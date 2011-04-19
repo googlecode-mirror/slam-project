@@ -1,0 +1,135 @@
+/*
+	global styles
+*/
+
+a:link, a:visited{
+	text-decoration: none;
+	color: #045FB4;
+}
+
+a:hover, a:active{
+	text-decoration: underline;
+	color: #FF8000;
+}
+
+/*
+	other styles
+*/
+
+#fileListContainer
+{
+	margin: 8px;
+	width: 500px;
+}
+
+#assetTitle
+{
+	text-align:	left;
+	margin-left: 4px;
+	margin-bottom: 4px;
+	font-family:"Georgia", Times, serif;
+	font-size: 14pt;
+	color: gray;
+}
+
+#fileListScrollbox
+{
+	max-height: 150px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+#fileEmpty
+{
+	height: 30px;
+	margin-top: 60px;
+	margin-bottom: 60px;
+	
+	text-align:	center;
+	font-family:"Georgia", Times, serif;
+	font-size: 16pt;
+	color: #BBBBBB;
+}
+
+#fileListTable
+{
+	width:500px;
+	border-collapse: collapse;
+}
+
+#fileListHeader td
+{
+	padding: 1px;
+	margin: 0px;
+	background: #DDDDDD;
+	text-align: center;
+}
+
+.fileListRowEven td
+{
+	background-color: #EEEEEE;
+	white-space:nowrap;
+}
+
+.fileListRowOdd td
+{
+	background-color: #FFFFFF;
+	white-space:nowrap;
+}
+
+
+#deleteButton
+{
+	border: 1px solid gray;
+	background: #EEEEEE;
+	margin-left: 8px;
+	padding: 2px;
+}
+
+#fileUploadContainer
+{
+	height: 150px;
+	margin: 8px;
+	width: 500px;
+}
+
+#fileUploadTable
+{
+	border-collapse: collapse;
+}
+
+div.error
+{
+	width: 100%;
+	text-align: center;
+	color: red;
+}
+
+#uploadingDiv
+{
+	width: 200px;
+	height: 60px;
+	position: fixed;
+	left: 50%;
+	right: 50%;
+	overflow: auto;
+	margin-top: -200px;
+	margin-left: -100px;
+	
+	font-family:"Georgia", Times, serif;
+	font-size: 10pt;
+	
+	border: 1px solid gray;
+	background-color: #EEEEEE;
+	padding: 10px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#uploadingDiv img, #uploadingDiv a
+{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+}

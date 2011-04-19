@@ -1,0 +1,83 @@
+#dashboardTitle
+{
+	float: left;
+	position: relative;
+	top: 10px;
+	left: 10px;
+	height: 24px;
+	width: 620px;
+	
+	text-align:	left;
+	font-family:"Georgia", Times, serif;
+	font-size: 14pt;
+	border-bottom: 1px solid gray;
+	color: #444444;
+}
+
+#dashboardStatus
+{
+	float: left;
+	position: relative;
+	top: 8px;
+	left: 10px;
+	
+	height: 16px;
+	padding-top: 4px;
+	margin-bottom: -8px;
+
+	text-align: left;
+	font-size: 12pt;
+	color: #444444;
+}
+
+#dashboardSearchContainer
+{
+	float: left;
+	width: 640px;
+	margin-bottom: -8px;
+	
+	text-align: right;
+}
+
+#dashboardSearchContainer input
+{
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-right: 2px;
+	
+	border: 1px solid gray;
+	background-color: #EEEEEE;
+	cursor: pointer;
+}
+
+#dashboardSearchReveal
+{
+	margin-right: 2px;
+	vertical-align: top;
+}
+
+#dashboardSearchReveal>select
+{
+	width: 150px;
+	height: 60px;
+}
+
+#dashboardSearchReveal input
+{
+	border: 1px solid gray;
+	background-color: #EEEEEE;
+}
+
+#dashboardNoEntries
+{
+	float: left;
+	width: 520px;
+	height: 90px;
+	padding-top: 80px;
+	margin:auto;
+	text-align:center;
+	vertical-align: middle;
+	color: #666666;
+	font-family:"Georgia", Times, serif;
+	font-size: 14pt;
+}

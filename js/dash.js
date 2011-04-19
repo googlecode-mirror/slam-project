@@ -1,0 +1,4 @@
+function doDashJS()
+{
+	return;
+}
