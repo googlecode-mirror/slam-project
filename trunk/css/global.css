@@ -1,0 +1,188 @@
+/*
+	Global styles
+*/
+
+a:link, a:visited{
+	text-decoration: none;
+	color: #045FB4;
+}
+
+a:hover, a:active{
+	text-decoration: underline;
+	color: #FF8000;
+}
+
+/*
+	Error and note div styles
+*/
+
+.error
+{
+	clear: both;
+	width: 100%;
+	text-align:center;
+	padding-top:20px;
+	font-family:"Georgia", Times, serif;
+	font-size: 10pt;
+	color: red;
+}
+
+.note
+{
+	clear: both;
+	width: 100%;
+	text-align:center;
+	padding-top:20px;
+	font-family:"Georgia", Times, serif;
+	font-size: 10pt;
+	color: red;
+}
+
+/*
+	Main container styles
+*/
+
+#contentDiv
+{
+	width: 800px;
+	text-align:center;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+/*
+	Breadcrumb nav styles
+*/
+
+#breadCrumb
+{
+	position: relative;
+	top: 0px;
+	left: 0px;
+	width: 780px;
+	padding: 5px;
+	
+	border: 1px solid gray;
+	background-color: #EEEEEE;
+	text-align: left;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#breadCrumbUser
+{
+	position: absolute;
+	right: 6px;
+	top: 6px
+}
+
+/*
+	Category list styles
+*/
+
+#categoryListContainer
+{
+	float: left;
+	position: relative;
+	top: 10px;
+	left: 0px;
+	width: 130px;
+	
+	/* extending the margin bottom prevents the floated left hand elements to wrap */
+	margin-bottom: 200px;
+	
+	border: 1px solid gray;
+	background-color: #EEEEEE;
+	padding: 5px;
+}
+
+#categoryList
+{
+	width: 100%;
+}
+
+#categoryList td
+{
+	white-space: nowrap;
+}
+
+td.categoryListElement, td.categoryListElementSelected
+{
+	text-align: right;
+	font-size:12pt;
+	font-family:"Georgia", Times, serif;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+td.categoryListElementSelected>a:link, td.categoryListElementSelected>a:visited{
+	color: #E67300;
+}
+
+td.categoryListElementSelected>a:hover, td.categoryListElementSelected>a:active{
+	color: #FF8000;
+}
+
+/*
+	footer styles
+*/
+
+#contentFooter
+{
+	float: left;
+	position: relative;
+	top: 50px;
+	width: 100%;
+	padding-bottom: 25px;
+
+	text-align: center;	
+	color: #444444;
+    font-size:	10pt;
+	font-family:"Georgia", Times, serif;
+}
+
+/*
+	Login screen styles
+*/
+
+#authContainer
+{
+	width: 250px;
+	text-align: center;
+	padding: 10px;
+	margin:50px;
+	margin-left:auto;
+	margin-right:auto;
+	border: 1px solid gray;
+    
+}
+
+#authContainer>input, #searchTerms>input, #searchConditions>input
+{
+	margin-left: 2px;
+	border: 1px solid gray;
+	background-color: #EEEEEE;
+	cursor: pointer;
+}
+
+#authFields
+{
+	margin-left:auto;
+	margin-right:auto;
+    font-size:11pt;
+	font-family:"Georgia", Times, serif;
+	color: #444444;
+}
+
+#authMessage
+{
+	width: 100%;
+	margin-top: 10px;
+	font-size: 75%
+}
+
+#authImage
+{
+	margin-left: 0px;
+	margin-right: 0px;
+}

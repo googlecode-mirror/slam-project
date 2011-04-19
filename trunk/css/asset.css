@@ -1,0 +1,78 @@
+#assetEditContainer
+{
+	float: left;
+	position: relative;
+	top: 10px;
+	left: 10px;
+	width: 630px;
+}
+
+#assetEditTitle
+{
+	text-align:	left;
+	font-family:"Georgia", Times, serif;
+	font-size: 16pt;
+}
+
+#assetEditFunctions
+{
+	text-align:left;
+	margin-top: 6px;
+	margin-bottom: 0px;
+	margin-left: 8px;
+	font-size: 10pt;
+}
+
+#assetEdit
+{
+	margin-top: 2px;
+}
+
+#assetEdit select
+{
+	border: 1px solid gray;
+}
+
+td.assetEditField
+{
+	padding-left: 5px;
+	padding-right: 5px;
+	text-align: right;
+	background-color: #DDDDDD;
+}
+
+td.assetEditValue
+{
+	text-align: left;
+	font-size: 11pt;
+}
+
+td.assetEditValue span
+{
+    font-style:italic;
+    font-size: 10pt;
+}
+
+#assetEditActions
+{
+	margin-top:	10px;
+	text-align: left;
+}
+
+.assetFieldDisabled
+{
+	color: gray;
+}
+
+.assetFieldHelp
+{
+	cursor: help;
+}
+
+#assetEditActions>input, .assetFileButton, .dateButton, .assetIdentifierLinkButton
+{
+	margin-left: 2px;
+	border: 1px solid gray;
+	background-color: #EEEEEE;
+	cursor: pointer;
+}

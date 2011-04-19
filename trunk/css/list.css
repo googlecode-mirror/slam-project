@@ -1,0 +1,148 @@
+#assetListContainer
+{
+	float: left;
+	position: relative;
+	top: 10px;
+	left: 10px;
+	
+	max-width: 630px;
+	overflow: visible;
+}
+
+.assetListName
+{
+	width: 25%;
+	height: 20px;
+	padding: 2px;
+	padding-left: 8px;
+	margin-top: 4px;
+	
+	white-space: nowrap;
+	text-align: right;
+	
+	font-size:14pt;
+	font-family:"Georgia", Times, serif;
+	color: #045FB4;
+	background-color: #DDDDDD;
+	border-bottom: 1px solid #AAAAAA;
+	/*	text-shadow: #666666 1px 1px 5px; */
+}
+
+.assetListName a
+{
+	float: left;
+}
+
+.assetListName input
+{
+	display: inline;
+	margin-top: 2px;
+	height: 18px;
+	width: 36px;
+
+	text-align: center;	
+	border: 1px solid gray;
+	padding-bottom: 4px;
+	background-color: #EEEEEE;
+	cursor: pointer;
+}
+
+.assetListEmpty
+{
+	width: 630px;
+	text-align: center;
+	margin-top: 0px;
+	padding-bottom: 2px;
+	margin-bottom: 8px;
+	font-size:10pt;
+	font-family:"Georgia", Times, serif;
+	color: #666666;
+	background-color: #DDDDDD;
+}
+
+.assetList
+{
+	width: 630px;
+	border-collapse: collapse;
+	overflow: visible;
+	margin-bottom:8px;
+}
+
+div.assetListActions
+{
+	height: 24px;
+	width: 400px;
+	text-align:left;
+	margin: 10px;
+	margin-top:2px;
+	margin-bottom:4px;
+}
+
+.assetListActionButton
+{
+	margin-left: 0px;
+	margin-right: 0px;
+	border: 1px solid gray;
+	background-color: #EEEEEE;
+	cursor: pointer;
+}
+
+.assetListFunctions
+{
+	display:inline;
+	text-align:left;
+	margin-top: 0px;
+	margin-left: 6px;
+	padding-bottom: 2px;
+	font-size: 10pt;
+}
+
+.assetListHeader td
+{
+	padding: 2px;
+	padding-left: 8px;
+	padding-right: 8px;
+	margin: 0px;
+	border-bottom: 0px;
+	background-color: #DDDDDD;
+	text-align: center;
+}
+
+.assetListRowEven td
+{
+	background-color: #EEEEEE;	
+}
+
+.assetListRowOdd td
+{
+	background-color: #FFFFFF;
+}
+
+td.assetListLink
+{
+	text-align:center;
+	white-space: nowrap;
+}
+
+td.assetListField
+{
+	padding-left: 10px;
+	white-space: nowrap;
+	overflow: visible;
+}
+
+td.assetListFieldLong
+{
+	padding-left: 10px;
+	font-size: 75%;
+}
+
+.listFileButton
+{
+	height: 16px;
+	width: 36px;
+	margin-left: 2px;
+	border: 1px solid gray;
+	padding: 0px;
+	background-color: #EEEEEE;
+}

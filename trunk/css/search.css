@@ -1,0 +1,40 @@
+#searchContainer
+{
+	float: left;
+	position: relative;
+	top: 10px;
+	left: 10px;
+	width: 600px;
+	
+	margin-bottom: 2px;
+	padding: 2px;
+	font-size: 11pt;
+	text-align: center;
+	border: 1px solid gray;
+}
+
+#searchContainer select, .assetEditFunction select
+{
+	border: 1px solid gray;
+}
+
+#searchTerms
+{
+	float: left;
+	width: 400px;
+	padding-left: 10px;
+
+	text-align: left;
+	white-space: nowrap;
+}
+
+#searchConditions
+{
+	float: left;
+	text-align: center;
+}
+
+.searchClass select
+{
+	max-width: 120px;
+}
