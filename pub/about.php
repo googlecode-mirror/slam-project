@@ -1,4 +1,5 @@
 <?php
+	set_include_path(get_include_path().PATH_SEPARATOR.'../');
 	require('../lib/obj/slam_config.inc.php');
 	$config = new SLAMconfig(false);
 ?>
