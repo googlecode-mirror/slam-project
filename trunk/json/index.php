@@ -1,6 +1,13 @@
 <?php
 
-require('lib/slam_index.inc.php');
+require('../lib/slam_json.inc.php');
+
+/*
+	in PHP 5.2 or higher we don't need to bring this in
+	from http://flipsideservices.com/
+*/
+if (!function_exists('json_encode'))
+	require_once 'json_encode/wrapper.php';
 
 $config	= new SLAMconfig();
 $db		= new SLAMdb($config);
@@ -12,48 +19,12 @@ if (!$_REQUEST['auth']){
 
 list($username,$password) = explode(':',base64_decode($_REQUEST['auth']));
 
-/* initialize an empty user object */
+/* try and get the user up and running */
 $user = new SLAMuser($config,$db,$username,$password);
 
 if ($user->authenticated)
-	echo '{"status":"good"}';
-
-if ($user->checkPassword($config,$db,$username,$password))
-	echo "user good";
+	return json_encode(array('status'=>'ok','error'=>''));
 else
-	echo "user bad";
-
-
-/* wrote my own json_encode, as only newer versions of PHP have it */
-function makeJSONArray($a)
-{
-	$s='';
-	foreach($a as $k=>$v)
-	{
-		if (is_array($v))
-			$v = explode("\n",makeJSONArray($v))
-		else
-		{
-			if(!is_numeric($k)
-				$k = '"'.encodeJSONString($k).'"';
-			if(!is_numeric($v))
-				$v = '"'.encodeJSONString($v).'"';
-
-			$s.=
-		}
-	}
-
-}
-
-function encodeJSONString($s)
-{
-
-}
-
-function addLeadingTab($text)
-{
-	$a = preg_split("/((\r(?!\n))|((?<!\r)\n)|(\r\n))/", $text);
-	array_walk($a,create_function('$a','return "\t".$a'));
-}
-
+	return json_encode(array('status'=>'error','error'=>'Invalid auth'));
+	
 ?>

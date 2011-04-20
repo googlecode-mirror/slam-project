@@ -21,8 +21,7 @@ class SLAMconfig
 		if ($noini)
 			return;
 			
-		if(($this->values = array_merge($this->values,$this->parseini())) === false)
-			die ('Could not load configuration.ini!');
+		$this->values = array_merge($this->values,$this->parseini());
 		
 		// define the regex
 		$this->values['identifier_regex'] = "/([A-Za-z][A-Za-z])(".implode('|',array_keys($this->values['lettercodes'])).")[_]?(\d+)/";
@@ -35,10 +34,9 @@ class SLAMconfig
 		/*
 			reads the SLAM configuration file and returns the configuration associative array
 		*/
-		
-		$path = (file_exists('configuration.ini')) ? 'configuration.ini' : '../configuration.ini'; // may be called from files/ directory
-		if (($r = @parse_ini_file($path,true)) === false)
-			return false;
+				
+		if (($r = @parse_ini_file('configuration.ini',true)) === false)
+			die('Fatal error: Could not read configuration.ini file!');
 		
 		$fields = $r['list_fields'];
 		unset($r['list_fields']);

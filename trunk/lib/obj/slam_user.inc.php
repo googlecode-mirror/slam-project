@@ -25,22 +25,12 @@ class SLAMuser
 		}
 	
 		/* is the user attempting to log in? */
-		$savecookie = false;
 		if (($_REQUEST['login_username']) && ($_REQUEST['login_password']))
 		{
-			$auth = $this->checkPassword($config,$db,urldecode($_REQUEST['login_username']),urldecode($_REQUEST['login_password']));
-			
-			/* set the cookie to keep the user logged in and copy the user prefs, etc to the user */
-			if (count($auth) == 1)
-			{
-				setcookie("{$config->values['name']}_slam",sha1($auth[0]['salt'].urldecode($_REQUEST['login_password'])),time()+$config->values['cookie_expire'],'/');
-				$this->values = $auth[0];
-				return true;
-			}
-			else
-				$config->errors[] = 'Auth error: Incorrect password provided.';
+			$username = urldecode($_REQUEST['login_username']);
+			$password = urldecode($_REQUEST['login_password']);
 		}
-		elseif($_COOKIE["{$config->values['name']}_slam"]) /* does the user posses the auth cookie? */
+		elseif($_COOKIE["{$config->values['name']}_slam"]) /* does the user possess the auth cookie? */
 		{
 			$crypt = mysql_real_escape(urldecode($_COOKIE["{$config->values['name']}_slam"]),$db->link);
 			$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `crypt`='$crypt' LIMIT 1");
@@ -55,8 +45,22 @@ class SLAMuser
 				return true;
 			}
 			
-			$config->errors[] = 'Auth error: Invalid crypt key.'.$crypt;
+			$config->errors[] = 'Auth error: Invalid crypt key.';
+			return false;
 		}
+		
+		/* attempt to check out the username and password */
+		$auth = $this->checkPassword($config,$db,$username,$password);
+			
+		/* set the cookie to keep the user logged in and copy the user prefs, etc to the user */
+		if (count($auth) == 1)
+		{
+			setcookie("{$config->values['name']}_slam",sha1($auth[0]['salt'].urldecode($_REQUEST['login_password'])),time()+$config->values['cookie_expire'],'/');
+			$this->values = $auth[0];
+			return true;
+		}
+		else
+			$config->errors[] = 'Auth error: Incorrect password provided.';
 		
 		return false;
 	}
