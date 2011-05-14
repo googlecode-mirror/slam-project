@@ -9,6 +9,7 @@ $user	= new SLAMuser($config,$db);
 $config->html['css'][] = 'css/global.css';
 $config->html['css'][] = 'css/popup.css';
 $config->html['js'][] = 'js/index.js';
+$config->html['js'][] = 'js/popup.js';
 
 if ($user->authenticated)
 {
@@ -120,7 +121,7 @@ if(!empty($config->values['debug']))
 }
 
 ?>
-		<div id='contentFooter'>SLAM v. <?php echo($config->values['version']) ;?> &copy; 2011 <a href='#' onClick="showPopupDiv('pub/about.php','helpDiv'); return false">About</a><br />[<a href="http://code.google.com/p/slam-project/issues/entry">Report a Bug</a>]</div>
+		<div id='contentFooter'>SLAM v. <?php echo($config->values['version']) ;?> &copy; 2011 <a href='#' onClick="showPopupDiv('pub/about.php','helpDiv',{}); return false">About</a><br />[<a href="http://code.google.com/p/slam-project/issues/entry">Report a Bug</a>]</div>
 		</div>
 	</body>
 </html>

@@ -51,9 +51,9 @@ class SLAMuser
 		
 		/* attempt to check out the username and password */
 		$auth = $this->checkPassword($config,$db,$username,$password);
-			
+
 		/* set the cookie to keep the user logged in and copy the user prefs, etc to the user */
-		if (count($auth) == 1)
+		if ($auth !== false)
 		{
 			setcookie("{$config->values['name']}_slam",sha1($auth[0]['salt'].urldecode($_REQUEST['login_password'])),time()+$config->values['cookie_expire'],'/');
 			$this->values = $auth[0];

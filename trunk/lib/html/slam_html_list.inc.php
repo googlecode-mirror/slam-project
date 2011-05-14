@@ -56,7 +56,7 @@ function SLAM_makeAssetTableActions($id)
 	<input type='submit' name='action' value='Delete' onClick=\"return confirm('Are you sure you want to delete the selected record?')\" disabled='true' class='assetListActionButton'/>
 	<div class='assetListFunctions'>
 		<a href='ext/export.php?{$export[1]}'>export</a> | 
-		<a href='#' onClick="showPopupDiv('pub/help_list.html','helpDiv'); return false">help</a>
+		<a href='#' onClick="showPopupDiv('pub/help_list.html','helpDiv',{}); return false">help</a>
 	</div>
 </div>
 EOL;
