@@ -54,20 +54,20 @@ class SLAMresult
 			if(empty($identifiers) || ($request->action == 'save'))
 			{
 				$order = "ORDER BY `".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link)." LIMIT ".mysql_real_escape($config->values['list_max'],$db->link);
-				$filter = ($user->values['superuser']) ? '' : "WHERE (`Removed`='0')";
+				$filter = ($user->values['superuser'] || $config->values['show_removed']) ? '' : "WHERE (`Removed`='0')";
 			}
 			else
 			{
 				$selector = "`Identifier`='".implode("' OR `Identifier`='",$identifiers)."'";
 				$order = "ORDER BY `".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link)." LIMIT ".count($identifiers);
-				$filter = ($user->values['superuser']) ? "WHERE($selector)" : "WHERE (($selector) AND `Removed`='0')";
+				$filter = ($user->values['superuser'] || $config->values['show_removed']) ? "WHERE($selector)" : "WHERE (($selector) AND `Removed`='0')";
 
 			}
-						
+			
 			$query = "SELECT * FROM `$category` $filter $order";
 			
 			if (($this->assets[$category] = $db->getRecords($query)) === false)
-					die('Database error: Error retrieving table:'.mysql_error().$query);
+					die('Database error: Error retrieving assets:'.mysql_error().$query);
 		}
 
 		return true;

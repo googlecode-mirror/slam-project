@@ -26,10 +26,7 @@ function SLAM_makeBreadcrumbHTML($config,$db,$user,$request,$results)
 			$s.=" &raquo; (Multiple Assets)";
 	}
 	
-//	if ($user->values['superuser'] && $config->values['premium'])
-//		$a = "<a style='float:right;width:5%' href='{$config->values['url']}?admin=true'>admin</a> <span style='float:right;width:1%'>&nbsp;|</span>";
-
-	return "$s$a<a id='breadCrumbUser' href='#' onClick=\"showPopupDiv('pub/user_actions.html','userDiv'); return false\">{$user->values['username']}</a></div>\n";
+	return "$s$a<a id='breadCrumbUser' href='#' onClick=\"togglePopupMenu('pub/user_actions.html','userActionsDiv',alignToBottomRight('breadCrumbUser')); return false\">{$user->values['username']}</a></div>\n";
 }
 
 function SLAM_makeCategoryListHTML($config,$db,$user,$request)

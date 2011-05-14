@@ -1,12 +1,7 @@
-<div id='userActionsDiv'>
-	<br />
-	<form name='changePassword' action='' method='POST'>
-		<div class='userAction'><input type='button' value='Change Password' onClick="showPopupDiv( 'pub/password_change.php', document.getElementById('userActionsDiv').parentNode.id )"/>
-	</form>
-	<br />
-	<br />
-	<form name='logoutForm' action='index.php' method='POST'>
-		<input type='hidden' name='logout' value='true' />
-		<div class='userAction'><input type='submit' value='Log Out' />
-	</form>
-</div>
+<form name='changePassword' action='' method='POST'>
+	<input type='button' value='Change Password' onClick="showPopupDiv('pub/password_change.php','userDiv',{})"/>
+</form>
+<form name='logoutForm' action='index.php' method='POST'>
+	<input type='hidden' name='logout' value='true' />
+	<input type='submit' value='Log Out' />
+</form>

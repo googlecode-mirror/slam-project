@@ -38,6 +38,13 @@ a:hover, a:active{
 	color: red;
 }
 
+.error_inline, .note_inline
+{
+	clear: none;
+	float: left;
+	width: 600px;
+}
+
 /*
 	Main container styles
 */

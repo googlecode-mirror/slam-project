@@ -5,12 +5,14 @@
 
 */
 
-function SLAM_makeErrorHTML($v,$attrs=''){
-	return "<div class='error' $attrs>$v</div>";
+function SLAM_makeErrorHTML($v,$inline=false,$attrs=''){
+	$class = ($inline) ? 'error error_inline' : 'error';
+	return "<div class='$class' $attrs>$v</div>";
 }
 
-function SLAM_makeNoteHTML($v,$attrs=''){
-	return "<div class='note' $attrs>$v</div>";
+function SLAM_makeNoteHTML($v,$inline=false,$attrs=''){
+	$class = ($inline) ? 'note note_inline' : 'note';
+	return "<div class='$class' $attrs>$v</div>";
 }
 
 function SLAM_makeHiddenInput($v,$n)

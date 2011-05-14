@@ -19,14 +19,40 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 	$category = array_shift(array_keys($request->categories));
 	$structure = $result->fields[$category];
 	$asset = &$result->assets[$category][0];
+	
+	/*
+		do some sanity checks	
+	*/
+	if (empty($category) || empty($structure))
+		return SLAM_makeErrorHTML('Internal error: bad link, no category or template asset specified.',true);
+	
+	/* check to make sure we actually have an asset */
+	if (empty($asset))
+		return SLAM_makeErrorHTML('Invalid identifier provided.',true);
+
+
+	/* entry is editable if the user is the owner, a superuser, or if the entry doesn't have any owner */
+	$editable = false;
+	if($user->values['username'] == $asset[$config->values['user_field']])
+		$editable = true;
+	if(empty($asset[$config->values['user_field']]))
+		$editable = true;
+	if($user->values['superuser'])
+		$editable = true;
+	
+	if (($asset['Removed']=='1') && (!$config->values['edit_removed']) && (!$user->values['superuser']))
+	{
+		$s.=SLAM_makeNoteHTML('This asset has been removed and cannot be edited.',true);
+		$editable = false;
+	}
+	
+	/*
+		done with sanity checks
+	*/
 
 	/* if we're cloning a tagged asset, register this so we know to tag it once it's saved */
 	if ($_REQUEST['tag'] || @in_array($asset['Identifier'],$user->prefs['identifiers'][$category]))
 		$s.=SLAM_makeHiddenInput('true','tag');
-
-	/* do some sanity checks */
-	if (empty($category) || empty($structure))
-		return SLAM_makeErrorHTML('Internal error: bad link, no category or template asset specified.');
 	
 	/* get what the identifier will be */
 	if($new)
@@ -40,14 +66,7 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 		
 	$s.="<div id='assetEditContainer'>\n";
 	
-	/* entry is editable if the user is the owner, a superuser, or if the entry doesn't have any owner */
-	$editable = false;
-	if($user->values['username'] == $asset[$config->values['user_field']])
-		$editable = true;
-	if(empty($asset[$config->values['user_field']]))
-		$editable = true;
-	if($user->values['superuser'])
-		$editable = true;
+
 
 	$export=explode('?',$_SERVER['REQUEST_URI']);
 	$f=<<<EOL
@@ -55,7 +74,7 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 jump to <a href='#End'>bottom</a> | 
 <a href='#' onClick="setSwitchableTR('none'); return false">hide</a>/<a href='' onClick="setSwitchableTR(''); return false">show</a> unused 
 | <a href='ext/export.php?{$export[1]}'>export</a>
-| <a href='#' onClick="showPopupDiv('pub/help_edit.html','helpDiv'); return false">help</a>
+| <a href='#' onClick="showPopupDiv('pub/help_edit.html','helpDiv',{}); return false">help</a>
 </div>\n
 EOL;
 	$b="$f<table id='assetEdit'>\n";

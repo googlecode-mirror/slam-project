@@ -10,7 +10,7 @@ class SLAMconfig
 	function __construct($noini=false){
 		$this->errors = array();
 		
-		$this->values['version'] = '1.0.3a';
+		$this->values['version'] = '1.0.4a';
 		$this->values['debug'] = true;
 		
 		// do some basic initializing

@@ -2,39 +2,6 @@
 
 */
 
-function showPopupDiv( url, id )
-{
-	var test=document.getElementById(id);
-	if (test != null)
-		document.body.removeChild(test);
-		
-	var sDiv=document.createElement('div');
-	sDiv.setAttribute('id',id);
-	
-	document.body.appendChild(sDiv);
-	clientSideInsertSrc(id, url);
-
-	sDiv.innerHTML = sDiv.innerHTML+"<a id='popupDivCloseA' onClick=\"removeBodyId('"+id+"')\">close</a>";
-
-	/* return false to abort link redirection */
-	return false;
-}
-
-function showPopupIframe( src, id, width, height )
-{
-	var test=document.getElementById(id);
-	if (test != null)
-		document.body.removeChild(test);
-
-	var sDiv=document.createElement('div');
-	sDiv.setAttribute('id',id);
-	sDiv.innerHTML = "<a id='popupDivCloseA' onClick=\"removeBodyId('"+id+"')\">close</a><iframe id='fileMangerIframe' src='"+src+"' width='"+width+"px' height='"+height+"px' marginwidth='0' marginheight='0' frameborder='no' scrolling='no'></iframe>";
-
-	document.body.appendChild(sDiv);
-
-	return false;
-}
-
 function removeBodyId( id )
 {
 	var hDiv = document.getElementById( id );

@@ -17,7 +17,7 @@ function SLAM_makeUserAuthHTML($config,$db,$user)
 EOL;
 
 	if (!empty($config->errors))
-		$s.="<div id='authMessage'><a href='#' onClick=\"showPopupDiv('pub/password_reset.html','userDiv'); return false\">forgot password?</a></div>\n";
+		$s.="<div id='authMessage'><a href='#' onClick=\"showPopupDiv('pub/password_reset.html','userDiv',{}); return false\">forgot password?</a></div>\n";
 		
 	$s.="</div>\n</form>\n";
 	
@@ -36,7 +36,7 @@ function SLAM_doUserActionHTML(&$config,$db,&$user)
 			if(SLAM_saveUserPassword($config,$db,$user) === true)
 				return;
 			else
-				$config->html['onload'][] = 'showPopupDiv("pub/password_change.php?bad_password=true","userDiv")';
+				$config->html['onload'][] = 'showPopupDiv("pub/password_change.php?bad_password=true","userDiv",{})';
 		
 			return;
 		case 'reset_send':
@@ -44,7 +44,7 @@ function SLAM_doUserActionHTML(&$config,$db,&$user)
 			
 			return;
 		case 'reset_change':
-			$config->html['onload'][] = "showPopupDiv(\"pub/password_choose.php?user_name={$_REQUEST['user_name']}&secret={$_REQUEST['secret']}\",\"userDiv\")";
+			$config->html['onload'][] = "showPopupDiv(\"pub/password_choose.php?user_name={$_REQUEST['user_name']}&secret={$_REQUEST['secret']}\",\"userDiv\",{})";
 
 			return;
 		case 'reset_save':
