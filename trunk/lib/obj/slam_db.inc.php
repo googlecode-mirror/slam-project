@@ -3,11 +3,18 @@
 class SLAMdb
 {
 	public $link = null;
+	private $required_fields = array('Serial','Identifier','Removed');
 	
 	public function __construct(&$config)
 	{
 		if(($this->Connect($config->values['db_server'],$config->values['db_user'],$config->values['db_pass'],$config->values['db_name'])) === false)
 			die('Error connecting to database: '.mysql_error());
+		
+		/* append the user field to the required fields */
+		$this->required_fields[] = $config->values['user_field'];
+		
+		/* make sure that the category tables provided in the config are valid */
+		$this->RemoveBadCategories($config);
 	}
 	
 	public	function Connect($server,$user,$pass,$db)
@@ -26,6 +33,27 @@ class SLAMdb
 			return false;
 			
 		return true;
+	}
+	
+	private	function RemoveBadCategories(&$config)
+	{
+		$tables = array_keys($config->values['categories']);
+		foreach($tables as $table)
+		{
+			/* compare the fields in each table with the required set */
+			$fields = array_keys($this->GetStructure($table));
+			$diff = array_diff($this->required_fields,array_intersect($this->required_fields,$fields));
+			
+			if(count($diff)>0)
+			{
+				/* remove the malformed category */
+				unset($config->values['categories'][$table]);
+				
+				foreach($diff as $error)
+					$config->errors[] = "Table \"$table\" is missing required attribute \"$error\".";
+			}
+		}
+		return;
 	}
 	
 	public	function GetTables()

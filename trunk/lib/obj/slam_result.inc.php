@@ -41,7 +41,7 @@ class SLAMresult
 	{
 		if (!is_array($request->categories))
 			return true;
-			
+		
 		foreach($request->categories as $category => $identifiers)
 		{
 			$this->assets[$category] = array();
