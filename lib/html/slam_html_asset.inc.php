@@ -257,7 +257,7 @@ function SLAM_makeIdentifierMenuHTML($config,$request,$v,$s,$n)
 	
 	// get list of linkable identifier elements
 	preg_match_all($config->values['identifier_regex'],$v,$m);
-	
+	print_r($m);
 	$url = "{$config->html['url']}?action=open&rloc={$request->location['return']}&identifier=";
 	
 	$a=array();
@@ -267,7 +267,7 @@ function SLAM_makeIdentifierMenuHTML($config,$request,$v,$s,$n)
 	
 	/* make a smart menu with each linkable identifier we found */
 	if (count($a) == 1)
-		return SLAM_makeButtonHTML("$v &rarr;","name='{$s['name']}_linklist' class='assetIdentifierLinkButton' onClick=\"jumpToIdentifier('".$request->makeRequest($config,array('identifier'=>array($id)),true)."')\" class='linkButton'",false);
+		return SLAM_makeButtonHTML("{$m[0][0]} &rarr;","name='{$s['name']}_linklist' class='assetIdentifierLinkButton' onClick=\"jumpToIdentifier('".$request->makeRequest($config,array('identifier'=>array($id)),true)."')\" class='linkButton'",false);
 	elseif(count($a) > 1)
 		return SLAM_makeMenuHTML('',$a,"name='{$s['name']}_linklist' onChange=\"jumpToIdentifier(this.options[this.selectedIndex].value)\"",true,false);
 	else
