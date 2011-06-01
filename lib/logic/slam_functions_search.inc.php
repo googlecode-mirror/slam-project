@@ -59,7 +59,7 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 		/* execute the query */
 		if (($result->assets[$category] = $db->getRecords($query)) === false)
 		{
-			$config->errors[] ='Database error: Error retrieving assets:'.mysql_error().$query;
+			$config->errors[] ='Database error: Error retrieving search:'.mysql_error().$query;
 			return new SLAMresult();
 		}
 	}

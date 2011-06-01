@@ -13,7 +13,7 @@ class SLAMuser
 			
 		if(($this->authenticated = $this->loaduser($config,$db,$username,$password)) === true)
 			$this->prefs = unserialize($this->values['prefs']);
-			
+				
 		return;
 	}
 
