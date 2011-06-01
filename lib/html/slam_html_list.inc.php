@@ -23,6 +23,8 @@ function SLAM_makeAssetListHTML(&$config,$db,$user,$request,$result)
 		{
 			$s.="<form name='assetListForm_$category' action='".$request->makeRequest($config,array('location'=>'list','category'=>array($category)),false)."' method='POST'>\n";
 			$s.=SLAM_makeAssetTableActions($category);
+			$s.=SLAM_makeAssetTableNavigation($config,$request,$result,$category);
+			$s.=SLAM_makeAssetTableFunctions($category);
 		}
 	
 		$s.=SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets);
@@ -35,6 +37,8 @@ function SLAM_makeAssetListHTML(&$config,$db,$user,$request,$result)
 	if (count($assets)>0)
 	{
 		$s.=SLAM_makeAssetTableActions($category);
+		$s.=SLAM_makeAssetTableNavigation($config,$request,$result,$category);
+		$s.=SLAM_makeAssetTableFunctions($category);
 		$s.="</form>\n";
 	}
 	
@@ -44,9 +48,7 @@ function SLAM_makeAssetListHTML(&$config,$db,$user,$request,$result)
 }
 
 function SLAM_makeAssetTableActions($id)
-{
-	$export=explode('?',$_SERVER['REQUEST_URI']);
-	
+{	
 	$s=<<<EOL
 <div class='assetListActions' id='assetListActions_{$id}'>
 	<input type='submit' name='action' value='New' class='assetListActionButton'/>
@@ -54,16 +56,41 @@ function SLAM_makeAssetTableActions($id)
 	<input type='submit' name='action' value='Tag' disabled='true' class='assetListActionButton'/>
 	<input type='submit' name='action' value='Clone' disabled='true' class='assetListActionButton'/>
 	<input type='submit' name='action' value='Delete' onClick=\"return confirm('Are you sure you want to delete the selected record?')\" disabled='true' class='assetListActionButton'/>
+EOL;
+
+	return $s;
+}
+
+function SLAM_makeAssetTableFunctions($id)
+{
+	$export=explode('?',$_SERVER['REQUEST_URI']);	
+	$s=<<<EOL
 	<div class='assetListFunctions'>
 		<a href='ext/export.php?{$export[1]}'>export</a> | 
 		<a href='#' onClick="showPopupDiv('pub/help_list.html','helpDiv',{}); return false">help</a>
 	</div>
 </div>
 EOL;
-
 	return $s;
 }
 
+function SLAM_makeAssetTableNavigation($config,$request,$result,$category)
+{
+	$b_limit = max(0,$request->limit - $config->values['list_max']);
+	$f_limit = min($result->counts[$category],$request->limit + $config->values['list_max']);
+	
+	$b_url = $request->makeRequest($config,array('limit'=>$b_limit),true);
+	$f_url = $request->makeRequest($config,array('limit'=>$f_limit),true);
+
+	$s="<div class='assetListNavigation'>\n";
+	$s.= ($request->limit > 0) ? "<a href='$b_url'>&lt;</a>" : "&lt;";
+	
+	$s.= ' '.(1+ceil($request->limit/$config->values['list_max'])).'/'.ceil($result->counts[$category]/$config->values['list_max']).' ';
+	
+	$s.= (($request->limit+$config->values['list_max']) < $result->counts[$category]) ? "<a href='$f_url'>&gt;</a>" : "&gt;";
+	$s.="</div>\n";
+	return $s;
+}
 function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 {
 	$s = '';

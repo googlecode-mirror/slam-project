@@ -257,7 +257,6 @@ function SLAM_makeIdentifierMenuHTML($config,$request,$v,$s,$n)
 	
 	// get list of linkable identifier elements
 	preg_match_all($config->values['identifier_regex'],$v,$m);
-	print_r($m);
 	$url = "{$config->html['url']}?action=open&rloc={$request->location['return']}&identifier=";
 	
 	$a=array();
