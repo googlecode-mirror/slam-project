@@ -12,6 +12,7 @@ class SLAMrequest
 	{
 		$this->action = '';
 		$this->location = '';
+		$this->limit = 0;
 		$this->order = array();
 		$this->categories = array();
 		$this->search = array();
@@ -48,6 +49,8 @@ class SLAMrequest
 				case 'dir':
 					$this->order['direction'] = $value[0];
 					break;
+				case 'lim':
+					$this->limit = $value[0];
 					
 				case 'i':
 				case 'identifier':
@@ -75,8 +78,6 @@ class SLAMrequest
 				case 's_join':
 					$this->search['join'] = $value;
 					break;
-				case 's_limit':
-					$this->search['limit'] = $value[0];
 			}
 		}
 		
@@ -104,6 +105,7 @@ class SLAMrequest
 		{
 			if (!empty($this->action)){ $args['action'] = $this->action; }
 			if (!empty($this->location)){ $args['location'] = $this->location; }
+			if (!empty($this->limit)){ $args['limit'] = $this->limit; }
 			
 			if (!empty($this->order)) // if order and direction fields are default, no need to gum up url
 			{
@@ -127,6 +129,7 @@ class SLAMrequest
 		{
 			if ($term == 'action'){ $args['action'] = urlencode($value); }
 			if ($term == 'location'){ $args['location'] = urlencode($value); }
+			if ($term == 'limit'){ $args['limit'] = urlencode($value); }
 			if ($term == 'order')
 			{
 				$args['order'] = $value['field'];
@@ -139,7 +142,9 @@ class SLAMrequest
 		
 		/* build the actual URL */
 		$url = array();
-		$abbr = array('action'=>'a','location'=>'loc','order'=>'ord','direction'=>'dir');
+		
+		/* abbreviation translation table for convinence */
+		$abbr = array('action'=>'a','location'=>'loc','limit'=>'lim','order'=>'ord','direction'=>'dir');
 		
 		foreach($args as $name=>$values)
 			if ((!is_array($values)) && (!empty($values)))
@@ -156,7 +161,6 @@ class SLAMrequest
 			if (!empty($args['search']['value'])){ $url[] = 's_value[]='.implode('&s_value[]=',array_map(urlencode,$args['search']['value'])); }
 			if (!empty($args['search']['mode'])){ $url[] = 's_mode[]='.implode('&s_mode[]=',array_map(urlencode,$args['search']['mode'])); }
 			if (!empty($args['search']['join'])){ $url[] = 's_join[]='.implode('&s_join[]=',array_map(urlencode,$args['search']['join'])); }
-			if (!empty($args['search']['limit'])){ $url[] = 's_limit='.urlencode($args['search']['limit']); }
 		}
 
 		return "{$config->html['url']}?".implode('&',$url);

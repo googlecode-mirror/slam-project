@@ -9,6 +9,7 @@ class SLAMresult
 	{
 		$this->fields = array();
 		$this->assets = array();
+		$this->counts = array();
 	
 		if ($config)
 		{
@@ -53,21 +54,27 @@ class SLAMresult
 			/* retrieve assets from the table */
 			if(empty($identifiers) || ($request->action == 'save'))
 			{
-				$order = "ORDER BY `".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link)." LIMIT ".mysql_real_escape($config->values['list_max'],$db->link);
+				$order = "ORDER BY `".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link);
 				$filter = ($user->values['superuser'] || $config->values['show_removed']) ? '' : "WHERE (`Removed`='0')";
+				$limit = ($request->limit > 0) ? "LIMIT {$request->limit},".($request->limit+$config->values['list_max']) : "LIMIT 0,{$config->values['list_max']}";
 			}
 			else
 			{
 				$selector = "`Identifier`='".implode("' OR `Identifier`='",$identifiers)."'";
-				$order = "ORDER BY `".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link)." LIMIT ".count($identifiers);
+				$order = "ORDER BY `".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link);
 				$filter = ($user->values['superuser'] || $config->values['show_removed']) ? "WHERE($selector)" : "WHERE (($selector) AND `Removed`='0')";
-
+				$limit = "LIMIT ".count($identifiers);
 			}
 			
-			$query = "SELECT * FROM `$category` $filter $order";
-			
+			$query = "SELECT * FROM `$category` $filter $order $limit";
+
 			if (($this->assets[$category] = $db->getRecords($query)) === false)
 					die('Database error: Error retrieving assets:'.mysql_error().$query);
+			
+			/* count the number of assets in the category */
+			if (($count=$db->getRecords("SELECT COUNT(*) FROM `$category` $filter")) === false)
+					die('Database error: Error counting assets:'.mysql_error().$query);
+			$this->counts[$category] = $count[0]['COUNT(*)'];
 		}
 
 		return true;

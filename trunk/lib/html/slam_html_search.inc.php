@@ -65,8 +65,6 @@ function SLAM_makeSearchBoxHTML($config,$db,$user,$request,$result)
 	$s.="</div>\n";
 	
 	$s.="<div id='searchConditions'>";
-	$limit = (empty($request->search['limit'])) ? '10' : $request->search['limit'];
-	$s.=" Limit: ".SLAM_makeMenuHTML($limit,array('10'=>10,'50'=>50,'100'=>100),"name='s_limit'",false);
 	$s.="&nbsp;&nbsp;<input type='submit' name='action' value='Search' />\n</div>\n";
 	
 	$s.="</div>\n</form>\n";
