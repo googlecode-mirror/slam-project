@@ -10,10 +10,11 @@ class SLAMconfig
 	function __construct($noini=false){
 		$this->errors = array();
 		
-		$this->values['version'] = '1.0.5a';
+		$this->values['version'] = '1.0.6';
 		
 		// do some basic initializing
-		$this->html['url'] = 'http://'.dirname($_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']).'/';
+		$http = ($_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+		$this->html['url'] = $http.dirname($_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']).'/';
 		$this->html['headers'] = array();
 		$this->html['onload'] = array();
 		
