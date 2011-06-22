@@ -1,0 +1,3 @@
+# prevent all HTTP access
+deny from all
+
