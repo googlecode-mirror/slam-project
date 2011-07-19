@@ -105,7 +105,7 @@ EOL;
 				break;
 				
 			case 'Files': /* if there's a "Files" field, show a link to the file browser instead */
-				$b.="<tr>\n<td class='assetEditField'>Files :</td><td class='assetEditValue'><input type='button' class='assetFileButton' onClick=\"showPopupIframe('ext/?i={$asset['Identifier']}','fileManagerDiv',510,310); return false\" value='Open Browser' /></td><td class='assetEditFunction'>&nbsp;</td>\n</tr>\n";
+				$b.="<tr>\n<td class='assetEditField'>Files :</td><td class='assetEditValue'><input type='button' class='assetFileButton' onClick=\"showPopupIframe('ext/files.php?i={$asset['Identifier']}','fileManagerDiv',510,310); return false\" value='Open Browser' /></td><td class='assetEditFunction'>&nbsp;</td>\n</tr>\n";
 				break;
 		
 			default:

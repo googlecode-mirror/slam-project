@@ -51,9 +51,9 @@ if (count($config->errors) == 0)
 
 /* immediately redirect on success, or give the user a chance to see any errors we've run into */
 if (count($config->errors) == 0)
-	header("refresh:0;url=../ext/?i=$identifier");
+	header("refresh:0;url=../ext/files.php?i=$identifier");
 else
-	header("refresh:{$config->values['file manager']['action_timeout']};url=../ext/?i=$identifier");
+	header("refresh:{$config->values['file manager']['action_timeout']};url=../ext/files.php?i=$identifier");
 
 echo SLAM_makeFileSplashHTML($identifier,'Remove from asset','The specified files are being removed from the asset.',$config->errors);
 

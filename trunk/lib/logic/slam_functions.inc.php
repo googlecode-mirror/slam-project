@@ -15,4 +15,26 @@ function mysql_real_escape($a,$link)
 	return $a;
 }
 
+function SLAM_findAssetDiffs($assets)
+{
+	if(count($assets) < 2)
+		return false;
+	
+	$ret = array();
+	$fields = array_keys($assets[0]);
+	foreach($fields as $field)
+	{
+		$temp = array();
+		foreach($assets as $asset)
+			$temp[] = $asset[$field];
+		
+		$temp = array_unique($temp);
+		
+		if(count($temp) > 1)
+			$ret[$field] = $temp;
+	}
+
+	return $ret;	
+}
+
 ?>

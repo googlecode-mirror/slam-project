@@ -170,7 +170,7 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 			$value = (strlen($asset[$field]) > $config->values['field_truncate']) ? substr($asset[$field],0,$config->values['field_truncate']).'...' : $asset[$field];
 				
 			if ($field == 'Files') // special treatment for files field
-				$s.="<td class='assetListField'><input type='button' class='listFileButton' onClick=\"showPopupIframe('ext/?i={$asset['Identifier']}','fileManagerDiv',510,310); return false\" value='View' />\n";
+				$s.="<td class='assetListField'><input type='button' class='listFileButton' onClick=\"showPopupIframe('ext/files.php?i={$asset['Identifier']}','fileManagerDiv',510,310); return false\" value='View' />\n";
 			else
 				$s.= ($f_value == $value) ? "<td class='$class'>$value</td>\n" : "<td class='$class' title='{$asset[$field]}'>$value</td>\n";
 		}

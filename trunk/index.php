@@ -11,12 +11,18 @@ $config->html['css'][] = 'css/popup.css';
 $config->html['js'][] = 'js/index.js';
 $config->html['js'][] = 'js/popup.js';
 
+$modules = SLAM_loadIndexModules($config,'mod','index.ini');
+
 if ($user->authenticated)
 {
 	$request = new SLAMrequest($config,$db,$user);
 
+	SLAM_doModuleRequest($modules,$config,$db,$user,$request);
+
 	switch($request->action)
 	{
+		case 'none':
+			break;
 		case 'new':
 		case 'clone':
 			$result = new SLAMresult($config,$db,$user,$request);
@@ -55,9 +61,12 @@ if ($user->authenticated)
 
 	switch($request->location)
 	{
+		case 'none':
+			break;
 		case 'list':
 			if (!$result)
 				$result = new SLAMresult($config,$db,$user,$request);
+				
 			if (!$content)
 			{
 				$content.= SLAM_makeSearchBoxHTML($config,$db,$user,$request,$result);
@@ -69,6 +78,7 @@ if ($user->authenticated)
 			$request->location = 'dash';
 			if (!$result)
 				$result = SLAM_getDashboardResult($config,$db,$user,$request);
+				
 			if (!$content)
 			{
 				$content.= SLAM_makeDashboardHTML($config,$db,$user,$request,$result);
@@ -77,6 +87,8 @@ if ($user->authenticated)
 			}
 			break;
 	}
+	
+	SLAM_doModuleContent($modules,$config,$db,$user,$request,$result,$content);
 }
 
 if ($_REQUEST['user_action'])

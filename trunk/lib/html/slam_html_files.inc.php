@@ -71,7 +71,7 @@ EOL;
 			<br />
 			<br />
 			<br />
-			<b><i>Please click <a href='../ext/?i=$identifier'>here</a> to continue.</b></i>
+			<b><i>Please click <a href='../ext/files.php?i=$identifier'>here</a> to continue.</b></i>
 		</div>
 	</body>
 </html>
