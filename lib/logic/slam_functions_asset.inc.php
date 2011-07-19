@@ -20,14 +20,14 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	$category = array_shift(array_keys($request->categories));
 	$identifier = $request->categories[$category][0];
 	
+	/* see if there's an entry with the specified identifier already */
+	$r = $db->GetRecords("SELECT * FROM `$category` WHERE identifier='$identifier' LIMIT 1");
+	
 	/* if no identifier is available, it's a new entry */
 	if (empty($identifier))
 	{
 		$f = 'INSERT';
-		
-		/* see if there's an entry with the specified identifier already */
-		$r = $db->GetRecords("SELECT Identifier FROM `$category` WHERE identifier='$i' LIMIT 1");
-		
+
 		if ($r === false)
 			return SLAM_makeErrorHTML('Database error: could not check for duplicate identifiers: '.mysql_error(),true);
 		elseif(count($r) > 0)
@@ -51,7 +51,7 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	{
 		$f = 'REPLACE';
 		/* make sure the asset we're editing belongs to the user and is editable */
-		$r = $db->GetRecords("SELECT `{$config->values['user_field']}`,`Removed` FROM `$category` WHERE `Identifier`='$identifier' LIMIT 1");
+		
 		if (($r[0][$config->values['user_field']] != $user->values['username']) && (!$user->values['superuser']))
 			return SLAM_makeErrorHTML('Authentication error: Unauthorized attempt to overwrite record.',true);
 		if (($r[0]['Removed'] == '1') && (!$config->values['edit_removed']) && (!$user->values['superuser']))
@@ -62,6 +62,9 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	$a = implode("`,`",array_keys($record));
 	$b = implode("','",mysql_real_escape(array_values($record),$db->link));
 	$q = "$f INTO `$category` (`$a`) VALUES ('$b')";
+
+	/* check the new entry against the old entry (if any) */
+//	print_r(SLAM_findAssetDiffs(array($record,$r[0])));
 
 	if ($db->Query($q) === false)
 		return SLAM_makeErrorHTML('Database error: could not save record: '.mysql_error(),true);
