@@ -91,6 +91,6 @@
 
 ==Additional Resources==
  # [http://www.mysql.com MySQL]Free, enterprise-class database system. The MySQL Workbench admin tool simplifies many duties like modifying and backing up databases, adding/deleting connections, etc.
- # [http://www.phpmyadmin.netphpMyAdmin] Free, web-based database design and administrative tool for administrative functions like adding/deleting categories, adding/deleting asset attributes
+ # [http://www.phpmyadmin.net phpMyAdmin] Free, web-based database design and administrative tool for administrative functions like adding/deleting categories, adding/deleting asset attributes
  # [http://www.adminer.org Adminer] Similar to phpMyAdmin, also free and web-based, but with a simpler interface and installation.
 	
