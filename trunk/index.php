@@ -2,23 +2,29 @@
 
 require('lib/slam_index.inc.php');
 
+/* obtain and initialize session objects */
 $config	= new SLAMconfig();
 $db		= new SLAMdb($config);
 $user	= new SLAMuser($config,$db);
 
+/* register the default css and javascript files */
 $config->html['css'][] = 'css/global.css';
 $config->html['css'][] = 'css/popup.css';
 $config->html['js'][] = 'js/index.js';
 $config->html['js'][] = 'js/popup.js';
 
+/* load index modules */
 $modules = SLAM_loadIndexModules($config,'mod','index.ini');
 
 if ($user->authenticated)
 {
+	/* parse and obtain the requested action */
 	$request = new SLAMrequest($config,$db,$user);
 
+	/* run any module modifications to the request */
 	SLAM_doModuleRequest($modules,$config,$db,$user,$request);
 
+	/* perform built-in request actions if necessary */
 	switch($request->action)
 	{
 		case 'none':
@@ -59,6 +65,7 @@ if ($user->authenticated)
 			break;
 	}
 
+	/* determine and/or set the current state (location) of the user */
 	switch($request->location)
 	{
 		case 'none':
@@ -88,12 +95,21 @@ if ($user->authenticated)
 			break;
 	}
 	
+	/* obtain module content */
 	SLAM_doModuleContent($modules,$config,$db,$user,$request,$result,$content);
 }
 
+/* has the user specified an action (e.g. logging in, requesting a password reset?) */
 if ($_REQUEST['user_action'])
 	$content.= SLAM_doUserActionHTML($config,$db,$user);
 
+/* if a module has pre-prepared HTML, we can exit now */
+if ($config->html['abort']){
+	echo $content;
+	return;
+}
+
+/* generate the HTML output */
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
