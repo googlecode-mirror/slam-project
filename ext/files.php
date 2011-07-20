@@ -22,62 +22,63 @@ $slam_file_errors['unzip_errors'] = array('No error','One or more warning errors
 <?php
 
 if ($user->authenticated)
+{
 	$request = new SLAMrequest($config,$db,$user);
-else
-{
-	echo "<div id='fileEmpty'>You are not logged in</div>\n</div>\n</body>\n</html>";
-	return;
-}
-
-/* get the category and identifier from the request object */
-if(!empty($request->categories))
-{
-	$category = array_shift(array_keys($request->categories));
-	$identifier = array_shift($request->categories[$category]);
 	
-	/* is the current user qualified to make changes to the archive? */
-	$editable = SLAM_checkAssetOwner($config,$db,$user,$category,$identifier);
-	
-	/* attempt to retrieve the asset's archive path*/
-	if(($path = SLAM_getArchivePath($config,$category,$identifier)) !== false)
+	/* get the category and identifier from the request object */
+	if(!empty($request->categories))
 	{
-		/* retrieve info on the files in the archive */
-		if(($files = SLAM_getArchiveFiles($config,$path)) !== false)
+		$category = array_shift(array_keys($request->categories));
+		$identifier = array_shift($request->categories[$category]);
+		
+		/* is the current user qualified to make changes to the archive? */
+		$editable = SLAM_checkAssetOwner($config,$db,$user,$category,$identifier);
+		
+		/* attempt to retrieve the asset's archive path*/
+		if(($path = SLAM_getArchivePath($config,$category,$identifier)) !== false)
 		{
-			echo "<div id='assetTitle'>$identifier</div>\n";
-			echo "<div id='fileListScrollbox'>\n";
-			echo "<form name='assetFileRemove' id='assetFileRemove' method='POST' action='delete.php'>\n";
-			echo "<input type='hidden' name='i' value='$identifier' />\n";
-			echo SLAM_makeArchiveFilesHTML($config,$db,$category,$identifier,$files,$editable);
-			echo "</div>\n";
-			if ($editable)
-				echo "<input type='button' id='deleteButton' value='Delete' onClick=\"delete_submit('assetFileRemove')\" />\n";
-			echo "</form>\n";
-			echo "</div>\n";
+			/* retrieve info on the files in the archive */
+			if(($files = SLAM_getArchiveFiles($config,$path)) !== false)
+			{
+				echo "<div id='assetTitle'>$identifier</div>\n";
+				echo "<div id='fileListScrollbox'>\n";
+				echo "<form name='assetFileRemove' id='assetFileRemove' method='POST' action='delete.php'>\n";
+				echo "<input type='hidden' name='i' value='$identifier' />\n";
+				echo SLAM_makeArchiveFilesHTML($config,$db,$category,$identifier,$files,$editable);
+				echo "</div>\n";
+				if ($editable)
+					echo "<input type='button' id='deleteButton' value='Delete' onClick=\"delete_submit('assetFileRemove')\" />\n";
+				echo "</form>\n";
+				echo "</div>\n";
+			}
+		}
+		else
+			echo "<div id='fileEmpty'>No files to show</div>\n";
+			
+		if ($editable)
+			SLAM_updaateArchiveFileList($config,$db,$category,$identifier,$files);
+		else
+		{
+			echo "</div>\n</body>\n</html>\n";
+			exit;
 		}
 	}
 	else
-		echo "<div id='fileEmpty'>No files to show</div>\n";
-		
-	if ($editable)
-		SLAM_updaateArchiveFileList($config,$db,$category,$identifier,$files);
-	else
-	{
-		echo "</div>\n</body>\n</html>\n";
-		exit;
-	}
+		$config->errors[] = 'Invalid identifier provided';
 }
-elseif($user->authenticated)
-	$config->errors[] = 'Invalid identifier provided';
+else
+{
+	echo "<div id='fileEmpty'>You are not logged in</div>\n</div>\n";
+	echo "</body>\n</html>";
+	return;
+}
 
-/* bail now if we've run into errors */
-if ((count($config->errors) > 0) || (!$user->authenticated))
-{		
-	echo "<center>\n";
-	foreach($config->errors as $error)
-		echo "<div class='error'>$error</p>";
-	echo "</center>\n</body>\n</html>\n";
-	exit;
+if(!empty($config->values['debug']))
+{
+	echo "<div class='error'>\n";
+	for($i=0; $i<count($config->errors); $i++)
+		echo "$i) {$config->errors[$i]}<br />\n";		
+	echo "</div>\n";
 }
 
 ?>
