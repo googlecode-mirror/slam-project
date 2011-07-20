@@ -133,7 +133,7 @@ class SLAMindexPlugin extends SLAMmodule
 	function request_action(&$config,$db,&$user,&$request)
 	{
 		foreach($this->request_actions as $action)
-			call_user_func_array($action,array($config,$db,$user,$request));
+			call_user_func_array($action,array($config,$db,$user,&$request));
 
 		return true;
 	}
@@ -141,7 +141,7 @@ class SLAMindexPlugin extends SLAMmodule
 	function content_action(&$config,$db,&$user,&$request,&$result,&$content)
 	{
 		foreach($this->content_actions as $action)
-			call_user_func_array($action,array($config,$db,$user,$request,$result,$content));
+			call_user_func_array($action,array($config,$db,$user,$request,$result,&$content));
 
 		return true;
 	}
