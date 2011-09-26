@@ -17,11 +17,14 @@ class SLAMconfig
 		$this->html['url'] = $http.dirname($_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']).'/';
 		$this->html['headers'] = array();
 		$this->html['onload'] = array();
-		
+				
 		if ($noini)
 			return;
 			
 		$this->values = array_merge($this->values,$this->parseini());
+		
+		if(!is_dir($this->values['path']))
+			exit("The installation path specified in your configuration file (\"{$this->values['path']}\") is not valid!");
 		
 		// define the regex
 		$this->values['identifier_regex'] = "/([A-Za-z][A-Za-z])(".implode('|',array_keys($this->values['lettercodes'])).")[_]?(\d+)/";

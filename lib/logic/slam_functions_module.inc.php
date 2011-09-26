@@ -10,14 +10,17 @@ function SLAM_getModules(&$config,$dir,$ini)
 	}
 
 	$enabled = array();
-	foreach($module_names['enabled'] as $name)
+	if(is_array($module_names['enabled']))
 	{
-		$path = escapeshellcmd("$dir/$name");
-		if (is_dir($path))
-			$enabled[] = $name;
-		else
-			$config->errors[] = "Fatal module error: Could not find module \"$name\".";
+		foreach($module_names['enabled'] as $name)
+		{
+			$path = escapeshellcmd("$dir/$name");
+			if (is_dir($path))
+				$enabled[] = $name;
+			else
+				$config->errors[] = "Fatal module error: Could not find module \"$name\".";
 		}
+	}
 
 	return $enabled;
 }

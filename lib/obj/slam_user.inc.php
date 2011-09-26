@@ -30,7 +30,11 @@ class SLAMuser
 			$username = urldecode($_REQUEST['login_username']);
 			$password = urldecode($_REQUEST['login_password']);
 		}
-		elseif($_COOKIE["{$config->values['name']}_slam"]) /* does the user possess the auth cookie? */
+		elseif($_REQUEST['auth']) /* is the user sending an auth variable? */
+		{
+			list($username,$password) = explode(':',base64_decode(rawurldecode($_REQUEST['auth'])));
+		}
+		elseif($_COOKIE["{$config->values['name']}_slam"]) /* does the user possess an auth cookie? */
 		{
 			$crypt = mysql_real_escape(urldecode($_COOKIE["{$config->values['name']}_slam"]),$db->link);
 			$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `crypt`='$crypt' LIMIT 1");
