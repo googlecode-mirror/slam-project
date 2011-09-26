@@ -99,17 +99,17 @@ if ($user->authenticated)
 	SLAM_doModuleContent($modules,$config,$db,$user,$request,$result,$content);
 }
 
-/* has the user specified an action (e.g. logging in, requesting a password reset?) */
-if ($_REQUEST['user_action'])
-	$content.= SLAM_doUserActionHTML($config,$db,$user);
-
 /* if a module has pre-prepared HTML, we can exit now */
-if ($config->html['abort']){
+if ($config->html['abort'])
+{
 	echo $content;
 	return;
 }
+elseif($_REQUEST['user_action']) /* has the user specified an action (e.g. logging in, requesting a password reset?) */
+	$content.= SLAM_doUserActionHTML($config,$db,$user);
 
-/* generate the HTML output */
+/* generate the HTML output wrapping the content */
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
