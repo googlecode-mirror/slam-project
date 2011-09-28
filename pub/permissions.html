@@ -1,0 +1,45 @@
+<form name='permissionsForm'>
+	<table width='100%' style='border-collapse:collapse;text-align:left'>
+		<tr>
+			<td>&nbsp;Owner:</td>
+			<td>&nbsp;Groups:</td>
+			<td>&nbsp;Everyone:</td>
+		</tr>
+		<tr>
+			<td style='text-align:left;vertical-align:top'>
+				<input id='perms-ownername' name='perms-ownername' value='' size='8'/>
+			</td>
+			<td>
+				<textarea id='perms-grouplist' name='perms-grouplist' cols='8' rows='4'></textarea>
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>
+				<select id='perms-owner' name='perms-owner' style='width:75px'>
+					<option value='R'>Read</option>
+					<option value='RW'>Read/Write</option>
+				</select>
+			</td>
+			<td>
+				<select id='perms-group' name='perms-group' style='width:75px'>
+					<option value='R'>Read</option>
+					<option value='RW'>Read/Write</option>
+					<option value=''>No access</option>
+				</select>
+			</td>
+			<td>
+				<select id='perms-user' name='perms-user' style='width:75px'>
+					<option value='R'>Read</option>
+					<option value='RW'>Read/Write</option>
+					<option value=''>No access</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='3' style='text-align:right'>
+				<input type='button' class='assetPermsButton' value='Cancel' onClick="removeBodyId('permissionsDiv')"/>
+				<input type='button' class='assetPermsButton' value='Apply' onClick="returnPermsPanel();removeBodyId('permissionsDiv')"/>
+			</td>
+	</table>
+</form>

@@ -10,7 +10,7 @@
 	cursor: pointer;
 }
 
-#helpDiv
+#helpDiv, #permissionsDiv
 {
 	width: 300px;
 	height: auto;
@@ -127,3 +127,4 @@
 {
 	padding: 10px;
 }
+

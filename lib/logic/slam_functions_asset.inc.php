@@ -11,10 +11,6 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	foreach($_REQUEST as $key => $value)
 		if (preg_match('/^edit_(.+)$/',$key,$m)>0)
 			$record[base64_decode($m[1])] = stripslashes($value);
-
-	/* if user isn't the owner or a root user, bail */
-	if (($record[$config->values['user_field']] != $user->values['username']) && (!$user->values['superuser']))
-		return SLAM_makeErrorHTML('Authentication error: You are not authorized to save edits to this asset.',true);
 		
 	/* get the table we're inserting into */
 	$category = array_shift(array_keys($request->categories));
@@ -22,7 +18,7 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	
 	/* see if there's an entry with the specified identifier already */
 	$r = $db->GetRecords("SELECT * FROM `$category` WHERE identifier='$identifier' LIMIT 1");
-	
+
 	/* if no identifier is available, it's a new entry */
 	if (empty($identifier))
 	{
@@ -50,12 +46,12 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	else
 	{
 		$f = 'REPLACE';
-		/* make sure the asset we're editing belongs to the user and is editable */
 		
-		if (($r[0][$config->values['user_field']] != $user->values['username']) && (!$user->values['superuser']))
-			return SLAM_makeErrorHTML('Authentication error: Unauthorized attempt to overwrite record.',true);
+		/* make sure we're not editing a removed asset */
 		if (($r[0]['Removed'] == '1') && (!$config->values['edit_removed']) && (!$user->values['superuser']))
 			return SLAM_makeErrorHTML('Authentication error: Unauthorized attempt to edit removed record.',true);
+		elseif (SLAM_getAssetRWStatus($user,$r) != 'RW')
+			return SLAM_makeErrorHTML('Authentication error: You are not authorized to save edits to this asset.',true);		
 	}
 	
 	/* generate the SQL statement */
@@ -93,14 +89,23 @@ function updateNewEntryFields($config,$db,$user,$request,&$result)
 	if(empty($request->categories[$category][0]))
 		foreach($structure as $field => $value)
 			$asset[$field]=$value['default'];
-		
-	/* generate the unique identifiers */
+
+	/* set the specified user fields, if needed */
+	if (is_array($config->values['user_field']))
+		foreach($config->values['user_field'] as $field)
+			if ($asset[$field] == '')
+				$asset[$field] = $user->values['username'];
+
+	/* set the specified date fields, if needed */
+	if (is_array($config->values['date_field']))
+		foreach($config->values['date_field'] as $field)
+			if ($asset[$field] == '')
+				$asset[$field] = date('Y-m-d');
+	
+	/* generate the unique identifier */
 	if(($results = $db->Query("SHOW TABLE STATUS WHERE `name`='$category'")) === false)
 		die('Database error: Couldn\'t get table status: '.mysql_error());
 	$row = mysql_fetch_assoc($results);
-
-	if (!$user->values['superuser'])
-		$asset[$config->values['user_field']] = $user->values['username'];
 	
 	$asset['Serial'] = $row['Auto_increment'];
 	$asset['Identifier'] = "{$config->values['lab_prefix']}{$config->values['categories'][$category]['prefix']}_{$row['Auto_increment']}";
@@ -117,6 +122,8 @@ function SLAM_deleteAssets(&$config,$db,&$user,&$request)
 	
 	/* drop them from the user's prefs first */
 	SLAM_dropAssetTags($config,$db,&$user,$request);
+	
+	/* iterate through the categories and assets to be dropped */
 	foreach($request->categories as $category=>$identifiers)
 	{
 		if (!is_array($identifiers))
@@ -124,12 +131,21 @@ function SLAM_deleteAssets(&$config,$db,&$user,&$request)
 			
 		foreach($identifiers as $i=>$identifier)
 		{
+			/* get the entry to check permissions */
+			$r = $db->GetRecords("SELECT Permissions FROM `$category` WHERE identifier='$identifier' LIMIT 1");
+			
+			if ($r === false)
+				return SLAM_makeErrorHTML('Database error: could not check for presence of specified identifier: '.mysql_error(),true);
+			elseif(count($r) < 1)
+				return SLAM_makeErrorHTML('Database error: specified asset was not found.',true);
+		
 			/* non-super_users have to provide their name to match the entry */
-			if ($user->values['superuser'])
+			if (SLAM_getAssetRWStatus($user,$r) != 'RW')
 				$q = "UPDATE `$category` SET `Removed`='1' WHERE `Identifier`='$identifier' LIMIT 1";
 			else
-				$q = "UPDATE `$category` SET `Removed`='1' WHERE (`{$config->values['user_field']}`='{$user->values['username']}' AND `Identifier`='$identifier') LIMIT 1";
+				return SLAM_makeErrorHTML('Authentication error: You are not authorized to remove this asset.',true);
 			
+			/* attempt to run the query */
 			if (($result = $db->Query($q)) === false)
 		 		return SLAM_makeErrorHTML('Database error: asset removal failure: '.mysql_error(),true);
 			

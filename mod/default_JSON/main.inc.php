@@ -21,7 +21,7 @@ function default_JSON_request(&$config,$db,$user,&$request)
 		else
 			$config->errors[] = "default_JSON: Could not include library files. Please reinstall this module.";
 	}
-	
+		
 	/* nuke any standard output */
 	if(default_JSON_OK && ($_REQUEST['json']))
 	{
@@ -57,7 +57,7 @@ function default_JSON_request(&$config,$db,$user,&$request)
 
 function default_JSON_content(&$config,$db,$user,$request,$result,&$content)
 {
-	if (default_JSON_OK)
+	if(default_JSON_OK && ($_REQUEST['json']))
 	{
 		$content = json_encode($config->values['json']);
 	}

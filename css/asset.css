@@ -69,7 +69,7 @@ td.assetEditValue span
 	cursor: help;
 }
 
-#assetEditActions>input, .assetFileButton, .dateButton, .assetIdentifierLinkButton
+#assetEditActions>input, .assetFileButton, .assetPermsButton, .assetDateButton, .assetIdentifierLinkButton
 {
 	margin-left: 2px;
 	border: 1px solid gray;

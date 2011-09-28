@@ -9,6 +9,7 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 	/* register the necessary header files */
 	$config->html['css'][] = 'css/asset.css';
 	$config->html['js'][] = 'js/asset.js';
+	$config->html['js'][] = 'js/base64.js';
 	
 	/* register the javascript plugin stub */
 	$config->html['onload'][] = 'doEditJS()';
@@ -30,16 +31,10 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 	if (empty($asset))
 		return SLAM_makeErrorHTML('Invalid identifier provided.',true);
 
-
 	/* entry is editable if the user is the owner, a superuser, or if the entry doesn't have any owner */
-	$editable = false;
-	if($user->values['username'] == $asset[$config->values['user_field']])
-		$editable = true;
-	if(empty($asset[$config->values['user_field']]))
-		$editable = true;
-	if($user->values['superuser'])
-		$editable = true;
+	$editable = (bool)(SLAM_getAssetRWStatus($user,$asset) == 'RW');
 	
+	/* properly set editability for removed assets */
 	if (($asset['Removed']=='1') && (!$config->values['edit_removed']) && (!$user->values['superuser']))
 	{
 		$s.=SLAM_makeNoteHTML('This asset has been removed and cannot be edited.',true);
@@ -65,8 +60,6 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 	$s.=SLAM_makeHiddenInput($category,'cat');
 		
 	$s.="<div id='assetEditContainer'>\n";
-	
-
 
 	$export=explode('?',$_SERVER['REQUEST_URI']);
 	$f=<<<EOL
@@ -85,7 +78,7 @@ EOL;
 		if ($field == $config->values['categories'][$category]['title_field'])
 			$t="<div id='assetEditTitle'>$category : $value</div>\n";
 
-		/* should empty fields be hidden? */
+		/* hide empty fields */
 		if (($value != '') || ($new))
 			$hidden = false;
 		elseif($value == '')
@@ -93,9 +86,13 @@ EOL;
 
 		switch($field)
 		{
-			case 'Identifier': /* identifier and other protected fields should not be editable if the user is not a superuser */
-			case $config->values['user_field']:
+			case 'Identifier': /* identifier should not be editable if the user is not a superuser */
 				$b.=SLAM_makeFieldHTML($config,$request,$value,$structure[$field],$user->values['superuser'],$hidden);
+				break;
+			
+			case 'Permissions': /* insert the permissions control panel */
+				$b.=SLAM_makePermissionsHTML($config,$user,$asset);
+				$b.=SLAM_makeHiddenInput(base64_encode($asset['Permissions']),'Permissions');
 				break;
 			
 			case 'Project': /* save the default projects array to the structure of the projects field */
@@ -206,7 +203,7 @@ function SLAM_makeFieldHTML($config,$request,$v,$s,$e,$h)
 	$g = (empty($f)) ? "{$s['name']}" : "<b>{$s['name']}</b>";
 	
 	/* date entries should have a date entry button */
-	$d = ($s['type'] == 'date') ? "<span>(yyyy-mm-dd)</span> <input class='dateButton' type='button' onClick=\"document.getElementById('$n').value=get10Date()\" value='Today' />" : "";
+	$d = ($s['type'] == 'date') ? "<span>(yyyy-mm-dd)</span> <input class='assetDateButton' type='button' onClick=\"document.getElementById('$n').value=get10Date()\" value='Today' />" : "";
 	
 	/* if the value is empty and we're not on a new entry, make the table row hidden/hidable */
 	$h = ($h) ? "class='TRhidable' style='display:none'" : "class='TRstatic'";
@@ -272,5 +269,37 @@ function SLAM_makeIdentifierMenuHTML($config,$request,$v,$s,$n)
 	else
 		return '<!-- empty -->';
 }
+
+function SLAM_makePermissionsHTML($config,$user,$asset)
+{
+	/* generates a panel that the user can modify the permissions with */
+
+	$perms = SLAM_getAssetPerms($asset);
+	
+	$perms_string = base64_encode($asset['Permissions']);
+
+	$s = "<tr>\n<td class='assetEditField'>Permissions:</td><td class='assetEditValue'>";
+	$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions.html','permissionsDiv',{noclose:'true'});populatePermsPanel('$perms_string')\"/ class='assetPermsButton'>";
+	//if (!$user->values['superuser'])
+		
+//	$s.= " {$user->values['username']}:".SLAM_makeMenuHTML($perms['user']['value'],array('R'=>'R','RW'=>'RW'),"name='perms-owner'",false,true);
+//	$s.= " G:".SLAM_makeMenuHTML($perms['user']['value'],array(''=>'','R'=>'R','RW'=>'RW'),"name='perms-group'",false,false);
+//	$s.= " E:".SLAM_makeMenuHTML($perms['user']['value'],array(''=>'','R'=>'R','RW'=>'RW'),"name='perms-user'",false,false);
+	
+	$s.= "</td><td class='assetEditFunction'></td>\n</tr>\n";
+	
+	return $s;
+}
+
+//function SLAM_makeMenuHTML($c,$a,$attrs,$b=false,$r=false)
+//{
+	/* returns a HTML drop-down menu
+		$c = selected value
+		$a = array of options
+		$attrs = attributes for the menu
+		$b = prepend a blank option?
+		$r = read only?
+	*/
+
 
 ?>

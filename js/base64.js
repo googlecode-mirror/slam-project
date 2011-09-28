@@ -1,80 +1,112 @@
-/* from http://ntt.cc/2008/01/19/base64-encoder-decoder-with-javascript.html */
+// from https://raw.github.com/kvz/phpjs/master/functions/url/base64_encode.js
+function base64_encode (data) {
+    // http://kevin.vanzonneveld.net
+    // +   original by: Tyler Akins (http://rumkin.com)
+    // +   improved by: Bayron Guevara
+    // +   improved by: Thunder.m
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   bugfixed by: Pellentesque Malesuada
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   improved by: Rafał Kukawski (http://kukawski.pl)
+    // -    depends on: utf8_encode
+    // *     example 1: base64_encode('Kevin van Zonneveld');
+    // *     returns 1: 'S2V2aW4gdmFuIFpvbm5ldmVsZA=='
+    // mozilla has this native
+    // - but breaks in 2.0.0.12!
+    //if (typeof this.window['atob'] == 'function') {
+    //    return atob(data);
+    //}
+    var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
+        ac = 0,
+        enc = "",
+        tmp_arr = [];
 
-var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    if (!data) {
+        return data;
+    }
 
-function encode64(input) {
-   input = escape(input);
-   var output = "";
-   var chr1, chr2, chr3 = "";
-   var enc1, enc2, enc3, enc4 = "";
-   var i = 0;
+//    data = this.utf8_encode(data + '');
 
-   do {
-	  chr1 = input.charCodeAt(i++);
-	  chr2 = input.charCodeAt(i++);
-	  chr3 = input.charCodeAt(i++);
+    do { // pack three octets into four hexets
+        o1 = data.charCodeAt(i++);
+        o2 = data.charCodeAt(i++);
+        o3 = data.charCodeAt(i++);
 
-	  enc1 = chr1 >> 2;
-	  enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-	  enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-	  enc4 = chr3 & 63;
+        bits = o1 << 16 | o2 << 8 | o3;
 
-	  if (isNaN(chr2)) {
-		 enc3 = enc4 = 64;
-	  } else if (isNaN(chr3)) {
-		 enc4 = 64;
-	  }
+        h1 = bits >> 18 & 0x3f;
+        h2 = bits >> 12 & 0x3f;
+        h3 = bits >> 6 & 0x3f;
+        h4 = bits & 0x3f;
 
-	  output = output +
-		 keyStr.charAt(enc1) +
-		 keyStr.charAt(enc2) +
-		 keyStr.charAt(enc3) +
-		 keyStr.charAt(enc4);
-	  chr1 = chr2 = chr3 = "";
-	  enc1 = enc2 = enc3 = enc4 = "";
-   } while (i < input.length);
+        // use hexets to index into b64, and append result to encoded string
+        tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+    } while (i < data.length);
 
-   return output;
+    enc = tmp_arr.join('');
+    
+    var r = data.length % 3;
+    
+    return (r ? enc.slice(0, r - 3) : enc) + '==='.slice(r || 3);
+
 }
 
-function decode64(input) {
-   var output = "";
-   var chr1, chr2, chr3 = "";
-   var enc1, enc2, enc3, enc4 = "";
-   var i = 0;
+// from https://raw.github.com/kvz/phpjs/master/functions/url/base64_decode.js
+function base64_decode (data) {
+    // http://kevin.vanzonneveld.net
+    // +   original by: Tyler Akins (http://rumkin.com)
+    // +   improved by: Thunder.m
+    // +      input by: Aman Gupta
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   bugfixed by: Onno Marsman
+    // +   bugfixed by: Pellentesque Malesuada
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +      input by: Brett Zamir (http://brett-zamir.me)
+    // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // -    depends on: utf8_decode
+    // *     example 1: base64_decode('S2V2aW4gdmFuIFpvbm5ldmVsZA==');
+    // *     returns 1: 'Kevin van Zonneveld'
+    // mozilla has this native
+    // - but breaks in 2.0.0.12!
+    //if (typeof this.window['btoa'] == 'function') {
+    //    return btoa(data);
+    //}
+    var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
+        ac = 0,
+        dec = "",
+        tmp_arr = [];
 
-   // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
-   var base64test = /[^A-Za-z0-9\+\/\=]/g;
-   if (base64test.exec(input)) {
-	  alert("There were invalid base64 characters in the input text.\n" +
-			"Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
-			"Expect errors in decoding.");
-   }
-   input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+    if (!data) {
+        return data;
+    }
 
-   do {
-	  enc1 = keyStr.indexOf(input.charAt(i++));
-	  enc2 = keyStr.indexOf(input.charAt(i++));
-	  enc3 = keyStr.indexOf(input.charAt(i++));
-	  enc4 = keyStr.indexOf(input.charAt(i++));
+    data += '';
 
-	  chr1 = (enc1 << 2) | (enc2 >> 4);
-	  chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-	  chr3 = ((enc3 & 3) << 6) | enc4;
+    do { // unpack four hexets into three octets using index points in b64
+        h1 = b64.indexOf(data.charAt(i++));
+        h2 = b64.indexOf(data.charAt(i++));
+        h3 = b64.indexOf(data.charAt(i++));
+        h4 = b64.indexOf(data.charAt(i++));
 
-	  output = output + String.fromCharCode(chr1);
+        bits = h1 << 18 | h2 << 12 | h3 << 6 | h4;
 
-	  if (enc3 != 64) {
-		 output = output + String.fromCharCode(chr2);
-	  }
-	  if (enc4 != 64) {
-		 output = output + String.fromCharCode(chr3);
-	  }
+        o1 = bits >> 16 & 0xff;
+        o2 = bits >> 8 & 0xff;
+        o3 = bits & 0xff;
 
-	  chr1 = chr2 = chr3 = "";
-	  enc1 = enc2 = enc3 = enc4 = "";
+        if (h3 == 64) {
+            tmp_arr[ac++] = String.fromCharCode(o1);
+        } else if (h4 == 64) {
+            tmp_arr[ac++] = String.fromCharCode(o1, o2);
+        } else {
+            tmp_arr[ac++] = String.fromCharCode(o1, o2, o3);
+        }
+    } while (i < data.length);
 
-   } while (i < input.length);
+    dec = tmp_arr.join('');
+//    dec = this.utf8_decode(dec);
 
-   return unescape(output);
+    return dec;
 }

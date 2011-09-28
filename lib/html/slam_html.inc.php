@@ -21,7 +21,7 @@ function SLAM_makeHiddenInput($v,$n)
 		$v = value
 		$n = name
 	*/
-	return "<input type='hidden' name='$n' value='$v' />\n";
+	return "<input type='hidden' name='$n' id='$n' value='$v' />\n";
 }
 
 function SLAM_makeMenuHTML($c,$a,$attrs,$b=false,$r=false)
