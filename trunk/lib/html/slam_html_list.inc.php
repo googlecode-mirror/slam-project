@@ -154,10 +154,7 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 		$url = $request->makeRequest($config,array('identifier'=>array($asset['Identifier']),'action'=>'open'),true);
 
 		/* is the current user qualified to edit this record ? */
-		if (($asset[$config->values['user_field']] == $user->values['username']) || $user->values['superuser'])
-			$s.="<a href='$url'>open</a>\n";
-		else
-			$s.="<a href='$url'>view</a>\n";
+		$s.= (SLAM_getAssetRWStatus($user,$asset) == 'RW') ? "<a href='$url'>open</a>\n" : "<a href='$url'>view</a>\n";
 		
 		$s.="</td>\n";
 		

@@ -31,18 +31,15 @@ function SLAM_checkAssetOwner($config,$db,$user,$category,$identifier)
 	if ($user->values['superuser'])
 		return true;
 
-	/* retrieve the user for the requested asset archive */
-	$q = "SELECT `{$config->values['user_field']}` FROM `$category` WHERE (`Identifier`='$identifier' AND `Removed`='0') LIMIT 1";
+	/* get the entry to check permissions */
+	$r = $db->GetRecords("SELECT Permissions FROM `$category` WHERE (`Identifier`='$identifier' AND `Removed`='0') LIMIT 1");
 	
-	if (($result = $db->Query($q)) === false)
-		die('Database error: Could not check user:'.mysql_error());
-	list($owner) = mysql_fetch_array($result);
-
-	/* return true on empty (i.e. no owner or nonexisting records) */
-	if (($owner == '') || ($user->values['username'] == $owner))
-		return true;
+	if ($r === false)
+		return SLAM_makeErrorHTML('Database error: could not check for presence of specified identifier: '.mysql_error(),true);
+	elseif(count($r) < 1)
+		return SLAM_makeErrorHTML('Database error: specified asset was not found, or has been removed.',true);
 		
-	return false;
+	return (bool)(SLAM_getAssetRWStatus($user,$r) != 'RW');
 }
 
 function SLAM_getArchiveFiles(&$config,$path)

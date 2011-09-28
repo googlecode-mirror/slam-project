@@ -38,11 +38,36 @@ class SLAMresult
 		return true;
 	}
 	
+	public function makePermissionsFilter(&$config,$db,$user,$request,$state='R')
+	{
+		/*
+			this function returns a SQL query string that without any additional constraints would return all the entries that user is able to read
+			$state = "R", all readable entries
+			$state = "RW", all readble and writable entries
+		*/
+		
+		$a = array();
+		$groups = explode(',',$user->values['groups']);
+		
+		$a[]="(`Permissions` like '{$user->values[$username]}:{$state}%;')";
+		foreach($groups as $group)
+			$a[]="(`Permissions` like '%;%{$group}%:{$state}%;%')";
+		if ($state == 'RW')
+			$a[]="(`Permissions` like '%;RW')";
+		elseif($state == 'R')
+			$a[]="(`Permissions` like '%;R')";
+		
+		return implode(' OR ',$a);
+	}
+	
 	public function getRecords(&$config,$db,$user,$request)
 	{
 		if (!is_array($request->categories))
 			return true;
 		
+		/* retrieve the user permissions filter string */
+		$perms = $this->makePermissionsFilter($config,$db,$user,$request,'R');
+
 		foreach($request->categories as $category => $identifiers)
 		{
 			$this->assets[$category] = array();
@@ -50,19 +75,20 @@ class SLAMresult
 			/* check that the order-by field is appropriate for this category */
 			if(!in_array($request->order['field'],array_keys($this->fields[$category])))				
 				$request->order['field'] = 'Identifier';
-	
+			
+			
 			/* retrieve assets from the table */
 			if(empty($identifiers) || ($request->action == 'save'))
 			{
 				$order = "ORDER BY `".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link);
-				$filter = ($user->values['superuser'] || $config->values['show_removed']) ? '' : "WHERE (`Removed`='0')";
+				$filter = ($user->values['superuser'] || $config->values['show_removed']) ? '' : "WHERE (($perms) AND `Removed`='0')";
 				$limit = ($request->limit > 0) ? "LIMIT {$request->limit},".($request->limit+$config->values['list_max']) : "LIMIT 0,{$config->values['list_max']}";
 			}
 			else
 			{
 				$selector = "`Identifier`='".implode("' OR `Identifier`='",$identifiers)."'";
 				$order = "ORDER BY `".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link);
-				$filter = ($user->values['superuser'] || $config->values['show_removed']) ? "WHERE($selector)" : "WHERE (($selector) AND `Removed`='0')";
+				$filter = ($user->values['superuser'] || $config->values['show_removed']) ? "WHERE($selector)" : "WHERE (($selector) AND ($perms) AND `Removed`='0')";
 				$limit = "LIMIT ".count($identifiers);
 			}
 			
