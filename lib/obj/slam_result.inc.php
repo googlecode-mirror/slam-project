@@ -49,8 +49,8 @@ class SLAMresult
 		$a = array();
 		$groups = explode(',',$user->values['groups']);
 		
-		$a[]="(`Permissions` like '{$user->values[$username]}:{$state}%;')";
-		foreach($groups as $group)
+		$a[]="(`Permissions` like '{$user->values['username']}:{$state}%;')";
+		foreach($user->values['groups'] as $group)
 			$a[]="(`Permissions` like '%;%{$group}%:{$state}%;%')";
 		if ($state == 'RW')
 			$a[]="(`Permissions` like '%;RW')";

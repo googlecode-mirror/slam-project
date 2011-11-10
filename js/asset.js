@@ -9,6 +9,16 @@ function doEditJS()
 	return;
 }
 
+function doNonEditableWarning( )
+{
+	showPopupDiv( 'pub/warning_modal.html', 'warningModalDiv', [] );
+	
+	var div = document.getElementById( 'warningModalText' );
+	div.innerHTML = 'You are not authorized to modify some of the assets you have selected. Edits made to attributes on this page will not be saved to those assets.';
+	
+	return;
+}
+
 function fillEmptyFields()
 {
 	// set Researcher field to Entered By field if empty
@@ -40,13 +50,13 @@ function populatePermsPanel( perms )
 		if (menu.options[i].value == o[1]){ menu.options[i].selected=true; }
 	
 	/* set group fields & menu */
-	var status = g.pop();
+	var groups = g[0].split(',');
 	field = document.getElementById('perms-grouplist');
-	field.value = g.join("\n");
+	field.value = groups.join("\n");
 	
 	menu = document.getElementById('perms-group');
 	for (var i=0; i<menu.length; i++)
-		if (menu.options[i].value == status){ menu.options[i].selected=true; }
+		if (menu.options[i].value == g[1]){ menu.options[i].selected=true; }
 
 	/* set user (everyone) status */
 	menu = document.getElementById('perms-user');
@@ -66,7 +76,7 @@ function returnPermsPanel()
 
 	var temp = document.getElementById('perms-grouplist').value;
 	var temp2 = temp.split("\n");
-	var group_list = temp2.join(":");
+	var group_list = temp2.join(',');
 	var temp = document.getElementById('perms-group');
 	var group_perms = temp.options[temp.options.selectedIndex].value;
 	
@@ -75,7 +85,6 @@ function returnPermsPanel()
 	
 	var field = document.getElementById('Permissions');
 	field.value = base64_encode(owner_name+':'+owner_perms+';'+group_list+':'+group_perms+';'+user_perms);
-	alert(field.value);
 	
 	return;
 }

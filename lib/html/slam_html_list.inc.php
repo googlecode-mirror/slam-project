@@ -105,25 +105,9 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 	
 	/* register onloads */
 	$config->html['onload'][] = "checkAssetListBoxes(\"{$category}\")";
-
-	/* go through the default fields and extract all asset fields that match */
-	$a1 = array();
-	foreach($config->values['list_fields']['default'] as $pattern)
-		$a1 = array_merge($a1,preg_grep("/$pattern/",array_keys($assets[0])));
-	
-	/* append any special fields if necessary */
-	$a2 = array();
-	if (is_array($config->values['categories'][$category]['list_fields']))
-		$a2 = $config->values['categories'][$category]['list_fields'];
 	
 	/* combine the two field arrays, except remove those that are present in both */
-	$fields = array_diff(array_merge($a1,$a2),array_intersect($a1,$a2));
-
-	/* the "files" field should always be at the end */
-	if (in_array('Files',$fields)){
-		$fields = array_diff($fields,array('Files'));;
-		$fields[] = 'Files';
-	}
+	$fields = $config->values['categories'][ $category ]['list_fields'];
 	
 	/* build the header bar showing the fields for each table */
 	$s.="<tr class='assetListHeader'>\n";
@@ -154,7 +138,7 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 		$url = $request->makeRequest($config,array('identifier'=>array($asset['Identifier']),'action'=>'open'),true);
 
 		/* is the current user qualified to edit this record ? */
-		$s.= (SLAM_getAssetRWStatus($user,$asset) == 'RW') ? "<a href='$url'>open</a>\n" : "<a href='$url'>view</a>\n";
+		$s.= (SLAM_getAssetPermissions($user,$asset) > 2) ? "<a href='$url'>open</a>\n" : "<a href='$url'>view</a>\n";
 		
 		$s.="</td>\n";
 		

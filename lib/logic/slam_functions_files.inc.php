@@ -39,7 +39,7 @@ function SLAM_checkAssetOwner($config,$db,$user,$category,$identifier)
 	elseif(count($r) < 1)
 		return SLAM_makeErrorHTML('Database error: specified asset was not found, or has been removed.',true);
 		
-	return (bool)(SLAM_getAssetRWStatus($user,$r) != 'RW');
+	return (bool)(SLAM_getAssetPermissions($user,$r) > 2);
 }
 
 function SLAM_getArchiveFiles(&$config,$path)

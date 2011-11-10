@@ -10,8 +10,8 @@ class SLAMdb
 		if(($this->Connect($config->values['db_server'],$config->values['db_user'],$config->values['db_pass'],$config->values['db_name'])) === false)
 			die('Error connecting to database: '.mysql_error());
 		
-		/* make sure that the category tables provided in the config are valid */
-		$this->RemoveBadCategories($config);
+		/* load category information from the SLAM_Categories table */
+		$this->loadCategoryInfo($config);
 	}
 	
 	public	function Connect($server,$user,$pass,$db)
@@ -32,25 +32,44 @@ class SLAMdb
 		return true;
 	}
 	
-	private	function RemoveBadCategories(&$config)
+	private	function loadCategoryInfo(&$config)
 	{
-		$tables = array_keys($config->values['categories']);
-		foreach($tables as $table)
+		/* retrieve all the category info from the specified category table */
+
+		if(($result = mysql_query("SELECT * FROM {$config->values['category_table']}",$this->link)) === false)
+			die('Fatal error: could not retrieve category information. Please contact your system administrator: '.mysql_error());
+		
+		if (mysql_num_rows($result) < 1)
+			die('Fatal error: Your category database table contains no categories. Please add a category or contact your system administrator.');
+			
+		/* iterate through all of the categories */
+		while ($category = mysql_fetch_assoc($result))
 		{
-			/* compare the fields in each table with the required set */
-			$fields = array_keys($this->GetStructure($table));
+			$fields = array_keys($this->GetStructure($category['Name']));
+						
+			/* are there any required fields that are not found in the current category? */
 			$diff = array_diff($this->required_fields,array_intersect($this->required_fields,$fields));
 			
 			if(count($diff)>0)
-			{
-				/* remove the malformed category */
-				unset($config->values['categories'][$table]);
-				
+			{				
 				foreach($diff as $error)
-					$config->errors[] = "Table \"$table\" is missing required attribute \"$error\".";
+					$config->errors[] = "Table \"{$category['Name']}\" is missing required attribute \"$error\".";
+			}
+			else
+			{
+				$config->values['categories'][ $category['Name'] ]['prefix'] = $category['Prefix'];
+				$config->values['categories'][ $category['Name'] ]['list_fields'] = explode(',',$category['List Fields']);
+				$config->values['categories'][ $category['Name'] ]['title_field'] = $category['Title Field'];
+				$config->values['categories'][ $category['Name'] ]['owner_field'] = $category['Owner Field'];
+				$config->values['categories'][ $category['Name'] ]['date_field'] = $category['Date Field'];
+				$config->values['lettercodes'][ $category['Prefix'] ] = $category['Name'];
 			}
 		}
-		return;
+		
+		// define the regex
+		$config->values['identifier_regex'] = "/([A-Za-z][A-Za-z])(".implode('|',array_keys($config->values['lettercodes'])).")[_]?(\d+)/";
+		
+		return;	
 	}
 	
 	public	function GetTables()
