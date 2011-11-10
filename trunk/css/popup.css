@@ -10,7 +10,7 @@
 	cursor: pointer;
 }
 
-#helpDiv, #permissionsDiv
+#helpDiv, #permissionsDiv, #warningModalDiv
 {
 	width: 300px;
 	height: auto;

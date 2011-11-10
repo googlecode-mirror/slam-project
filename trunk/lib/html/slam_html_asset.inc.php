@@ -3,7 +3,7 @@
 function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 {
 	/*
-		Displays the edit page for the first record in $result
+		Displays the edit page for the records corresponding to the first category in $result
 	*/
 	
 	/* register the necessary header files */
@@ -16,44 +16,48 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 	
 	$s="<form id='editRecord' action='{$config->html['url']}' method='GET'>\n";
 	
-	/* get the current asset and category */
-	$category = array_shift(array_keys($request->categories));
-	$structure = $result->fields[$category];
-	$asset = &$result->assets[$category][0];
+	$category	= array_shift(array_keys($request->categories)); //the first category
+	$assets		= $result->assets[$category];
+	$structure	= $result->fields[$category];
+	$editable	= array();
 	
-	/*
-		do some sanity checks	
-	*/
-	if (empty($category) || empty($structure))
-		return SLAM_makeErrorHTML('Internal error: bad link, no category or template asset specified.',true);
-	
-	/* check to make sure we actually have an asset */
-	if (empty($asset))
-		return SLAM_makeErrorHTML('Invalid identifier provided.',true);
-
-	/* entry is editable if the user is the owner, a superuser, or if the entry doesn't have any owner */
-	$editable = (bool)(SLAM_getAssetRWStatus($user,$asset) == 'RW');
-	
-	/* properly set editability for removed assets */
-	if (($asset['Removed']=='1') && (!$config->values['edit_removed']) && (!$user->values['superuser']))
+	/* retrieve the field values, either for a new entry or for editing existing ones */
+	if ($new)
 	{
-		$s.=SLAM_makeNoteHTML('This asset has been removed and cannot be edited.',true);
-		$editable = false;
+		$editable = true;
+		$fields	= SLAM_getNewAssetFields($config,$db,$user,$category,$structure,$assets[0]);
 	}
-	
-	/*
-		done with sanity checks
-	*/
-
-	/* if we're cloning a tagged asset, register this so we know to tag it once it's saved */
-	if ($_REQUEST['tag'] || @in_array($asset['Identifier'],$user->prefs['identifiers'][$category]))
-		$s.=SLAM_makeHiddenInput('true','tag');
-	
-	/* get what the identifier will be */
-	if($new)
-		updateNewEntryFields($config,$db,$user,$request,$result);
 	else
-		$s.=SLAM_makeHiddenInput($asset['Identifier'],'identifier');
+	{
+		/* retrieve the consensus field values */
+		$fields	= SLAM_getAssetFields($config,$db,$user,$assets);
+	
+		foreach($assets as $asset)
+		{
+			/* save the editable status for every asset */
+			$editable[] = (SLAM_getAssetPermissions($user,$asset) > 2);
+			
+			/* save all of the identifiers we're to update into the form */		
+			$s.=SLAM_makeHiddenInput($asset['Identifier'],'Identifier[]');
+		}
+	}
+
+	/* if there are a mix of editable and uneditable assets, provide the user a warning */
+	$editable = array_unique($editable);
+	if (count($editable) > 1)
+	{
+		$config->html['onload'][] = 'doNonEditableWarning()';
+		$editable = true;
+	}
+	else
+		$editable = $editable[0];
+	
+	/* fields that cannot be edited for more than one asset at a time */
+	if (count($assets) > 1)
+	{
+		unset($fields['Identifier']);
+		unset($fields['Files']);
+	}
 	
 	/* set our location */
 	$s.=SLAM_makeHiddenInput($request->location,'loc');
@@ -70,9 +74,10 @@ jump to <a href='#End'>bottom</a> |
 | <a href='#' onClick="showPopupDiv('pub/help_edit.html','helpDiv',{}); return false">help</a>
 </div>\n
 EOL;
+
 	$b="$f<table id='assetEdit'>\n";
 	/* go through each field and put together the html to view/edit it */
-	foreach($asset as $field => $value)
+	foreach($fields as $field => $value)
 	{
 		/* when we run across the title field, save it to the $t variable for later use */
 		if ($field == $config->values['categories'][$category]['title_field'])
@@ -91,7 +96,7 @@ EOL;
 				break;
 			
 			case 'Permissions': /* insert the permissions control panel */
-				$b.=SLAM_makePermissionsHTML($config,$user,$asset);
+				$b.=SLAM_makePermissionsHTML($config,$user,$value);
 				$b.=SLAM_makeHiddenInput(base64_encode($asset['Permissions']),'Permissions');
 				break;
 			
@@ -270,16 +275,23 @@ function SLAM_makeIdentifierMenuHTML($config,$request,$v,$s,$n)
 		return '<!-- empty -->';
 }
 
-function SLAM_makePermissionsHTML($config,$user,$asset)
+function SLAM_makePermissionsHTML($config,$user,$string)
 {
 	/* generates a panel that the user can modify the permissions with */
 
-	$perms = SLAM_getAssetPerms($asset);
-	
-	$perms_string = base64_encode($asset['Permissions']);
-
 	$s = "<tr>\n<td class='assetEditField'>Permissions:</td><td class='assetEditValue'>";
-	$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions.html','permissionsDiv',{noclose:'true'});populatePermsPanel('$perms_string')\"/ class='assetPermsButton'>";
+
+	if($string == '(multiple)')
+	{
+		$string = base64_encode(':;:;:');
+		$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions_multiple.html','permissionsDiv',{noclose:'true'});populatePermsPanel('$string')\"/ class='assetPermsButton'>";
+	}
+	else
+	{
+		$string = base64_encode($string);
+		$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions_single.html','permissionsDiv',{noclose:'true'});populatePermsPanel('$string')\"/ class='assetPermsButton'>";
+		
+	}
 	//if (!$user->values['superuser'])
 		
 //	$s.= " {$user->values['username']}:".SLAM_makeMenuHTML($perms['user']['value'],array('R'=>'R','RW'=>'RW'),"name='perms-owner'",false,true);

@@ -38,7 +38,7 @@ function checkAssetListBoxes(category)
 		}
 		else
 		{
-			if (actions[i].value == 'Edit')			{actions[i].disabled = true}
+			if (actions[i].value == 'Edit')			{actions[i].disabled = false}
 			else if (actions[i].value == 'Tag')		{actions[i].disabled = false}
 			else if (actions[i].value == 'Untag')	{actions[i].disabled = false}
 			else if (actions[i].value == 'Clone')	{actions[i].disabled = true}
