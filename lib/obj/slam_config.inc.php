@@ -24,9 +24,17 @@ class SLAMconfig
 		$this->values = array_merge($this->values,$this->parse_config());
 		$this->values = array_merge($this->values,$this->parse_prefs());
 		
+		/* check for some absolutely required values in the config file */
+		
 		if(!is_dir($this->values['path']))
 			exit("The installation path specified in your configuration file (\"{$this->values['path']}\") is not valid. Please check your \"configuration.ini\" file or contact your system administrator.");
-				
+		
+		if(empty($this->values['category_table']))
+			exit("The \"category_table\" option in the \"configuration.ini\" file is missing. Please check your configuration file or contact your system administrator.");
+
+		if(empty($this->values['user_table']))
+			exit("The \"category_table\" option in the \"configuration.ini\" file is missing. Please check your configuration file or contact your system administrator.");			
+		
 		return;
 	}
 
