@@ -1,0 +1,88 @@
+body
+{
+	color: #444444;
+}
+
+#installerTitle
+{
+	font-size: 18pt;
+	color: #045FB4;
+}
+
+#installerVer
+{
+	font-style: italic;
+	font-size: 10pt;
+}
+
+#configTable
+{
+	width:	500px;
+	text-align: left;
+	margin-top: 10px;
+	margin-left: 20px;
+}
+
+td.inputCategory
+{
+	font-weight: bold;
+	font-size: 14pt;
+	color: #045FB4;
+}
+
+td.inputField
+{
+	width:	150px;
+	text-align: right;
+	padding-left: 25px;
+}
+
+td.inputValue
+{
+	width:	300px;
+	text-align: left;
+}
+
+td.checkCategory
+{
+	text-align: right;
+	padding-right:	50px;
+}
+
+td.checkCategory>input
+{
+	border: 1px solid gray;
+	background-color: #EEEEEE;
+	cursor: pointer;
+}
+
+#checkGeneral
+{
+	width: auto;
+	height: 100px;
+	position: fixed;
+	z-index: 5;
+	top: 20%;
+	left: 50%;
+	right: 50%;
+	margin-left: -400px;
+	padding: 5px;
+	
+	border: 2px solid gray;
+	background-color: #FFFFFF;
+	vertical-align: middle;
+	border-radius: 12px;
+	text-align:center;
+}
+
+#popupDivCloseA
+{
+	display: block;
+	text-align: right;
+	position: absolute;
+	bottom: 6px;
+	right: 10px;
+	text-decoration: none;
+	color: #045FB4;
+	cursor: pointer;
+}
