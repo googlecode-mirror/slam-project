@@ -40,23 +40,23 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 			/* save all of the identifiers we're to update into the form */		
 			$s.=SLAM_makeHiddenInput($asset['Identifier'],'Identifier[]');
 		}
-	}
 
-	/* if there are a mix of editable and uneditable assets, provide the user a warning */
-	$editable = array_unique($editable);
-	if (count($editable) > 1)
-	{
-		$config->html['onload'][] = 'doNonEditableWarning()';
-		$editable = true;
-	}
-	else
-		$editable = $editable[0];
-	
-	/* fields that cannot be edited for more than one asset at a time */
-	if (count($assets) > 1)
-	{
-		unset($fields['Identifier']);
-		unset($fields['Files']);
+		/* if there are a mix of editable and uneditable assets, provide the user a warning */
+		$editable = array_unique($editable);
+		if (count($editable) > 1)
+		{
+			$config->html['onload'][] = 'doNonEditableWarning()';
+			$editable = true;
+		}
+		else
+			$editable = $editable[0];
+		
+		/* fields that cannot be edited for more than one asset at a time */
+		if (count($assets) > 1)
+		{
+			unset($fields['Identifier']);
+			unset($fields['Files']);
+		}
 	}
 	
 	/* set our location */
