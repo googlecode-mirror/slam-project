@@ -7,7 +7,7 @@ class SLAMconfig
 	public $db;
 	public $html;
 	
-	function __construct($noini=false){
+	function __construct(){
 		$this->errors = array();
 		
 		$this->values['version'] = '1.0.7a';
@@ -17,9 +17,6 @@ class SLAMconfig
 		$this->html['url'] = $http.dirname($_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']).'/';
 		$this->html['headers'] = array();
 		$this->html['onload'] = array();
-				
-		if ($noini)
-			return;
 			
 		$this->values = array_merge($this->values,$this->parse_config());
 		$this->values = array_merge($this->values,$this->parse_prefs());

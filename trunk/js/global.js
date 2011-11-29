@@ -50,6 +50,20 @@ function checkPasswordForm(form, field1, field2)
 	return false;
 }
 
+// function name is different than doProjectMenu (for asset project menu)
+function doUserProjectMenu( selection, id )
+{
+	el = document.getElementById( id );
+	el.value = selection;
+
+	if (selection == 'Other')
+		el.style.display='';
+	else
+		el.style.display='none';
+	
+	return;
+}
+
 function clientSideInsertSrc(id, url)
 {
 	/* from http://www.boutell.com/newfaq/creating/include.html */

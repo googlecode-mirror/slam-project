@@ -12,13 +12,13 @@
 		<input type='hidden' name='user_action' value='set_options' />
 		<table>
 			<tr>
-				<td style='text-align:right'>Username:</td>
+				<td style='text-align:right;font-weight:bold'>Username:</td>
 				<td>
 					<input readonly='readonly' type='text' size='25' value='<?php echo($user->values['username']) ?>' />
 				</td>
 			</tr>
 			<tr>
-				<td style='text-align:right;vertical-align:top'>Groups:</td>
+				<td style='text-align:right;vertical-align:top;font-weight:bold'>Groups:</td>
 				<td>
 					<textarea readonly='readonly' cols='18' rows='4'>
 <?php
@@ -29,13 +29,36 @@
 				</td>
 			</tr>
 			<tr>
-				<td style='text-align:right'>Email:</td>
+				<td style='text-align:right;font-weight:bold'>Email:</td>
 				<td>
 					<input type='text' name='user_email' size='25' value='<?php echo($user->values['email']) ?>' id='user_email' />
 				</td>
 			</tr>
 			<tr>
-				<td colspan='2' style='text-align:left;padding-top:10px'>New assets are:</td>
+				<td colspan='2' style='text-align:left;padding-top:10px;font-weight:bold'>By default, new assets are:</td>
+			</tr>
+			<tr>
+				<td colspan='1' style='text-align:right'>In project</td>
+				<td style='text-align:left'>
+<?php
+	$current = $user->values['prefs']['default_project'];
+	$options = array_combine($config->values['default_project'],$config->values['default_project']);
+	$selected = (in_array($current,$options) || ($current == '')) ? $current : 'Other';
+	$vis = (in_array($current,$options) || ($current == '')) ? "style='display:none'" : ''; // hide the other input text box if the option is in the menu
+
+	/* make the "other" project input field */	
+	if($config->values['novel_projects'])
+	{
+		$options['Other'] = 'Other'; //Append "Other" option to menu
+		$input = SLAM_makeInputHTML($v,10,10,"name='user_defaultProject' id='user_defaultProject' $vis",false);
+	}
+	else
+		$input = SLAM_makeInputHTML($v,10,10,"name='user_defaultProject' id='user_defaultProject' $vis",true);
+
+	echo SLAM_makeMenuHTML($selected,$options,"name='userProjectMenu' onChange=\"doUserProjectMenu(this.options[this.selectedIndex].value, 'user_defaultProject')\"",false,false);
+	echo $input;
+?>
+				</td>
 			</tr>
 			<tr>
 				<td colspan='2' style='text-align:right'>Editable by

@@ -19,9 +19,9 @@ function SLAM_makeAssetListHTML(&$config,$db,$user,$request,$result)
 			$s.="<div class='assetListName' onClick=\"toggleHideBodyId('assetListTable_{$category}')\">$category</div>\n";
 			
 		/* generate the category list html */
+		$s.="<form name='assetListForm_$category' action='".$request->makeRequest($config,array('location'=>'list','category'=>array($category)),false)."' method='POST'>\n";
 		if (count($assets)>0)
 		{
-			$s.="<form name='assetListForm_$category' action='".$request->makeRequest($config,array('location'=>'list','category'=>array($category)),false)."' method='POST'>\n";
 			$s.=SLAM_makeAssetTableActions($category);
 			$s.=SLAM_makeAssetTableNavigation($config,$request,$result,$category);
 			$s.=SLAM_makeAssetTableFunctions($category);
@@ -34,13 +34,13 @@ function SLAM_makeAssetListHTML(&$config,$db,$user,$request,$result)
 	}
 	
 	/* if the last category had visible assets, put an extra bunch of action buttons at the end */
-	if (count($assets)>0)
-	{
-		$s.=SLAM_makeAssetTableActions($category);
-		$s.=SLAM_makeAssetTableNavigation($config,$request,$result,$category);
-		$s.=SLAM_makeAssetTableFunctions($category);
-		$s.="</form>\n";
-	}
+#	if (count($assets)>0)
+#	{
+	$s.=SLAM_makeAssetTableActions($category);
+	$s.=SLAM_makeAssetTableNavigation($config,$request,$result,$category);
+	$s.=SLAM_makeAssetTableFunctions($category);
+	$s.="</form>\n";
+#	}
 	
 	$s.= "</div>\n";
 	
