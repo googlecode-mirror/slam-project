@@ -1,10 +1,13 @@
 <?php
+	require('file_actions.inc.php');
 
+	#
+	# SLAM installer
+	#
+	$version = '1.x.x';
+	
 	$fail = false;
 	
-	if( file_exists('./configuration.ini') )
-		$fail = "A SLAM configuration file is already present, please delete the 'configuration.ini' file in the SLAM directory before reinstalling.";
-
 	$pathinfo = pathinfo($_SERVER['SCRIPT_FILENAME']);
 	$defaults = parse_ini_file('./defaults.ini');
 	
@@ -19,6 +22,11 @@
 	if ($defaults['SLAM_FILE_TEMP_DIR'] == 'auto')
 		$defaults['SLAM_FILE_TEMP_DIR'] = str_replace('/slam/install','/slam_files/temp',dirname(realpath($_SERVER['SCRIPT_FILENAME'])));
 	
+
+	if (file_exists('../configurations.ini'))
+		$fail = "A configuration.ini file already exists.";
+	if(!checkFileList('./file_list.txt'))
+		$fail = "Required installation files are missing. Please download the SLAM installer and try again.";
 ?>
 <html>
 	<head>
@@ -28,14 +36,13 @@
 		<script type='text/javascript' src='base64.js'></script>
 	</head>
 	<body>
+		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer</div>
+		<div id='installerVer'>Version: <?php print($version) ?></div>
 <?php
 
-//	if (fail !== false)
-//		print $fail;		
-?>
-		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer</div>
-		<div id='installerVer'>Version: 1.x.x</div>
-
+	if ($fail !== false)
+		print "<div id='fatalFail'>$fail</div>\n";		
+?>		
 		<form name='config'>
 
 			<table id='configTable'>

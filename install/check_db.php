@@ -1,6 +1,6 @@
 <?php
 
-require('db_actions.php');
+require('db_actions.inc.php');
 
 $server = base64_decode($_REQUEST['SLAM_DB_HOST']);
 $dbname = base64_decode($_REQUEST['SLAM_DB_NAME']);

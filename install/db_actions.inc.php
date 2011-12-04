@@ -7,7 +7,7 @@ function checkForSLAMTables( $dblink, $dbname )
     0 - no existing required SLAM tables
     1 - SLAM_Category table exists
     2 - SLAM_Researchers table exists
-    3 - both required tables exist
+    3 - both tables exist
     */
     
     $sql = "SHOW TABLES FROM $dbname";

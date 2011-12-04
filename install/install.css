@@ -15,6 +15,13 @@ body
 	font-size: 10pt;
 }
 
+#fatalFail
+{
+	margin:20px;
+	font-weight:bold;
+	color: red;
+}
+
 #configTable
 {
 	width:	500px;
