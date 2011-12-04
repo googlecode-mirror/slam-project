@@ -1,3 +1,31 @@
+function checkGeneralForm()
+{
+	var str="./check_gen.php?";
+	str += "SLAM_CONF_PREFIX="+document.getElementById('SLAM_CONF_PREFIX').value;
+	str += "&SLAM_CONF_PATH="+base64_encode(document.getElementById("SLAM_CONF_PATH").value);
+	showPopupDiv( str, "checkGeneral", []);	
+}
+
+function checkDatabaseForm()
+{
+	var str="./check_db.php?";
+	str += "SLAM_DB_HOST="+base64_encode(document.getElementById("SLAM_DB_HOST").value);
+	str += "&SLAM_DB_NAME="+base64_encode(document.getElementById("SLAM_DB_NAME").value);
+	str += "&SLAM_DB_USER="+base64_encode(document.getElementById("SLAM_DB_USER").value);
+	str += "&SLAM_DB_PASS="+base64_encode(document.getElementById("SLAM_DB_PASS").value);
+
+	showPopupDiv(str, "checkGeneral", []);
+}
+
+function checkFilesForm()
+{
+	var str="./check_file.php?";
+	str += "SLAM_FILE_ARCH_DIR="+base64_encode(document.getElementById("SLAM_FILE_ARCH_DIR").value);
+	str += "&SLAM_FILE_TEMP_DIR="+base64_encode(document.getElementById("SLAM_FILE_TEMP_DIR").value);
+	
+	showPopupDiv(str, "checkGeneral", []);
+}
+
 function showPopupDiv( url, id, options )
 {
 	var sDiv=document.createElement('div');
