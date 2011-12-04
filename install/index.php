@@ -9,10 +9,15 @@
 	$defaults = parse_ini_file('./defaults.ini');
 	
 	if ($defaults['SLAM_CONF_PATH'] == 'auto')
-		$defaults['SLAM_CONF_PATH'] = $pathinfo['dirname'];
+		$defaults['SLAM_CONF_PATH'] = str_replace('/install','',dirname(realpath($_SERVER['SCRIPT_FILENAME'])));
 		
 	if ($defaults['SLAM_CONF_HEADER'] == 'auto')
 		$defaults['SLAM_CONF_HEADER'] = 'From: SLAM <'.$_SERVER['SERVER_ADMIN'].'>';
+	
+	if ($defaults['SLAM_FILE_ARCH_DIR'] == 'auto')
+		$defaults['SLAM_FILE_ARCH_DIR'] = str_replace('/slam/install','/slam_files',dirname(realpath($_SERVER['SCRIPT_FILENAME'])));
+	if ($defaults['SLAM_FILE_TEMP_DIR'] == 'auto')
+		$defaults['SLAM_FILE_TEMP_DIR'] = str_replace('/slam/install','/slam_files/temp',dirname(realpath($_SERVER['SCRIPT_FILENAME'])));
 	
 ?>
 <html>
@@ -55,7 +60,7 @@
 					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_CONF_HEADER'] ?>' size='50' id='SLAM_CONF_HEADER' name='SLAM_CONF_HEADER' /></td>
 				</tr>
 				<tr>
-					<td class='checkCategory' colspan='2'><input type='button' value='Check these values' onClick='showPopupDiv("./check_gen.php?SLAM_CONF_PATH="+base64_encode(document.getElementById("SLAM_CONF_PATH").value),"checkGeneral",[])'/></td>
+					<td class='checkCategory' colspan='2'><input type='button' value='Check these values' onClick='checkGeneralForm()'/></td>
 				</tr>
 				<tr>
 					<td class='inputCategory' colspan='2'>Database Settings</td>
@@ -77,21 +82,21 @@
 					<td class='inputValue'><input type='password' value='<?php print $defaults['SLAM_DB_PASS'] ?>' size='20' id='SLAM_DB_PASS' name='SLAM_DB_PASS' /></td>
 				</tr>
 				<tr>
-					<td class='checkCategory' colspan='2'><input type='button' value='Check these values' onClick='showPopupDiv("./check_db.php?SLAM_DB_HOST="+base64_encode(document.getElementById("SLAM_DB_HOST").value)+"&SLAM_DB_NAME="+base64_encode(document.getElementById("SLAM_DB_NAME").value)+"&SLAM_DB_USER="+base64_encode(document.getElementById("SLAM_DB_USER").value)+"&SLAM_DB_PASS="+base64_encode(document.getElementById("SLAM_DB_PASS").value),"checkGeneral",[])'/></td>
+					<td class='checkCategory' colspan='2'><input type='button' value='Check these values' onClick='checkDatabaseForm()'/></td>
 				</tr>
 				<tr>
 					<td class='inputCategory' colspan='2'>Attached File Settings</td>
 				</tr>
 				</tr>
 					<td class='inputField'>Attachment directory:</td>
-					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_FILE_ARCH_DIR'] ?>' size='50' /></td>
+					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_FILE_ARCH_DIR'] ?>' size='50' id='SLAM_FILE_ARCH_DIR' name='SLAM_FILE_ARCH_DIR' /></td>
 				</tr>
 				</tr>
 					<td class='inputField'>Temporary directory:</td>
-					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_FILE_TEMP_DIR'] ?>' size='50' /></td>
+					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_FILE_TEMP_DIR'] ?>' size='50' id='SLAM_FILE_TEMP_DIR' name='SLAM_FILE_TEMP_DIR' /></td>
 				</tr>
 				<tr>
-					<td class='checkCategory' colspan='2'><input type='button' value='Check these values' /></td>
+					<td class='checkCategory' colspan='2'><input type='button' value='Check these values' onClick='checkFilesForm()' /></td>
 				</tr>
 			</table>
 		</form>
