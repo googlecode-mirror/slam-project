@@ -7,4 +7,31 @@ function SLAM_makeInsertionStatement( $db, $f, $table, $array )
 	return "$f INTO `$table` (`$a`) VALUES ('$b')";
 }
 
+function SLAM_getPermissionsFilter($config,$db,$user,$request,$state='R')
+{
+	/*
+		this function returns a SQL query string that without any additional constraints would return all the entries that user is able to read
+		$state = "R", all readable entries
+		$state = "RW", all readble and writable entries
+	*/
+
+	$a = array();
+	$groups = explode(',',$user->values['groups']);
+
+	$a[]="`Permissions` like '{$user->values['username']}:{$state}%;'";
+	foreach($user->values['groups'] as $group)
+		$a[]="`Permissions` like '%;%{$group}%:{$state}%;%'";
+	if ($state == 'RW')
+		$a[]="`Permissions` like '%;RW'";
+	elseif($state == 'R')
+		$a[]="`Permissions` like '%;R'";
+
+	return implode(' OR ',$a);
+}
+
+function SLAM_getRemovedFilter($config, $user)
+{
+	return ($user->values['superuser'] || $config->values['show_removed']) ? '' : "`Removed`='0'";
+}
+
 ?>
