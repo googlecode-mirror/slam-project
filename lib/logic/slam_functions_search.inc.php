@@ -35,6 +35,13 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 	$result = new SLAMresult();
 	$result->getStructures($config,$db,$user,$request);
 	
+	/* retrieve the user permissions filter string */
+	$filter1 = SLAM_getPermissionsFilter($config,$db,$user,$request,'R');
+	$filter2 = SLAM_getRemovedFilter($config,$user);
+	
+	/* generate the limit based upon the previously provided limit */
+	$limit = ($request->limit > 0) ? "{$request->limit},".($request->limit+$config->values['list_max']) : "0,{$config->values['list_max']}";
+
 	/* run the query on each category */
 	foreach($categories as $category)
 	{
@@ -42,19 +49,15 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 		if(!in_array($request->order['field'],array_keys($result->fields[$category])))				
 			$request->order['field'] = 'Identifier';
 		
-		/* only put the joins between terms */
-		$selector = '';
+		$order = mysql_real_escape($request->order['field'],$db->link)." ".mysql_real_escape($request->order['direction'],$db->link);
+		
+		/* construct the select statement by putting together the field names and joining conjunctions */
+		$select = '';
 		foreach($terms as $i=>$term)
-			$selector.= ((count($terms)>1) && ($i < (count($terms)-1))) ? "{$term} {$joins[$i]} " : $term;
-
-		/* filter out the removed assets */
-		$filter = ($user->values['superuser']) ? "WHERE ($selector)" : "WHERE (($selector) AND `Removed`='0')";
-		
-		/* generate the limit based upon the previously provided limit */
-		$limit = ($request->limit > 0) ? "LIMIT {$request->limit},".($request->limit+$config->values['list_max']) : "LIMIT 0,{$config->values['list_max']}";
-		
+			$select.= ((count($terms)>1) && ($i < (count($terms)-1))) ? "{$term} {$joins[$i]} " : $term;
+				
 		/* generate the query */
-		$query = "SELECT * FROM `{$category}` $filter ORDER BY ".mysql_real_escape($request->order['field'],$db->link)." ".mysql_real_escape($request->order['direction'],$db->link)." $limit";
+		$query = "SELECT * FROM `$category` WHERE ($select) AND ($filter1) AND ($filter2) ORDER BY $order LIMIT $limit";
 
 		/* execute the query */
 		if (($result->assets[$category] = $db->getRecords($query)) === false)
@@ -64,8 +67,10 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 		}
 		
 		/* count the number of assets in the category */
-		if (($count=$db->getRecords("SELECT COUNT(*) FROM `$category` $filter")) === false)
-				die('Database error: Error counting assets:'.mysql_error().$query);
+		$query = "SELECT COUNT(*) FROM `$category` WHERE ($filter1)";
+		
+		if (($count=$db->getRecords($query)) === false)
+			$config->errors[] = 'Database error: Error counting assets:'.mysql_error().$query;
 		$result->counts[$category] = $count[0]['COUNT(*)'];
 	}
 	

@@ -30,5 +30,8 @@ function checkForSLAMTables( $dblink, $dbname )
     
     return $ret;
 }
+/*
+ * UPDATE `Cell Strains` SET Permissions=CONCAT(`Researcher`,':RW',`Researcher`,':RW;R')
+ */
 
 ?>
