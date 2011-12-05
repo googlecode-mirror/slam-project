@@ -85,5 +85,5 @@
 				</td>
 			</tr>
 		</table>
-	</form>
+	</div>
 </form>

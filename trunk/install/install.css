@@ -22,7 +22,7 @@ body
 	color: red;
 }
 
-#configTable
+#configTable, #optionalCategoriesTable
 {
 	width:	500px;
 	text-align: left;
@@ -35,6 +35,12 @@ td.inputCategory
 	font-weight: bold;
 	font-size: 14pt;
 	color: #045FB4;
+}
+
+td.categoryInfo
+{
+	 text-align: left;
+	 padding-left: 20px;
 }
 
 td.inputField
@@ -61,6 +67,28 @@ td.checkCategory>input
 	border: 1px solid gray;
 	background-color: #EEEEEE;
 	cursor: pointer;
+}
+
+/* optional category options */
+td.optionalCategoryBox
+{
+	padding-left:50px;
+	width:10px;
+}
+
+td.optionalCategoryName
+{
+	width:120px;
+}
+
+td.optionalCategoryPrefix
+{
+	width:50px
+}
+
+td.optionalCategoryDescription
+{
+	width:250px;
 }
 
 #checkGeneral

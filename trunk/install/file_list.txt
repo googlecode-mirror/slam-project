@@ -1,5 +1,7 @@
 #
 # Required file list for SLAM
+# Files must start with './'
+#
 # Version 1.x.x
 #
 
