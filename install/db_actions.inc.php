@@ -1,5 +1,7 @@
 <?php
 
+require('db_schemas.inc.php');
+
 function checkForSLAMTables( $dblink, $dbname )
 {
     /* returns a numeric value containing the suitability of the specified database for installing SLAM

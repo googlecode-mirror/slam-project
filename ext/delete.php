@@ -34,7 +34,7 @@ if (count($config->errors) == 0)
 		{
 			/* extract the name of the file to be deleted */
 			$file = base64_decode(substr($name,7));
-			
+
 			/* remove the specified file from the archive */
 			$path = escapeshellarg($path);
 			$file = escapeshellarg($file);

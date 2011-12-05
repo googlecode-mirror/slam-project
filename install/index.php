@@ -1,5 +1,6 @@
 <?php
 	require('file_actions.inc.php');
+	require('db_actions.inc.php');
 
 	#
 	# SLAM installer
@@ -105,6 +106,37 @@
 				<tr>
 					<td class='checkCategory' colspan='2'><input type='button' value='Check these values' onClick='checkFilesForm()' /></td>
 				</tr>
+				<tr>
+					<td class='inputCategory' colspan='2'>Default Categories</td>
+				</tr>
+				<tr>
+					 <td class='categoryInfo' colspan="2">This installer can set up some asset categories for you automatically. Select which categories you would like to set up at this time:</td>
+				</tr>
+			</table>
+			<table id='optionalCategoriesTable'>
+				<tr>
+					<td class='optionalCategoryBox' style="color: #045FB4;font-weight:bold">&nbsp;</td>
+					<td class='optionalCategoryName' style="color: #045FB4;font-weight:bold">Name</td>
+					<td class='optionalCategoryPrefix' style="color: #045FB4;font-weight:bold">Prefix</td>
+					<td class='optionalCategoryDescription' style="color: #045FB4;font-weight:bold">Description</td>
+				</tr>
+			
+<?php
+	$table_names = array_keys($sql_create_optional);
+
+	foreach( $table_names as $name )
+	{
+		print "<tr>\n";
+		print "<td class='optionalCategoryBox'><input type='checkbox' name='OPTIONAL_TABLES[]' value='".base64_encode($name)."' ";
+		if ($sql_create_optional[$name]['checked'])
+			print "checked='checked' ";
+		print "/></td>\n";
+		print "<td class='optionalCategoryName'>$name</td>\n";
+		print "<td class='optionalCategoryPrefix'><input type='text' size='2' name='OPTIONAL_TABLE_PREFIX[]' value='".$sql_create_optional[$name]['prefix']."'/></td>\n";
+		print "<td class='optionalCategoryDescription'>".$sql_create_optional[$name]['description']."</td>\n";
+		print "</tr>\n";
+	}
+?>
 			</table>
 		</form>
 	</body>
