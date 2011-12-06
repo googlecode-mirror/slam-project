@@ -9,7 +9,7 @@
 <form name='userOptions' id='userOptions' action='' method='POST'>
 	<div id='setUserOptions'>
 		<input type='hidden' name='a' value='user' />
-		<input type='hidden' name='user_action' value='set_options' />
+		<input type='hidden' name='user_action' value='set_preferences' />
 		<table>
 			<tr>
 				<td style='text-align:right;font-weight:bold'>Username:</td>
@@ -31,7 +31,7 @@
 			<tr>
 				<td style='text-align:right;font-weight:bold'>Email:</td>
 				<td>
-					<input type='text' name='user_email' size='25' value='<?php echo($user->values['email']) ?>' id='user_email' />
+					<input readonly='readonly' type='text' size='25' value='<?php echo($user->values['email']) ?>' id='user_email' />
 				</td>
 			</tr>
 			<tr>
@@ -41,41 +41,49 @@
 				<td colspan='1' style='text-align:right'>In project</td>
 				<td style='text-align:left'>
 <?php
-	$current = $user->values['prefs']['default_project'];
+
+	/* get the user's default project from his preferences */
+	$current = empty($user->prefs['default_project']) ? 'Other' : $user->prefs['default_project'];
+	
+	/* fill out the project menu with options from the config */
 	$options = array_combine($config->values['default_project'],$config->values['default_project']);
+	
 	$selected = (in_array($current,$options) || ($current == '')) ? $current : 'Other';
 	$vis = (in_array($current,$options) || ($current == '')) ? "style='display:none'" : ''; // hide the other input text box if the option is in the menu
 
-	/* make the "other" project input field */	
+	/* make the "other" project input field */
 	if($config->values['novel_projects'])
 	{
 		$options['Other'] = 'Other'; //Append "Other" option to menu
-		$input = SLAM_makeInputHTML($v,10,10,"name='user_defaultProject' id='user_defaultProject' $vis",false);
+		$input = SLAM_makeInputHTML($v,10,10,"name='defaultProject' id='defaultProject' $vis",false);
 	}
 	else
-		$input = SLAM_makeInputHTML($v,10,10,"name='user_defaultProject' id='user_defaultProject' $vis",true);
+		$input = SLAM_makeInputHTML($v,10,10,"name='defaultProject' id='defaultProject' $vis",true);
 
-	echo SLAM_makeMenuHTML($selected,$options,"name='userProjectMenu' onChange=\"doUserProjectMenu(this.options[this.selectedIndex].value, 'user_defaultProject')\"",false,false);
+	echo SLAM_makeMenuHTML($selected,$options,"name='user_projectMenu' onChange=\"doUserPreferencesProjectMenu(this.options[this.selectedIndex].value, 'defaultProject')\"",false,false);
 	echo $input;
 ?>
 				</td>
 			</tr>
 			<tr>
 				<td colspan='2' style='text-align:right'>Editable by
-					<select name='foo1'>
-						<option value='0'>Me and my groups</option>
-						<option value='1'>Just me</option>
-						<option value='2'>Anyone</option>
-					</select>
+<?php
+	if (empty($user->prefs['newEntry_EditPermissions']))
+		$user->prefs['newEntry_EditPermissions'] = 0;
+
+	$options = array('Me and my groups'=>0,'Just me'=>1,'Anyone'=>2);
+	echo SLAM_makeMenuHTML($user->prefs['default_entryEditable'],$options,"name='defaultEditable'",false);
+?>
 				</td>
 			</tr>
 			<tr>
 				<td colspan='2' style='text-align:right'>Readable by
-					<select name='foo2'>
-						<option value='0'>Me and my groups</option>
-						<option value='1'>Just me</option>
-						<option value='2'>Anyone</option>
-					</select>
+<?php
+	if (empty($user->prefs['newEntry_ReadPermissions']))
+		$user->prefs['newEntry_ReadPermissions'] = 2;
+
+	echo SLAM_makeMenuHTML($user->prefs['default_entryReadable'],$options,"name='defaultReadable'",false);
+?>
 				</td>
 			</tr>
 			<tr>
