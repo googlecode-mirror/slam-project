@@ -106,7 +106,7 @@ if ($config->html['abort'])
 	return;
 }
 elseif($_REQUEST['user_action']) /* has the user specified an action (e.g. logging in, requesting a password reset?) */
-	$content.= SLAM_doUserActionHTML($config,$db,$user);
+	$content.= SLAM_doUserAction($config,$db,$user);
 
 /* generate the HTML output wrapping the content */
 

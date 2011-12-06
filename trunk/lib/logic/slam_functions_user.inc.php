@@ -1,5 +1,65 @@
 <?php
 
+function SLAM_doUserAction(&$config,$db,&$user)
+{
+	/*
+		performs the requested user action
+	*/
+	
+	switch(urldecode($_REQUEST['user_action']))
+	{
+		case 'set_preferences':
+			SLAM_setUserPreferences($config,$db,$user);
+			/* pop up the user prefs panel to show the user that the changes have been applied */
+			$config->html['onload'][] = 'showPopupDiv("pub/user_prefs.php","userDiv",{"noclose":true})';
+
+			return;
+		case 'change_password':
+			if(SLAM_saveUserPassword($config,$db,$user) === true)
+				return;
+			else
+				$config->html['onload'][] = 'showPopupDiv("pub/password_change.php?bad_password=true","userDiv",{})';
+		
+			return;
+		case 'reset_send':
+			SLAM_sendUserResetMail($config,$db);
+			
+			return;
+		case 'reset_change':
+			$config->html['onload'][] = "showPopupDiv(\"pub/password_choose.php?user_name={$_REQUEST['user_name']}&secret={$_REQUEST['secret']}\",\"userDiv\",{})";
+
+			return;
+		case 'reset_save':
+			SLAM_saveUserResetPass($config,$db);
+			
+			return;
+		default:
+			return;
+	}
+
+	return;
+}
+
+function SLAM_setUserPreferences(&$config,$db,&$user)
+{
+	/*
+	$email = urldecode($_REQUEST['user_email']);
+	if (filter_var($email, FILTER_VALIDATE_EMAIL) === false)
+		$config->errors[] = 'User attempted to set email to an invalid address.';
+	 
+	*/
+	
+	if ($_REQUEST['defaultProject'])
+		$user->prefs['default_project'] = urldecode($_REQUEST['defaultProject']);
+	
+	$user->prefs['default_entryEditable'] = urldecode($_REQUEST['defaultEditable']);
+	$user->prefs['default_entryReadable'] = urldecode($_REQUEST['defaultReadable']);
+	
+	$user->savePrefs($config,$db);
+	
+	return;
+}
+
 function SLAM_saveAssetTags($config,$db,&$user,$request)
 {
 	$identifiers = array();

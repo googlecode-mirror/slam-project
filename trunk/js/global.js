@@ -50,8 +50,7 @@ function checkPasswordForm(form, field1, field2)
 	return false;
 }
 
-// function name is different than doProjectMenu (for asset project menu)
-function doUserProjectMenu( selection, id )
+function doUserPreferencesProjectMenu( selection, id )
 {
 	el = document.getElementById( id );
 	el.value = selection;

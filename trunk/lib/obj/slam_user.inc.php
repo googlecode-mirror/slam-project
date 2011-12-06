@@ -86,11 +86,16 @@ class SLAMuser
 		return false;
 	}
 	
-	function savePrefs($config,$db)
+	function savePrefs(&$config,$db)
 	{
 		$prefs = mysql_real_escape(serialize($this->prefs),$db->link);
 		$q = "UPDATE `{$config->values['user_table']}` SET `prefs`='$prefs' WHERE `username`='{$this->values['username']}' LIMIT 1";
-		$db->Query($q);
+		if (!$db->Query($q))
+		{
+			$config->errors[] = 'Error updating user preferences: '.mysql_error();
+			return false;
+		}
+		return true;
 	}
 }
 
