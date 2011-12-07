@@ -71,7 +71,7 @@
 	if (empty($user->prefs['newEntry_EditPermissions']))
 		$user->prefs['newEntry_EditPermissions'] = 0;
 
-	$options = array('Me and my groups'=>0,'Just me'=>1,'Anyone'=>2);
+	$options = array('Just me'=>0,'Me and my groups'=>1,'Anyone'=>2);
 	echo SLAM_makeMenuHTML($user->prefs['default_entryEditable'],$options,"name='defaultEditable'",false);
 ?>
 				</td>

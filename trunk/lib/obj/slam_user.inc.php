@@ -15,6 +15,16 @@ class SLAMuser
 		{
 			$this->prefs = unserialize($this->values['prefs']);
 			$this->values['groups'] = split(',',$this->values['groups']);
+			
+			/* 
+			 * make sure user has some defaults set
+			 */
+			if(empty($user->prefs['default_entryReadable']))
+				$user->prefs['default_entryReadable'] = 2;
+			if(empty($user->prefs['default_entryEditable']))
+				$user->prefs['default_entryEditable'] = 1;
+			if(count($this->values['groups']) == 0)
+				$this->values['groups'] = array( $this->values['username'] );
 		}
 				
 		return;

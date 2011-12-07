@@ -4,7 +4,9 @@
 
 function doEditJS()
 {
-	fillEmptyFields();
+	/*
+	 empty stub for now
+	*/
 	
 	return;
 }
@@ -16,20 +18,6 @@ function doNonEditableWarning( )
 	var div = document.getElementById( 'warningModalText' );
 	div.innerHTML = 'You are not authorized to modify some of the assets you have selected. Edits made to attributes on this page will not be saved to those assets.';
 	
-	return;
-}
-
-function fillEmptyFields()
-{
-	// set Researcher field to Entered By field if empty
-//	var field1 = document.getElementById('edit_RW50ZXJlZCBCeQ==');
-//	var field2 = document.getElementById('edit_UmVzZWFyY2hlcg==');
-//	if (field2.value == ''){ field2.value = field1.value; }
-	
-	// set Date field to current date if empty
-//	var field3 = document.getElementById('edit_RGF0ZQ==');
-//	if (field3.value == ''){ field3.value=get10Date(); }
-
 	return;
 }
 
