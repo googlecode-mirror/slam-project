@@ -1,6 +1,6 @@
 <?php
 
-function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
+function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 {
 	/*
 		Displays the edit page for the records corresponding to the first category in $result
@@ -22,13 +22,28 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 	$editable	= array();
 	
 	/* retrieve the field values, either for a new entry or for editing existing ones */
-	if ($new)
+	if ($request->action == 'new')
+	{
+		$editable = true;
+		$fields	= SLAM_getNewAssetFields($config,$db,$user,$category,$structure,null);
+	}
+	elseif ($request->action == 'clone')
 	{
 		$editable = true;
 		$fields	= SLAM_getNewAssetFields($config,$db,$user,$category,$structure,$assets[0]);
 	}
 	else
 	{
+		/* if there are a mix of editable and uneditable assets, provide the user a warning */
+		$editable = array_unique($editable);
+		if (count($editable) > 1)
+		{
+			$config->html['onload'][] = 'doNonEditableWarning()';
+			$editable = true;
+		}
+		else
+			$editable = $editable[0];
+		
 		/* retrieve the consensus field values */
 		$fields	= SLAM_getAssetFields($config,$db,$user,$assets);
 	
@@ -40,16 +55,6 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result,$new)
 			/* save all of the identifiers we're to update into the form */		
 			$s.=SLAM_makeHiddenInput($asset['Identifier'],'Identifier[]');
 		}
-
-		/* if there are a mix of editable and uneditable assets, provide the user a warning */
-		$editable = array_unique($editable);
-		if (count($editable) > 1)
-		{
-			$config->html['onload'][] = 'doNonEditableWarning()';
-			$editable = true;
-		}
-		else
-			$editable = $editable[0];
 		
 		/* fields that cannot be edited for more than one asset at a time */
 		if (count($assets) > 1)
@@ -84,7 +89,7 @@ EOL;
 			$t="<div id='assetEditTitle'>$category : $value</div>\n";
 
 		/* hide empty fields */
-		if (($value != '') || ($new))
+		if (($value != '') || ($request->action == 'new'))
 			$hidden = false;
 		elseif($value == '')
 			$hidden = true;

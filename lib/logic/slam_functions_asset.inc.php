@@ -40,7 +40,7 @@ function SLAM_getNewAssetFields($config,$db,$user,$category,$structure,$clone=nu
 	/* if we're not cloning an entry, save default values to all fields */
 	foreach($structure as $name => $value)
 	{
-		if (empty($clone))
+		if ($clone != null)
 			$fields[ $name ]=$clone[ $name ];
 		else
 			$fields[ $name ]=$value['default'];
@@ -58,6 +58,33 @@ function SLAM_getNewAssetFields($config,$db,$user,$category,$structure,$clone=nu
 			if ($fields[ $name ] == '')
 				$fields[ $name ] = date('Y-m-d');
 	
+	/* set permissions */
+	$a = split(';',$clone['Permissions']); // do it this way in case the the clone entry has malformed permissions
+	if (count($a) < 3)
+	{
+		$a = array();
+		/* 0 - me
+		 * 1 - groups
+		 * 2 - everyone
+		 */
+		for ($i = 1; $i<=$user->prefs['default_entryReadable']; $i++)
+			$a[ $i ] = 'R';
+		for ($i = 1; $i<=$user->prefs['default_entryEditable']; $i++)
+			$a[ $i ].= 'W';
+		
+		$groups = join(',',$user->values['groups']);
+		$fields['Permissions'] = "{$user->values['username']}:RW;{$groups}:{$a[1]};{$a[2]}";
+	}
+	else
+		$fields['Permissions'] = "{$user->values['username']}:RW;{$a[1]};{$a[2]}";
+	
+	/* set user-default project */
+	if ($clone != null)
+	{
+		if ((!empty($user->prefs['default_project'])) && (!empty($fields['Project'])))
+			$fields[ 'Project'] = $user->prefs['default_project'];
+	}
+			
 	/* generate the unique identifier */
 	if(($results = $db->Query("SHOW TABLE STATUS WHERE `name`='$category'")) === false)
 		die('Database error: Couldn\'t get table status: '.mysql_error());

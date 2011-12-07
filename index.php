@@ -32,17 +32,17 @@ if ($user->authenticated)
 		case 'new':
 		case 'clone':
 			$result = new SLAMresult($config,$db,$user,$request);
-			$content = SLAM_makeAssetEditHTML($config,$db,$user,$request,$result,true);
+			$content = SLAM_makeAssetEditHTML($config,$db,$user,$request,$result);
 			break;
 		case 'edit':
 		case 'open':
 			$result = new SLAMresult($config,$db,$user,$request);
-			$content = SLAM_makeAssetEditHTML($config,$db,$user,$request,$result,false);
+			$content = SLAM_makeAssetEditHTML($config,$db,$user,$request,$result);
 			break;
 		case 'save changes':
 			$content = SLAM_saveAssetEdits($config,$db,$user,$request);
 			$result = new SLAMresult($config,$db,$user,$request);
-			$content.= SLAM_makeAssetEditHTML($config,$db,$user,$request,$result,false);
+			$content.= SLAM_makeAssetEditHTML($config,$db,$user,$request,$result);
 			break;
 		case 'save':
 			$content = SLAM_saveAssetEdits($config,$db,$user,$request);
