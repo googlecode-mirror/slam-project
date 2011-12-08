@@ -19,15 +19,16 @@ if ($user->authenticated)
 		$config->errors[] = 'Invalid identifier provided.';
 	elseif(SLAM_checkAssetOwner($config,$db,$user,$category,$identifier) === false)
 		$config->errors[] = 'You cannot modify this asset.';
+
+	/* can't use SLAM_getArchivePath, because may not exist for new archives */
+	$cats = array_flip($config->values['lettercodes']);
+	$path = "{$config->values['file manager']['archive_dir']}/{$config->values['lab_prefix']}{$cats[$category]}/{$identifier}.zip";
 }
 else
 	$config->errors[] = "Please <a href='{$config->html['url']}'>log in</a>";
 
 if (count($config->errors) == 0)
 {
-	$cats = array_flip($config->values['lettercodes']);
-	$path = "{$config->values['file manager']['archive_dir']}/{$config->values['lab_prefix']}{$cats[$category]}/{$identifier}.zip";
-
 	/* are there files ready to be uploaded? */
 	if (isset($_FILES['asset_file']))
 	{	
@@ -88,6 +89,25 @@ if (count($config->errors) == 0)
 	header("refresh:0;url=../ext/files.php?i=$identifier");
 else
 	header("refresh:{$config->values['file manager']['action_timeout']};url=../ext/files.php?i=$identifier");
-
-echo SLAM_makeFileSplashHTML($identifier,'Attach to asset','Your files are being attached to the asset.',$config->errors);
 ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+	<head>
+		<link type='text/css' href='../css/files.css' rel='stylesheet' />
+	</head>
+	<body>	
+<?php
+	if (count($config->errors) == 0)
+		print "<div id='actionSuccessDiv'>The specified files have been attached to the asset.</div>";
+	elseif(!empty($config->values['debug']))
+	{
+		print "<div id='actionErrorDiv'>";
+		foreach($config->errors as $error)
+			print "$error<br />\n";
+		print "</div>";
+	}
+	
+	print "<div id='actionContinueDiv'>Please <a href='../ext/files.php?i=$identifier'>click here</a> to continue.</div>";
+?>
+	</body>
+</html>

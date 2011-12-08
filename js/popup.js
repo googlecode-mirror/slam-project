@@ -35,17 +35,23 @@ function showPopupDiv( url, id, options )
 	return false;
 }
 
-function showPopupIframe( src, id, width, height )
+function showFileManager( src )
 {
-	var test=document.getElementById(id);
+	var test=document.getElementById('fileManagerDiv');
 	if (test != null)
 		document.body.removeChild(test);
-
+	
 	var sDiv=document.createElement('div');
-	sDiv.setAttribute('id',id);
-	sDiv.innerHTML = "<a id='popupDivCloseA' onClick=\"removeBodyId('"+id+"')\">close</a><iframe id='fileMangerIframe' src='"+src+"' width='"+width+"px' height='"+height+"px' marginwidth='0' marginheight='0' frameborder='no' scrolling='no'></iframe>";
+	sDiv.setAttribute('id','fileManagerDiv');
+	
+	var myImg=document.createElement('img');
+	myImg.setAttribute('src','img/grey_loader_circle.gif');
+	myImg.setAttribute('id','fileManagerLoadImage');
 
+	sDiv.appendChild( myImg );
 	document.body.appendChild(sDiv);
+
+	sDiv.innerHTML += "<a id='popupDivCloseA' onClick=\"removeBodyId('fileManagerDiv')\">close</a>\<iframe id='fileMangerIframe' onLoad=\"removeBodyId('fileManagerLoadImage')\" src='"+src+"' width='510px' height='310px' marginwidth='0' marginheight='0' frameborder='no' scrolling='no'></iframe>";
 
 	return false;
 }

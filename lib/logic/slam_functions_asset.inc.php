@@ -181,7 +181,7 @@ function replaceExistingAsset( $config, $db, $user, $asset )
 	/* make sure we're not editing a removed asset */
 	if (($r[0]['Removed'] == '1') && (!$config->values['edit_removed']) && (!$user->values['superuser']))
 		return SLAM_makeErrorHTML('Authentication error: Unauthorized attempt to edit removed record.',true);
-	elseif (SLAM_getAssetPermissions($user,$r[0]) < 2)
+	elseif (SLAM_getAssetPermission($user,$r[0]) < 2)
 		return SLAM_makeErrorHTML('Authentication error: You are not authorized to save edits to this asset.',true);
 	
 	$q = SLAM_makeInsertionStatement( $db, 'REPLACE', $asset['category'], $asset['fields'] );
@@ -217,7 +217,7 @@ function SLAM_deleteAssets(&$config, $db, &$user, &$request)
 				return SLAM_makeErrorHTML('Database error: specified asset was not found.',true);
 		
 			/* non-super_users have to provide their name to match the entry */
-			if (SLAM_getAssetPermissions($user,$r) > 2)
+			if (SLAM_getAssetPermission($user,$r) > 2)
 				$q = "UPDATE `$category` SET `Removed`='1' WHERE `Identifier`='$identifier' LIMIT 1";
 			else
 				return SLAM_makeErrorHTML('Authentication error: You are not authorized to remove this asset.',true);

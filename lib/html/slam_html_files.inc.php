@@ -49,35 +49,4 @@ EOL;
 	return $s."</table>\n";
 }
 
-function SLAM_makeFileSplashHTML($identifier,$title,$desc,$errors)
-{
-	$s = <<<EOL
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
-<html>
-	<head>
-		<title>$title</title>
-	</head>
-	<body>
-		<div style="width:400;margin-left:auto;margin-right:auto;text-align:center">
-		<b><i>$desc</i></b>
-		<br />
-		<img src="../img/grey_loader_dots.gif" width="43" height="11" alt="[loading dots]" vertical-align="middle" />
-EOL;
-	
-	foreach($errors as $error)
-		$s.="<p style='color:red'>$error</p>\n";
-	
-	$s.= <<<EOL
-			<br />
-			<br />
-			<br />
-			<b><i>Please click <a href='../ext/files.php?i=$identifier'>here</a> to continue.</b></i>
-		</div>
-	</body>
-</html>
-EOL;
-
-	return $s;
-}
-
 ?>

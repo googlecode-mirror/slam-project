@@ -138,7 +138,7 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 		$url = $request->makeRequest($config,array('identifier'=>array($asset['Identifier']),'action'=>'open'),true);
 
 		/* is the current user qualified to edit this record ? */
-		$s.= (SLAM_getAssetPermissions($user,$asset) > 2) ? "<a href='$url'>open</a>\n" : "<a href='$url'>view</a>\n";
+		$s.= (SLAM_getAssetPermission($user,$asset) > 1) ? "<a href='$url'>open</a>\n" : "<a href='$url'>view</a>\n";
 		
 		$s.="</td>\n";
 		
@@ -151,7 +151,7 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 			$value = (strlen($asset[$field]) > $config->values['field_truncate']) ? substr($asset[$field],0,$config->values['field_truncate']).'...' : $asset[$field];
 				
 			if ($field == 'Files') // special treatment for files field
-				$s.="<td class='assetListField'><input type='button' class='listFileButton' onClick=\"showPopupIframe('ext/files.php?i={$asset['Identifier']}','fileManagerDiv',510,310); return false\" value='View' />\n";
+				$s.="<td class='assetListField'><input type='button' class='listFileButton' onClick=\"showFileManager('ext/files.php?i={$asset['Identifier']}'); return false\" value='View' />\n";
 			else
 				$s.= ($f_value == $value) ? "<td class='$class'>$value</td>\n" : "<td class='$class' title='{$asset[$field]}'>$value</td>\n";
 		}

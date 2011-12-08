@@ -6,59 +6,74 @@ function SLAM_getArchivePath(&$config,$category,$identifier)
 		This function attempts to locate the archive file for the requested record, and returns a file path on success
 	
 		It returns the following status values:
-			false - couldn't find an archive associated with that asset
+			false - couldn't find an archive associated with that asset (for whatever reason)
 			string (path) - asset exists
 	*/
 		
 	$cats = array_flip($config->values['lettercodes']);
 	$path = "{$config->values['file manager']['archive_dir']}/{$config->values['lab_prefix']}{$cats[$category]}/{$identifier}.zip";
-
+		
 	if (file_exists($path) && (!is_readable($path)))
 		$config->errors[]='File manager error: Asset file exists, but is not readable. (Permissions error?)';
+	elseif (!file_exists($path))
+	{
+		if (is_writable(dirname($path)))
+			return $path;
+		else
+			$config->errors[]="File manager error: Asset file path '$path' does not exist, and cannot be created.";
+	}
 	elseif (is_readable($path))
 		return $path;
 	
 	return false;
 }
 
-function SLAM_checkAssetOwner($config,$db,$user,$category,$identifier)
+function SLAM_checkAssetOwner(&$config,$db,$user,$category,$identifier)
 {
 	/*
 		Determines whether or not the current user is authorized to modify the archive.
-		Returns true if yes, false if not.
+		Returns true if yes, a string describing the problem otherwise
 	*/
 	
-	if ($user->values['superuser'])
-		return true;
-
 	/* get the entry to check permissions */
-	$r = $db->GetRecords("SELECT Permissions FROM `$category` WHERE (`Identifier`='$identifier' AND `Removed`='0') LIMIT 1");
+	$r = $db->GetRecords("SELECT Permissions FROM `$category` WHERE (`Identifier`='$identifier') LIMIT 1");
 	
 	if ($r === false)
-		return SLAM_makeErrorHTML('Database error: could not check for presence of specified identifier: '.mysql_error(),true);
-	elseif(count($r) < 1)
-		return SLAM_makeErrorHTML('Database error: specified asset was not found, or has been removed.',true);
-		
-	return (bool)(SLAM_getAssetPermissions($user,$r) > 2);
+	{
+		$config->errors[] = 'Database error: could not check for presence of specified identifier: '.mysql_error();
+		return false;
+	}
+	
+	if(empty($r)) // asset doesn't exist (a new asset)
+		return true;
+	else
+		return (bool)(SLAM_getAssetPermission($user,$r[0]) > 1);
 }
 
 function SLAM_getArchiveFiles(&$config,$path)
 {
 	global $slam_file_errors;
 	
+	if (!is_readable($path))
+	{
+		$config->errors[] = "File manager error: Cannot read the archive at ".escapeshellarg($path).".";
+		return false;
+	}
+
 	/* get the list of files in the archive */
 	$path = escapeshellarg($path);
+		
 	exec("unzip -l $path",$output,$status);
 
 	if ($status == 9) /* there is/are file(s) attached, but they are not zip archives, or it is an empty zip archive */
 	{
-		$config->errors[] = 'There is an archive associated with this asset, but it is not readable by zip.';
+		$config->errors[] = 'File manager error: There is an archive associated with this asset, but it is not readable by SLAM.';
 		return false;
 	}
 
 	if ($status > 1)/* see unzip man page for details */
 	{
-		$config->errors[] = "Unzip error: {$slam_file_errors['unzip_errors'][$status]}";
+		$config->errors[] = "File manager error: Unzip error: {$slam_file_errors['unzip_errors'][$status]}";
 		return false;
 	}
 	
@@ -78,7 +93,7 @@ function SLAM_getArchiveFiles(&$config,$path)
 	return $files;
 }
 
-function SLAM_updaateArchiveFileList($config,$db,$category,$identifier,$files)
+function SLAM_updateArchiveFileList(&$config,$db,$category,$identifier,$files)
 {
 	if (empty($files))
 		return;
@@ -88,7 +103,7 @@ function SLAM_updaateArchiveFileList($config,$db,$category,$identifier,$files)
 
 	$q = "UPDATE `$category` SET `Files`='$s' WHERE (`Identifier`='$identifier') LIMIT 1";
 	if (($result = $db->Query($q)) === false)
-		die('Database error: Could not update asset file list:'.mysql_error());
+		$config->errors[]='Database error: Could not update asset file list:'.mysql_error();
 		
 	return;
 }
@@ -123,7 +138,7 @@ function SLAM_deleteAssetFiles(&$config,$category,$identifier)
 	
 	if(($path = SLAM_getArchivePath(&$config,$category,$identifier)) !== false)
 		if(!unlink($path))
-			$config->errors[]='File handler error: Could not delete asset archive.';
+			$config->errors[]='File manager error: Could not delete asset archive.';
 	
 	return;
 }

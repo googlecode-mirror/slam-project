@@ -95,8 +95,17 @@ if ($user->authenticated)
 			break;
 	}
 	
+	/* prepend the navigation and category listing HTML */
+	$content = SLAM_makeCategoryListHTML($config,$db,$user,$request).$content;
+	$content = SLAM_makeBreadcrumbHTML($config,$db,$user,$request,$result).$content;
+	
 	/* obtain module content */
 	SLAM_doModuleContent($modules,$config,$db,$user,$request,$result,$content);
+}
+else
+{
+	/* provide the login form */
+	$content = SLAM_makeUserAuthHTML($config,$db,$user);
 }
 
 /* if a module has pre-prepared HTML, we can exit now */
@@ -107,15 +116,13 @@ if ($config->html['abort'])
 }
 elseif($_REQUEST['user_action']) /* has the user specified an action (e.g. logging in, requesting a password reset?) */
 	$content.= SLAM_doUserAction($config,$db,$user);
-
-/* generate the HTML output wrapping the content */
-
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
 	<head>
 		<title><?php echo $config->values['name']; ?></title>
 <?php
+	/* include any specified header files */
 	foreach($config->html['css'] as $header)
 		echo("<link type='text/css' href='$header' rel='stylesheet' />\n");
 	foreach($config->html['js'] as $header)
@@ -127,19 +134,11 @@ elseif($_REQUEST['user_action']) /* has the user specified an action (e.g. loggi
 	<body onLoad='<?php echo(implode(';',$config->html['onload'])); ?>'>
 		<div id='contentDiv'>
 			<noscript>
-				<div class='error'>Javascript is required for proper usage of SLAM!</div>
+				<div class='error'>Javascript is required for proper usage of SLAM.</div>
 			</noscript>
+			<?php echo $content ?>
 <?php
-
-if ($user->authenticated)
-{
-	echo SLAM_makeBreadcrumbHTML($config,$db,$user,$request,$result);
-	echo SLAM_makeCategoryListHTML($config,$db,$user,$request);
-	echo $content;
-}
-else
-	echo SLAM_makeUserAuthHTML($config,$db,$user);
-	
+/* display errors if in debug mode */
 if(!empty($config->values['debug']))
 {
 	echo "<div class='error'>\n";
@@ -147,7 +146,6 @@ if(!empty($config->values['debug']))
 		echo "$i) {$config->errors[$i]}<br />\n";		
 	echo "</div>\n";
 }
-
 ?>
 		<div id='contentFooter'>SLAM v. <?php echo($config->values['version']) ;?> &copy; <a href='#' onClick="showPopupDiv('pub/about.php','helpDiv',{}); return false">SteelSnowflake</a> LLC<br />[<a href="http://code.google.com/p/slam-project/issues/entry">Report a Bug</a>]</div>
 		</div>

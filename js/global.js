@@ -5,7 +5,8 @@
 function removeBodyId( id )
 {
 	var hDiv = document.getElementById( id );
-	document.body.removeChild(hDiv);
+	if (hDiv != null)
+		hDiv.parentNode.removeChild(hDiv);
 	return;
 }
 
