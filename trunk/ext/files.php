@@ -33,7 +33,7 @@ if ($user->authenticated)
 		
 		/* is the current user qualified to make changes to the archive? */
 		$editable = SLAM_checkAssetOwner($config,$db,$user,$category,$identifier);
-		
+
 		/* attempt to retrieve the asset's archive path*/
 		if(($path = SLAM_getArchivePath($config,$category,$identifier)) !== false)
 		{
@@ -51,17 +51,11 @@ if ($user->authenticated)
 				echo "</form>\n";
 				echo "</div>\n";
 			}
+			else
+				echo "<div id='fileEmpty'>No files to show</div>\n";
 		}
 		else
 			echo "<div id='fileEmpty'>No files to show</div>\n";
-			
-		if ($editable)
-			SLAM_updaateArchiveFileList($config,$db,$category,$identifier,$files);
-		else
-		{
-			echo "</div>\n</body>\n</html>\n";
-			exit;
-		}
 	}
 	else
 		$config->errors[] = 'Invalid identifier provided';
@@ -79,6 +73,14 @@ if(!empty($config->values['debug']))
 	for($i=0; $i<count($config->errors); $i++)
 		echo "$i) {$config->errors[$i]}<br />\n";		
 	echo "</div>\n";
+}
+
+if ($editable)
+	SLAM_updateArchiveFileList($config,$db,$category,$identifier,$files);
+else
+{
+	echo "</div>\n</body>\n</html>\n";
+	exit;
 }
 
 ?>

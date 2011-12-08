@@ -38,14 +38,14 @@ function SLAM_findAssetDiffs($assets)
 }
 
 
-function SLAM_getAssetPermissions($user,$asset)
+function SLAM_getAssetPermission($user,$asset)
 {
 	/*
 	returns the permissions the provided user has upon the provided asset:
 	
 	0 = no access
 	1 = read access
-	3 = read + write access
+	2 = read + write access
 	
 	*/
 
@@ -61,24 +61,24 @@ function SLAM_getAssetPermissions($user,$asset)
 		if ($a[1] == 'R')
 			$ret = 1;
 		if ($a[1] == 'RW')
-			$ret = 3;
+			return 2;
 	}
-
+	
 	$a = explode(':',$g);
 	$groups = explode(',',$a[0]);
 	if ( count(array_intersect($groups,$user->values['groups'])) > 0 )
 	{
-		if (($a[1] == 'R') && ($ret < 3))
+		if ($a[1] == 'R')
 			$ret = 1;
 		if ($a[1] == 'RW')
-			$ret = 3;
+			return 2;
 	
 	}
 	
-	if (($u == 'R') && ($ret < 3))
+	if ($u == 'R')
 		$ret = 1;
 	elseif ($u == 'RW')
-		$ret = 3;
+		return 2;
 		
 	return $ret;
 }

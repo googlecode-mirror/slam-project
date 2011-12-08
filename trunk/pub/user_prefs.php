@@ -14,13 +14,13 @@
 			<tr>
 				<td style='text-align:right;font-weight:bold'>Username:</td>
 				<td>
-					<input readonly='readonly' type='text' size='25' value='<?php echo($user->values['username']) ?>' />
+					<input readonly='readonly' type='text' size='20' value='<?php echo($user->values['username']) ?>' />
 				</td>
 			</tr>
 			<tr>
 				<td style='text-align:right;vertical-align:top;font-weight:bold'>Groups:</td>
 				<td>
-					<textarea readonly='readonly' cols='18' rows='4'>
+					<textarea readonly='readonly' cols='17' rows='4'>
 <?php
 	foreach ($user->values['groups'] as $group)
 		echo $group."\n";
@@ -31,7 +31,7 @@
 			<tr>
 				<td style='text-align:right;font-weight:bold'>Email:</td>
 				<td>
-					<input readonly='readonly' type='text' size='25' value='<?php echo($user->values['email']) ?>' id='user_email' />
+					<input readonly='readonly' type='text' size='20' value='<?php echo($user->values['email']) ?>' id='user_email' />
 				</td>
 			</tr>
 			<tr>

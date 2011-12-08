@@ -50,13 +50,13 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 		foreach($assets as $asset)
 		{
 			/* save the editable status for every asset */
-			$editable[] = (SLAM_getAssetPermissions($user,$asset) > 2);
+			$editable[] = (SLAM_getAssetPermission($user,$asset) > 1);
 			
 			/* save all of the identifiers we're to update into the form */		
 			$s.=SLAM_makeHiddenInput($asset['Identifier'],'Identifier[]');
 		}
 		
-		/* fields that cannot be edited for more than one asset at a time */
+		/* fields that cannot be edited for more than one asset at a time shouldn't be shown */
 		if (count($assets) > 1)
 		{
 			unset($fields['Identifier']);
@@ -102,7 +102,7 @@ EOL;
 			
 			case 'Permissions': /* insert the permissions control panel */
 				$b.=SLAM_makePermissionsHTML($config,$user,$value);
-				$b.=SLAM_makeHiddenInput(base64_encode($asset['Permissions']),'Permissions');
+				$b.=SLAM_makeHiddenInput(base64_encode($field['Permissions']),'Permissions');
 				break;
 			
 			case 'Project': /* save the default projects array to the structure of the projects field */
@@ -112,7 +112,7 @@ EOL;
 				break;
 				
 			case 'Files': /* if there's a "Files" field, show a link to the file browser instead */
-				$b.="<tr>\n<td class='assetEditField'>Files :</td><td class='assetEditValue'><input type='button' class='assetFileButton' onClick=\"showPopupIframe('ext/files.php?i={$asset['Identifier']}','fileManagerDiv',510,310); return false\" value='Open Browser' /></td><td class='assetEditFunction'>&nbsp;</td>\n</tr>\n";
+				$b.="<tr>\n<td class='assetEditField'>Files :</td><td class='assetEditValue'><input type='button' class='assetFileButton' onClick=\"showFileManager('ext/files.php?i={$fields['Identifier']}'); return false\" value='Open Browser' /></td><td class='assetEditFunction'>&nbsp;</td>\n</tr>\n";
 				break;
 		
 			default:

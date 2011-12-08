@@ -109,21 +109,20 @@ div.error
 {
 	width: 200px;
 	height: 60px;
-	position: fixed;
-	left: 50%;
-	right: 50%;
-	overflow: auto;
-	margin-top: -200px;
-	margin-left: -100px;
-	
-	font-family:"Georgia", Times, serif;
-	font-size: 10pt;
-	
-	border: 1px solid gray;
-	background-color: #EEEEEE;
-	padding: 10px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	margin-left: 160px;
+	margin-right: 160px;
+	margin-top:	40px;
+	margin-bottom: 200px;
+
+	float:left;
+	z-index: 10;
 	text-align: center;
-	vertical-align: middle;
+	
+	color: gray;
+	background-color: #FFFFFF;
 }
 
 #uploadingDiv img, #uploadingDiv a
@@ -132,4 +131,26 @@ div.error
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 10px;
+}
+
+#actionSuccessDiv
+{
+	text-align:center;
+	margin-top:50px;
+	font-weight: bold;
+	color: green;
+}
+
+#actionErrorDiv
+{
+	text-align:center;
+	margin-top:50px;
+	font-weight: bold;
+	color: red;
+}
+
+#actionContinueDiv
+{
+	text-align:center;
+	margin-top:10px;
 }

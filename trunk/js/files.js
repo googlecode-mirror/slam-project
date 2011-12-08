@@ -52,7 +52,7 @@ function showUploadingDiv()
 	
 	var sDiv=document.createElement('div');
 	sDiv.setAttribute('id','uploadingDiv');
-	sDiv.innerHTML = "Please wait while your files are uploaded.<br /><img src='../img/grey_loader_dots.gif' width='43' height='11' alt='[loader dots'] />";
+	sDiv.innerHTML = "Please wait while your files are uploaded.<br /><img src='../img/grey_loader_circle.gif' width='32' height='32' alt='[loading'] />";
 	
 	document.body.appendChild(sDiv);
 	

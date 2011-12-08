@@ -1,12 +1,22 @@
 <?php
 
-function SLAM_makeUserAuthHTML($config,$db,$user)
+function SLAM_makeUserAuthHTML(&$config,$db,$user)
 {	
 	/*
 		Displays the user login form, as well as any provided message
 	*/
 	
-	$s=<<<EOL
+	$config->html['js'][] = 'js/detect.js';
+	
+	$s.=<<<EOL
+
+<script>
+	var stat = checkBrowser();
+if (stat < 1)
+	document.write("<div class='error'>This browser is not supported for use with SLAM.</div>");
+else if (stat < 2)
+	document.write("<div class='error'>SLAM requires that browser cookies be enabled.</div>");
+</script>
 <form name='loginForm' action='{$config->html['url']}' method='POST'>
 <div id='authContainer'>
 <table id='authFields'>

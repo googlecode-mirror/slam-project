@@ -27,6 +27,9 @@ else
 
 if (count($config->errors) == 0)
 {
+	/* remove the specified file from the archive */
+	$path = escapeshellarg($path);
+			
 	/* go through the arguments and look for files for deletion */
 	foreach($_REQUEST as $name => $value)
 	{
@@ -35,8 +38,6 @@ if (count($config->errors) == 0)
 			/* extract the name of the file to be deleted */
 			$file = base64_decode(substr($name,7));
 
-			/* remove the specified file from the archive */
-			$path = escapeshellarg($path);
 			$file = escapeshellarg($file);
 			exec("zip $path -d $file",$output,$status);
 			
@@ -54,7 +55,25 @@ if (count($config->errors) == 0)
 	header("refresh:0;url=../ext/files.php?i=$identifier");
 else
 	header("refresh:{$config->values['file manager']['action_timeout']};url=../ext/files.php?i=$identifier");
-
-echo SLAM_makeFileSplashHTML($identifier,'Remove from asset','The specified files are being removed from the asset.',$config->errors);
-
 ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+	<head>
+		<link type='text/css' href='../css/files.css' rel='stylesheet' />
+	</head>
+	<body>
+<?php
+	if (count($config->errors) == 0)
+		print "<div id='actionSuccessDiv'>The specified files have been deleted from the asset.</div>";
+	elseif(!empty($config->values['debug']))
+	{
+		print "<div id='actionErrorDiv'>";
+		foreach($config->errors as $error)
+			print "$error<br />\n";
+		print "</div>";
+	}
+
+	print "<div id='actionContinueDiv'>Please <a href='../ext/files.php?i=$identifier'>click here</a> to continue.</div>";
+?>
+	</body>
+</html>
