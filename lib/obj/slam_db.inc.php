@@ -3,15 +3,35 @@
 class SLAMdb
 {
 	public $link = null;
+	public $tables = array();
+	
 	private $required_fields = array('Serial','Identifier','Permissions','Removed');
 	
 	public function __construct(&$config)
 	{
 		if(($this->Connect($config->values['db_server'],$config->values['db_user'],$config->values['db_pass'],$config->values['db_name'])) === false)
-			die('Error connecting to database: '.mysql_error());
+			die('Database error: Could not connect: '.mysql_error());
 		
+		if(!($this->tables = $this->GetTables()))
+			die ('Database error: Could not get list of categories'.mysql_error());
+
+		if (!in_array($config->values['user_table'],$this->tables))
+			die ("Database error: required user table \"{$config->values['user_table']}\" not found.");
+		
+		if (!in_array($config->values['category_table'],$this->tables))
+			die ("Database error: required category table \"{$config->values['category_table']}\" not found.");
+				
+		if (!in_array($config->values['perms_table'],$this->tables))
+			die ("Database error: required permissions table \"{$config->values['perms_table']}\" not found.");
+		
+		if (!in_array($config->values['projects_table'],$this->tables))
+			die ("Database error: required projects table \"{$config->values['projects_table']}\" not found.");
+			
 		/* load category information from the SLAM_Categories table */
 		$this->loadCategoryInfo($config);
+		
+		/* load project information */
+		$this->loadProjectsInfo($config);
 	}
 	
 	public	function Connect($server,$user,$pass,$db)
@@ -70,6 +90,18 @@ class SLAMdb
 		$config->values['identifier_regex'] = "/([A-Za-z][A-Za-z])(".implode('|',array_keys($config->values['lettercodes'])).")[_]?(\d+)/";
 		
 		return;	
+	}
+	
+	private function loadProjectsInfo(&$config)
+	{
+		if(($result = mysql_query("SELECT * FROM {$config->values['projects_table']}",$this->link)) === false)
+			die('Fatal error: could not retrieve project information. Please contact your system administrator: '.mysql_error());
+					
+		/* save the projects to the config object */
+		while ($category = mysql_fetch_assoc($result))
+			$config->values['projects'][] = $category;
+		
+		return;
 	}
 	
 	public	function GetTables()

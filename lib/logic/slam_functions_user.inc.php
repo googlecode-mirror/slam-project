@@ -130,12 +130,11 @@ function SLAM_saveUserPassword(&$config,$db,$user)
 	if(!$user->authenticated)
 		$config->errors[] = 'You must be logged in to change your password.';
 	
-	$username = $user->values['username'];
 	$old_password = urldecode($_REQUEST['old_password']);
 	$new_password = urldecode($_REQUEST['new_password']);
 
-	if ($user->checkPassword($config,$db,$username,$old_password))
-		return SLAM_changeUserPassword($config,$db,$username,$new_password);
+	if ($user->checkPassword($config,$db,$old_password))
+		return SLAM_changeUserPassword($config,$db,$new_password);
 
 	return false;
 }

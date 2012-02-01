@@ -16,10 +16,10 @@ function SLAM_getPermissionsFilter($config,$db,$user,$request,$state='R')
 	*/
 
 	$a = array();
-	$groups = explode(',',$user->values['groups']);
+	$groups = explode(',',$user->groups);
 
-	$a[]="`Permissions` like '{$user->values['username']}:{$state}%;'";
-	foreach($user->values['groups'] as $group)
+	$a[]="`Permissions` like '{$user->username}:{$state}%;'";
+	foreach($user->groups as $group)
 		$a[]="`Permissions` like '%;%{$group}%:{$state}%;%'";
 	if ($state == 'RW')
 		$a[]="`Permissions` like '%;RW'";
@@ -31,7 +31,7 @@ function SLAM_getPermissionsFilter($config,$db,$user,$request,$state='R')
 
 function SLAM_getRemovedFilter($config, $user)
 {
-	return ($user->values['superuser'] || $config->values['show_removed']) ? '' : "`Removed`='0'";
+	return ($user->superuser || $config->values['show_removed']) ? '' : "`Removed`='0'";
 }
 
 ?>

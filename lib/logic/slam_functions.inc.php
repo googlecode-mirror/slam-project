@@ -49,14 +49,14 @@ function SLAM_getAssetPermission($user,$asset)
 	
 	*/
 
-	if ($user->values['superuser'])
+	if ($user->superuser)
 		return 3;
 
 	$ret = 0;
 	list($o,$g,$u) = explode(';',$asset['Permissions']);
 	
 	$a = explode(':',$o);
-	if ($user->values['username'] == $a[0])
+	if ($user->username == $a[0])
 	{
 		if ($a[1] == 'R')
 			$ret = 1;
@@ -66,7 +66,7 @@ function SLAM_getAssetPermission($user,$asset)
 	
 	$a = explode(':',$g);
 	$groups = explode(',',$a[0]);
-	if ( count(array_intersect($groups,$user->values['groups'])) > 0 )
+	if ( count(array_intersect($groups,$user->groups)) > 0 )
 	{
 		if ($a[1] == 'R')
 			$ret = 1;

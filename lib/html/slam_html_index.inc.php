@@ -26,7 +26,7 @@ function SLAM_makeBreadcrumbHTML($config,$db,$user,$request,$results)
 			$s.=" &raquo; (Multiple Assets)";
 	}
 	
-	return "$s$a<a id='breadCrumbUser' href='#' onClick=\"togglePopupMenu('pub/user_actions.html','userActionsDiv',alignToBottomRight('breadCrumbUser')); return false\">{$user->values['username']}</a></div>\n";
+	return "$s$a<a id='breadCrumbUser' href='#' onClick=\"togglePopupMenu('pub/user_actions.html','userActionsDiv',alignToBottomRight('breadCrumbUser')); return false\">$user->username</a></div>\n";
 }
 
 function SLAM_makeCategoryListHTML($config,$db,$user,$request)
@@ -35,11 +35,8 @@ function SLAM_makeCategoryListHTML($config,$db,$user,$request)
 		generates a clickable list of available categories
 	*/
 	
-	if(!($categories = $db->GetTables()))
-		die ('Database error: Could not get list of categories'.mysql_error());
-	
 	/* restrict displayed tables to only those that are specified in the config */
-	$categories = array_intersect($categories,array_keys($config->values['categories']));
+	$categories = array_intersect($db->tables,array_keys($config->values['categories']));
 	
 	$s=<<<EOL
 <div id='categoryListContainer'>

@@ -97,7 +97,7 @@ EOL;
 		switch($field)
 		{
 			case 'Identifier': /* identifier should not be editable if the user is not a superuser */
-				$b.=SLAM_makeFieldHTML($config,$request,$value,$structure[$field],$user->values['superuser'],$hidden);
+				$b.=SLAM_makeFieldHTML($config,$request,$value,$structure[$field],$user->superuser,$hidden);
 				break;
 			
 			case 'Permissions': /* insert the permissions control panel */
@@ -107,7 +107,7 @@ EOL;
 			
 			case 'Project': /* save the default projects array to the structure of the projects field */
 				$tmp = $structure[$field];
-				$tmp['values'] = $config->values['default_project'];
+				$tmp['values'] = $config->values['projects'];
 				$b.=SLAM_makeFieldHTML($config,$request,$value,$tmp,$editable,$hidden);
 				break;
 				
@@ -116,7 +116,7 @@ EOL;
 				break;
 		
 			default:
-				if ($structure[$field]['hidden'] && !$user->values['superuser'])
+				if ($structure[$field]['hidden'] && !$user->superuser)
 					$b.=SLAM_makeHiddenInput($value,'edit_'.base64_encode($structure[$field]['name']));
 				else
 					$b.=SLAM_makeFieldHTML($config,$request,$value,$structure[$field],$editable,$hidden);
@@ -297,9 +297,9 @@ function SLAM_makePermissionsHTML($config,$user,$string)
 		$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions_single.html','permissionsDiv',{noclose:'true'});populatePermsPanel('$string')\"/ class='assetPermsButton'>";
 		
 	}
-	//if (!$user->values['superuser'])
+	//if (!$user->superuser)
 		
-//	$s.= " {$user->values['username']}:".SLAM_makeMenuHTML($perms['user']['value'],array('R'=>'R','RW'=>'RW'),"name='perms-owner'",false,true);
+//	$s.= " $user->username:".SLAM_makeMenuHTML($perms['user']['value'],array('R'=>'R','RW'=>'RW'),"name='perms-owner'",false,true);
 //	$s.= " G:".SLAM_makeMenuHTML($perms['user']['value'],array(''=>'','R'=>'R','RW'=>'RW'),"name='perms-group'",false,false);
 //	$s.= " E:".SLAM_makeMenuHTML($perms['user']['value'],array(''=>'','R'=>'R','RW'=>'RW'),"name='perms-user'",false,false);
 	
