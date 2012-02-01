@@ -107,8 +107,8 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 	$config->html['onload'][] = "checkAssetListBoxes(\"{$category}\")";
 	
 	/* combine the two field arrays, except remove those that are present in both */
-	$fields = $config->values['categories'][ $category ]['list_fields'];
-	
+	$fields = $config->categories[ $category ]['list_fields'];
+
 	/* build the header bar showing the fields for each table */
 	$s.="<tr class='assetListHeader'>\n";
 	$s.="<td><a href='#' onClick='toggleCategoryCheckboxes(\"$category\"); return false'>Select</a></td>\n"; // cell for the edit link and radio buttons

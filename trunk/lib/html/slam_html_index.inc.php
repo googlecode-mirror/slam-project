@@ -36,7 +36,7 @@ function SLAM_makeCategoryListHTML($config,$db,$user,$request)
 	*/
 	
 	/* restrict displayed tables to only those that are specified in the config */
-	$categories = array_intersect($db->tables,array_keys($config->values['categories']));
+	$categories = array_intersect($db->tables,array_keys($config->categories));
 	
 	$s=<<<EOL
 <div id='categoryListContainer'>

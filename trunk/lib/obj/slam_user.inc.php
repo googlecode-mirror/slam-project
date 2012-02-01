@@ -12,11 +12,12 @@ class SLAMuser
 	{
 		if ((!$config) || (!$db))
 			return;
-			
+
+		/* loaduser will return false if username/password are bad */
 		if(($ret = $this->loaduser($config,$db,$username,$password)) !== false)
 		{
 			$this->authenticated = true;
-
+			
 			/* extract user groups */
 			$this->groups = split(',',$ret['groups']);
 			if(count($this->values['groups']) == 0)
@@ -63,6 +64,8 @@ class SLAMuser
 			{
 				/* refresh the cookie */
 				setcookie("{$config->values['name']}_slam",$auth[0]['crypt'],time()+$config->values['cookie_expire'],'/');
+				
+				$this->username = $auth[0]['username'];
 				return $auth[0];
 			}
 			

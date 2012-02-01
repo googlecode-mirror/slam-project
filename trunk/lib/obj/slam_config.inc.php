@@ -7,6 +7,9 @@ class SLAMconfig
 	public $db;
 	public $html;
 	
+	public $categories;
+	public $projects;
+	
 	function __construct(){
 		$this->errors = array();
 		

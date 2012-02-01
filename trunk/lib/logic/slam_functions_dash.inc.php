@@ -10,7 +10,7 @@ function SLAM_getDashboardResult(&$config,$db,$user,$request)
 	$dash_req->order = $request->order;
 	
 	/* check the user's categories against the available categories */
-	$available_categories = array_keys($config->values['categories']);
+	$available_categories = array_keys($config->categories);
 	
 	foreach($dash_req->categories as $category=>$foo){
 		if(!in_array($category,$available_categories)){

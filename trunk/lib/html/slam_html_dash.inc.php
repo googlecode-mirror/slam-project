@@ -14,8 +14,8 @@ function SLAM_makeDashboardHTML(&$config,$db,$user,$request,$result)
 	
 	/* register the javascript plugin stub */
 	$config->html['onload'][] = 'doDashJS()';
-
-	$s = "<div id='dashboardTitle'>$user->username's Dashboard</div>\n";
+	
+	$s = "<div id='dashboardTitle'>{$user->username}'s Dashboard</div>\n";
 
 	if($_REQUEST['d_status'])
 		$s.="<div id='dashboardStatus'>Searching categories</div>\n";
@@ -36,7 +36,7 @@ function SLAM_makeDashboardSearchHTML($config,$db,$user,$request)
 	$categories = array_keys($request->categories);
 		
 	/* restrict tables to only those that are specified in the config */
-	$tables = array_intersect($db->tables,array_keys($config->values['categories']));
+	$tables = array_intersect($db->tables,array_keys($config->categories));
 
 	$s ="<form name='selectSearchCategories' action='".$request->makeRequest($config,array('category'=>array()),true)."&d_status=select' method='POST'>\n";
 	$s.="<div id='dashboardSearchContainer'>\n";

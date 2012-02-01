@@ -85,7 +85,7 @@ EOL;
 	foreach($fields as $field => $value)
 	{
 		/* when we run across the title field, save it to the $t variable for later use */
-		if ($field == $config->values['categories'][$category]['title_field'])
+		if ($field == $config->categories[$category]['title_field'])
 			$t="<div id='assetEditTitle'>$category : $value</div>\n";
 
 		/* hide empty fields */
@@ -107,7 +107,7 @@ EOL;
 			
 			case 'Project': /* save the default projects array to the structure of the projects field */
 				$tmp = $structure[$field];
-				$tmp['values'] = $config->values['projects'];
+				$tmp['values'] = $config->projects;
 				$b.=SLAM_makeFieldHTML($config,$request,$value,$tmp,$editable,$hidden);
 				break;
 				
