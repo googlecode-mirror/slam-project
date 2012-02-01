@@ -42,10 +42,6 @@ class SLAMresult
 	{
 		if (!is_array($request->categories))
 			return true;
-		
-		/* retrieve the user permissions filter string */
-		$filter1 = SLAM_getPermissionsFilter($config,$db,$user,$request,'R');
-		$filter2 = SLAM_getRemovedFilter($config,$user);
 
 		foreach($request->categories as $category => $identifiers)
 		{
@@ -69,16 +65,17 @@ class SLAMresult
 				$limit = count($identifiers);
 			}
 			
-			$query = "SELECT * FROM `$category` WHERE ($select) AND ($filter1) AND ($filter2) ORDER BY $order LIMIT $limit";
+			$query = SLAM_makePermsQuery($config, $db, $user, '*', $category, $select, $order, $limit);
 
 			if (($this->assets[$category] = $db->getRecords($query)) === false)
 				$config->errors[]='Database error: Error retrieving assets:'.mysql_error().$query;
 			
-			/* count the number of assets in the category */
-			$query = "SELECT COUNT(*) FROM `$category` WHERE ($filter2)";
+			/* count the number of visible assets in the category */
+			$query = SLAM_makePermsQuery($config, $db, $user, 'COUNT(*)', $category, $select);
 			
 			if (($count=$db->getRecords($query)) === false)
 				$config->errors[]='Database error: Error counting assets:'.mysql_error().$query;
+			
 			$this->counts[$category] = $count[0]['COUNT(*)'];
 		}
 

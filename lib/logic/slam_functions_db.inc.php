@@ -7,31 +7,46 @@ function SLAM_makeInsertionStatement( $db, $f, $table, $array )
 	return "$f INTO `$table` (`$a`) VALUES ('$b')";
 }
 
-function SLAM_getPermissionsFilter($config,$db,$user,$request,$state='R')
+function SLAM_makePermsQuery($config, $db, $user, $return, $table, $match=false, $order=false, $limit=false)
 {
-	/*
-		this function returns a SQL query string that without any additional constraints would return all the entries that user is able to read
-		$state = "R", all readable entries
-		$state = "RW", all readble and writable entries
-	*/
+	if (!$match)
+		$match = '1=1';
+	
+	$group_match = '';
+	foreach( $user->groups as $group )
+		$group_match .= "OR ( MATCH (`Group`) AGAINST ('$group' IN BOOLEAN MODE) AND `Group_access` > 0)\n";
+	
+	$query=<<<EOL
+SELECT $return FROM `$table`
+WHERE(
+	$match
+	AND
+	(
+		(`Identifier` NOT IN (SELECT `Identifier` FROM `{$config->values['perms_table']}`))
+		OR
+		(`Identifier` IN (SELECT `Identifier` FROM `{$config->values['perms_table']}` WHERE(
+			(`Default_access` > 0)
+OR (`Owner` = "{$user->username}" AND `Owner_access` > 0)
+$group_match
+		)))
+	)
+	AND
+	(
+		`Removed` < 1
+	)
+)
+EOL;
 
-	$a = array();
-	$groups = explode(',',$user->groups);
+	if ($user->superuser)
+		$query = "SELECT * FROM `$table` WHERE $match";
 
-	$a[]="`Permissions` like '{$user->username}:{$state}%;'";
-	foreach($user->groups as $group)
-		$a[]="`Permissions` like '%;%{$group}%:{$state}%;%'";
-	if ($state == 'RW')
-		$a[]="`Permissions` like '%;RW'";
-	elseif($state == 'R')
-		$a[]="`Permissions` like '%;R'";
-
-	return implode(' OR ',$a);
-}
-
-function SLAM_getRemovedFilter($config, $user)
-{
-	return ($user->superuser || $config->values['show_removed']) ? '' : "`Removed`='0'";
+	if ($order)
+		$query .= "ORDER BY $order\n";
+	
+	if ($limit)
+		$query .= "LIMIT $limit\n";
+				
+	return $query;
 }
 
 ?>

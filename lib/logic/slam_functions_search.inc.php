@@ -35,10 +35,6 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 	$result = new SLAMresult();
 	$result->getStructures($config,$db,$user,$request);
 	
-	/* retrieve the user permissions filter string */
-	$filter1 = SLAM_getPermissionsFilter($config,$db,$user,$request,'R');
-	$filter2 = SLAM_getRemovedFilter($config,$user);
-	
 	/* generate the limit based upon the previously provided limit */
 	$limit = ($request->limit > 0) ? "{$request->limit},".($request->limit+$config->values['list_max']) : "0,{$config->values['list_max']}";
 
@@ -57,7 +53,7 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 			$select.= ((count($terms)>1) && ($i < (count($terms)-1))) ? "{$term} {$joins[$i]} " : $term;
 				
 		/* generate the query */
-		$query = "SELECT * FROM `$category` WHERE ($select) AND ($filter1) AND ($filter2) ORDER BY $order LIMIT $limit";
+		$query = SLAM_makePermsQuery($config, $db, $user, '*', $category, $select, $order, $limit);
 
 		/* execute the query */
 		if (($result->assets[$category] = $db->getRecords($query)) === false)
@@ -67,10 +63,11 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 		}
 		
 		/* count the number of assets in the category */
-		$query = "SELECT COUNT(*) FROM `$category` WHERE ($filter1)";
+		$query = SLAM_makePermsQuery($config, $db, $user, 'COUNT(*)', $category, $select);
 		
 		if (($count=$db->getRecords($query)) === false)
 			$config->errors[] = 'Database error: Error counting assets:'.mysql_error().$query;
+		
 		$result->counts[$category] = $count[0]['COUNT(*)'];
 	}
 	
