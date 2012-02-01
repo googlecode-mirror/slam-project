@@ -20,7 +20,7 @@ class SLAMuser
 			
 			/* extract user groups */
 			$this->groups = split(',',$ret['groups']);
-			if(count($this->values['groups']) == 0)
+			if(count($this->groups) == 0)
 				$this->groups = array( $this->values['username'] );
 
 			/* extract user prefs */

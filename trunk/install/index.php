@@ -5,16 +5,20 @@
 	$fail = false;
 	$pathinfo = pathinfo($_SERVER['SCRIPT_FILENAME']);
 	
+	# make sure we're running a compatible version of PHP
+	if (version_compare(PHP_VERSION, $req_php_version, '<'))
+		$fail = "Installed PHP version is less than PHP v. $req_php_version";
+	
 	# make sure we're not installing into an existing install
-	if (file_exists('../configurations.ini'))
+	if((!$fail) && (file_exists('../configurations.ini')))
 		$fail = "A configuration.ini file already exists.";
 	
 	# make sure we have all the necessary files
-	if(!checkFileList('./file_list.txt'))
+	if(((!$fail) && !checkFileList('./file_list.txt')))
 		$fail = "Required installation files are missing. Please download the SLAM installer and try again.";
 	
 	# make sure the install directory is writeable
-	if(!is_writable( $pathinfo['dirname'] ))
+	if((!$fail) && (!is_writable( $pathinfo['dirname'])))
 		$fail = "Installation directory is not writeable. Please contact your system administrator";
 	
 	if ($fail !== false)
