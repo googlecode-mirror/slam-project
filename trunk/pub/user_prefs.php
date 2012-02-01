@@ -14,7 +14,7 @@
 			<tr>
 				<td style='text-align:right;font-weight:bold'>Username:</td>
 				<td>
-					<input readonly='readonly' type='text' size='20' value='<?php echo($user->values['username']) ?>' />
+					<input readonly='readonly' type='text' size='20' value='<?php echo($user->username) ?>' />
 				</td>
 			</tr>
 			<tr>
@@ -22,7 +22,7 @@
 				<td>
 					<textarea readonly='readonly' cols='17' rows='4'>
 <?php
-	foreach ($user->values['groups'] as $group)
+	foreach ($user->groups as $group)
 		echo $group."\n";
 ?>
 					</textarea>

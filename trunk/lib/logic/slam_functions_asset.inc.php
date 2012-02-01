@@ -50,7 +50,7 @@ function SLAM_getNewAssetFields($config,$db,$user,$category,$structure,$clone=nu
 	if (is_array($config->values['user_field']))
 		foreach($config->values['user_field'] as $field)
 			if ($fields[ $name ] == '')
-				$fields[ $name ] = $user->values['username'];
+				$fields[ $name ] = $user->username;
 
 	/* set the specified date fields, if needed */
 	if (is_array($config->values['date_field']))
@@ -72,11 +72,11 @@ function SLAM_getNewAssetFields($config,$db,$user,$category,$structure,$clone=nu
 		for ($i = 1; $i<=$user->prefs['default_entryEditable']; $i++)
 			$a[ $i ].= 'W';
 		
-		$groups = join(',',$user->values['groups']);
-		$fields['Permissions'] = "{$user->values['username']}:RW;{$groups}:{$a[1]};{$a[2]}";
+		$groups = join(',',$user->groups);
+		$fields['Permissions'] = "$user->username:RW;$groups:{$a[1]};{$a[2]}";
 	}
 	else
-		$fields['Permissions'] = "{$user->values['username']}:RW;{$a[1]};{$a[2]}";
+		$fields['Permissions'] = "$user->username:RW;{$a[1]};{$a[2]}";
 	
 	/* set user-default project */
 	if ($clone != null)
@@ -179,7 +179,7 @@ function replaceExistingAsset( $config, $db, $user, $asset )
 	$r = $db->GetRecords("SELECT * FROM `{$asset['category']}` WHERE `Identifier`='{$asset['fields']['Identifier']}' LIMIT 1");
 
 	/* make sure we're not editing a removed asset */
-	if (($r[0]['Removed'] == '1') && (!$config->values['edit_removed']) && (!$user->values['superuser']))
+	if (($r[0]['Removed'] == '1') && (!$config->values['edit_removed']) && (!$user->superuser))
 		return SLAM_makeErrorHTML('Authentication error: Unauthorized attempt to edit removed record.',true);
 	elseif (SLAM_getAssetPermission($user,$r[0]) < 2)
 		return SLAM_makeErrorHTML('Authentication error: You are not authorized to save edits to this asset.',true);

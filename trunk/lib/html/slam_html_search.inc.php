@@ -35,7 +35,7 @@ function SLAM_makeSearchBoxHTML($config,$db,$user,$request,$result)
 			$fields = array_intersect($fields,array_keys($structure));
 	
 	$diff = array_intersect($fields,$config->values['hide_fields']);
-	if(!$user->values['superuser'])
+	if(!$user->superuser)
 		$fields = array_diff($fields,$diff);
 
 	/* the possible search modes */

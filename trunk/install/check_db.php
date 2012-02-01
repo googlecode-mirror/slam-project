@@ -36,7 +36,7 @@ else
 if ($message === true)
 {
 	if ($stat > 0)
-	    print "<span style='color:red'>This database is already connected to a SLAM installation.</span>";
+	    print "<span style='color:red'>This database already contains a SLAM installation.</span>";
 	else
 	    print "<span style='color:green'>These settings are OK.</span>";
 
