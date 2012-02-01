@@ -91,7 +91,7 @@ function SLAM_getNewAssetFields($config,$db,$user,$category,$structure,$clone=nu
 	$row = mysql_fetch_assoc($results);
 	
 	$fields['Serial'] = $row['Auto_increment'];
-	$fields['Identifier'] = "{$config->values['lab_prefix']}{$config->values['categories'][$category]['prefix']}_{$row['Auto_increment']}";
+	$fields['Identifier'] = "{$config->values['lab_prefix']}{$config->categories[$category]['prefix']}_{$row['Auto_increment']}";
 	$fields['Removed'] = '0';
 
 	return $fields;
@@ -163,7 +163,7 @@ function insertNewAsset( $config, $db, $user, $asset )
 		else
 		{
 			$asset['fields']['Serial'] = $row['Auto_increment'];
-			$asset['fields']['Identifier'] = "{$config->values['lab_prefix']}{$config->values['categories'][ $asset['category'] ]['prefix']}_{$row['Auto_increment']}";
+			$asset['fields']['Identifier'] = "{$config->values['lab_prefix']}{$config->categories[ $asset['category'] ]['prefix']}_{$row['Auto_increment']}";
 		
 			$q = SLAM_makeInsertionStatement( $db, 'INSERT', $asset['category'], $asset['fields'] );
 			if ($db->Query($q) === false)

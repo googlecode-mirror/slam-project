@@ -28,10 +28,10 @@ class SLAMdb
 			die ("Database error: required projects table \"{$config->values['projects_table']}\" not found.");
 			
 		/* load category information from the SLAM_Categories table */
-		$this->loadCategoryInfo($config);
+		$this->loadCategories($config);
 		
 		/* load project information */
-		$this->loadProjectsInfo($config);
+		$this->loadProjects($config);
 	}
 	
 	public	function Connect($server,$user,$pass,$db)
@@ -52,7 +52,7 @@ class SLAMdb
 		return true;
 	}
 	
-	private	function loadCategoryInfo(&$config)
+	private	function loadCategories(&$config)
 	{
 		/* retrieve all the category info from the specified category table */
 
@@ -66,7 +66,7 @@ class SLAMdb
 		while ($category = mysql_fetch_assoc($result))
 		{
 			$fields = array_keys($this->GetStructure($category['Name']));
-						
+			
 			/* are there any required fields that are not found in the current category? */
 			$diff = array_diff($this->required_fields,array_intersect($this->required_fields,$fields));
 			
@@ -77,11 +77,11 @@ class SLAMdb
 			}
 			else
 			{
-				$config->values['categories'][ $category['Name'] ]['prefix'] = $category['Prefix'];
-				$config->values['categories'][ $category['Name'] ]['list_fields'] = explode(',',$category['List Fields']);
-				$config->values['categories'][ $category['Name'] ]['title_field'] = $category['Title Field'];
-				$config->values['categories'][ $category['Name'] ]['owner_field'] = $category['Owner Field'];
-				$config->values['categories'][ $category['Name'] ]['date_field'] = $category['Date Field'];
+				$config->categories[ $category['Name'] ]['prefix'] = $category['Prefix'];
+				$config->categories[ $category['Name'] ]['list_fields'] = explode(',',$category['List Fields']);
+				$config->categories[ $category['Name'] ]['title_field'] = $category['Title Field'];
+				$config->categories[ $category['Name'] ]['owner_field'] = $category['Owner Field'];
+				$config->categories[ $category['Name'] ]['date_field'] = $category['Date Field'];
 				$config->values['lettercodes'][ $category['Prefix'] ] = $category['Name'];
 			}
 		}
@@ -89,18 +89,17 @@ class SLAMdb
 		// define the regex
 		$config->values['identifier_regex'] = "/([A-Za-z][A-Za-z])(".implode('|',array_keys($config->values['lettercodes'])).")[_]?(\d+)/";
 		
-		return;	
+		return $ret;	
 	}
 	
-	private function loadProjectsInfo(&$config)
+	private function loadProjects(&$config)
 	{
 		if(($result = mysql_query("SELECT * FROM {$config->values['projects_table']}",$this->link)) === false)
 			die('Fatal error: could not retrieve project information. Please contact your system administrator: '.mysql_error());
-					
-		/* save the projects to the config object */
-		while ($category = mysql_fetch_assoc($result))
-			$config->values['projects'][] = $category;
 		
+		while ($project = mysql_fetch_assoc($result))
+			$config->projects[] = $project['Name'];
+
 		return;
 	}
 	
