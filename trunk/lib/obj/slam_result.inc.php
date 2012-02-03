@@ -79,6 +79,49 @@ class SLAMresult
 			$this->counts[$category] = $count[0]['COUNT(*)'];
 		}
 
+		/* associate the retrieved records with their permissions*/
+		$this->getPermissions($config, $db, $user, $request);
+		
+		return true;
+	}
+	
+	public function getPermissions( &$config, $db, $user, $request )
+	{
+		/* this function creates a list of all the identifiers in the result and associates their permissions */
+		
+		# compile the list of identifiers we're to retrieve
+		$list = array();
+		foreach( $this->assets as $name=>$category)
+			foreach( $category as $asset )
+				$list[] = "'{$asset['Identifier']}'";
+		
+		# run a single query to get all available info
+		$query = "SELECT * FROM `{$config->values['perms_table']}` WHERE `Identifier` IN (".join(',',$list).')';
+		if( ($rows = $db->GetRecords( $query )) === false)
+		{
+			$config->errors[] = "Error: Could not retrieve permissions for requested assets.".mysql_error();
+			return false;
+		}
+		
+		# reconfigure the perms so that the identifier is the key
+		$permissions = array();
+		foreach( $rows as $row )
+			$permissions[ $row['Identifier'] ] = $row;
+
+		$identifiers = @array_keys( $permissions );
+		
+		# save the permissions to the assets, or outfit them with default perms
+		foreach( $this->assets as $category=>&$list)
+		{
+			foreach( $list as &$asset)
+			{
+				if( in_array($asset['Identifier'], $identifiers) )
+					$asset['Permissions'] = $permissions[ $asset['Identifier'] ];
+				else
+					SLAM_setDefaultPerms( $config, $asset );
+			}
+		}
+
 		return true;
 	}
 }

@@ -31,8 +31,9 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 		$joins[] = (in_array($request->search['join'][$i],$allowed_joins)) ? $request->search['join'][$i] : 'AND';
 	}
 
-	/* make the result object */
 	$result = new SLAMresult();
+	
+	/* retrieve the structure of the categories in the request */
 	$result->getStructures($config,$db,$user,$request);
 	
 	/* generate the limit based upon the previously provided limit */
@@ -70,6 +71,9 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 		
 		$result->counts[$category] = $count[0]['COUNT(*)'];
 	}
+	
+	/* associate the retrieved records with their permissions*/
+	$result->getPermissions($config, $db, $user, $request);
 	
 	return $result;
 }
