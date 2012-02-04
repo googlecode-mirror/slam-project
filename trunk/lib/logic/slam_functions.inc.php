@@ -15,13 +15,15 @@ function mysql_real_escape($a,$link)
 	return $a;
 }
 
-function SLAM_setDefaultPerms( $config, &$asset )
+function SLAM_setDefaultPerms( $config, &$asset, $user=null )
 {
 	/* sets an asset's permissions array to stand in for output from the SLAM_perms table */
 	
 	$asset['Permissions'] = array();
-	
-	if( ($config->values['permissions']['default_owner'] == '') && ($config->values['permissions']['owner_field'] != '') )
+
+	if ($user)
+		$asset['Permissions']['Owner'] = $user->username;
+	elseif( ($config->values['permissions']['default_owner'] == '') && ($config->values['permissions']['owner_field'] != '') )
 		$asset['Permissions']['Owner'] = $asset[ $config->values['permissions']['owner_field'] ];
 	elseif( $config->values['permissions']['default_owner'] != '' )
 		$asset['Permissions']['Owner'] = $config->values['permissions']['default_owner'];
@@ -30,10 +32,12 @@ function SLAM_setDefaultPerms( $config, &$asset )
 	
 	$asset['Permissions']['Owner_access'] = (int)$config->values['permissions']['default_owner_perms'];
 
-	if( ($config->values['permissions']['default_group'] == '') && ($config->values['permissions']['owner_field'] != '') )
-		$asset['Permissions']['Group'] = $asset[ $config->values['permissions']['owner_field'] ];
+	if ($user)
+		$asset['Permissions']['Group'] = $user->groups;
+	elseif( ($config->values['permissions']['default_group'] == '') && ($config->values['permissions']['owner_field'] != '') )
+		$asset['Permissions']['Group'] = explode( ',', $asset[ $config->values['permissions']['owner_field'] ] );
 	elseif( $config->values['permissions']['default_group'] != '')
-		$asset['Permissions']['Group'] = $config->values['permissions']['default_group'];
+		$asset['Permissions']['Group'] = explode( ',', $config->values['permissions']['default_group'] );
 	else
 		$asset['Permissions']['Group'] = null;
 	

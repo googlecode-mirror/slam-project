@@ -48,7 +48,7 @@ function SLAM_makeMenuHTML($c,$a,$attrs,$b=false,$r=false)
 	
 	$s = "<select $attrs $z>\n";
 	foreach($a as $k=>$v)
-		$s.= (($c == $v) || ($c == $k)) ? "<option value='$v' selected>$k</option>\n" : "<option value='$v'>$k</option>\n";
+		$s.= ($c == $v) ? "<option value='$v' selected>$k</option>\n" : "<option value='$v'>$k</option>\n";
 	return "$s</select>\n";
 }
 

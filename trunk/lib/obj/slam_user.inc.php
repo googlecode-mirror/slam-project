@@ -3,6 +3,7 @@
 class SLAMuser
 {
 	public $username;
+	public $email;
 	public $prefs;
 	public $groups;
 	public $authenticated;
@@ -17,18 +18,21 @@ class SLAMuser
 		if(($ret = $this->loaduser($config,$db,$username,$password)) !== false)
 		{
 			$this->authenticated = true;
+			$this->email = $ret['email'];
 			
 			/* extract user groups */
 			$this->groups = split(',',$ret['groups']);
 			if(count($this->groups) == 0)
 				$this->groups = array( $this->values['username'] );
-
+			
 			/* extract user prefs */
 			$this->prefs = unserialize($ret['prefs']);
-			if(empty($this->prefs['default_entryReadable']))
-				$this->prefs['default_entryReadable'] = 2;
-			if(empty($this->prefs['default_entryEditable']))
-				$this->prefs['default_entryEditable'] = 1;
+			
+			if(!is_numeric($this->prefs['default_groupAccess']))
+				$this->prefs['default_groupAccess'] = (int)$config->values['permissions']['default_group_perms'];
+			
+			if(!is_numeric($this->prefs['default_Access']))
+				$this->prefs['default_Access'] = (int)$config->values['permissions']['default_perms'];
 		}
 			
 		return;
@@ -105,7 +109,7 @@ class SLAMuser
 	function savePrefs(&$config,$db)
 	{
 		$prefs = mysql_real_escape(serialize($this->prefs),$db->link);
-		$q = "UPDATE `{$config->values['user_table']}` SET `prefs`='$prefs' WHERE `username`='$this->username' LIMIT 1";
+		$q = "UPDATE `{$config->values['user_table']}` SET `prefs`='$prefs' WHERE `username`='$this->username' LIMIT 1";		
 		if (!$db->Query($q))
 		{
 			$config->errors[] = 'Error updating user preferences: '.mysql_error();
