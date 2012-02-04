@@ -73,14 +73,14 @@
 	$read_sel = 0;
 	$options = array('Just me'=>0,'Me and my groups'=>1,'Anyone'=>2);
 	
-	if( $user->prefs['default_groupAccess'] > 0 )
+	if( $user->prefs['default_group_access'] > 0 )
 		$read_sel++;
-	if( $user->prefs['default_groupAccess'] == 2 )
+	if( $user->prefs['default_group_access'] == 2 )
 		$edit_sel++;
 	
-	if( $user->prefs['default_Access'] > 0 )
+	if( $user->prefs['default_access'] > 0 )
 		$read_sel++;
-	if( $user->prefs['default_Access'] == 2 )
+	if( $user->prefs['default_access'] == 2 )
 		$edit_sel++;
 
 	echo SLAM_makeMenuHTML($edit_sel,$options,"name='defaultEditable'",false);
