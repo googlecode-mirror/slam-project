@@ -13,7 +13,7 @@ function SLAM_makePermsQuery($config, $db, $user, $return, $table, $match=false,
 		$match = '1=1';
 	
 	$group_match = '';
-	foreach( $user->groups as $group )
+	foreach( $user->group as $group )
 		$group_match .= "OR ( MATCH (`Group`) AGAINST ('$group' IN BOOLEAN MODE) AND `Group_access` > 0)\n";
 	
 	$query=<<<EOL

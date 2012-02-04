@@ -9,7 +9,7 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 	/* register the necessary header files */
 	$config->html['css'][] = 'css/asset.css';
 	$config->html['js'][] = 'js/asset.js';
-	$config->html['js'][] = 'js/base64.js';
+	$config->html['js'][] = 'js/convert.js';
 	
 	/* register the javascript plugin stub */
 	$config->html['onload'][] = 'doEditJS()';
@@ -34,16 +34,6 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 	}
 	else
 	{
-		/* if there are a mix of editable and uneditable assets, provide the user a warning */
-		$editable = array_unique($editable);
-		if (count($editable) > 1)
-		{
-			$config->html['onload'][] = 'doNonEditableWarning()';
-			$editable = true;
-		}
-		else
-			$editable = $editable[0];
-		
 		/* retrieve the consensus field values */
 		$fields	= SLAM_getAssetFields($config,$db,$user,$assets);
 	
@@ -55,6 +45,7 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 			/* save all of the identifiers we're to update into the form */		
 			$s.=SLAM_makeHiddenInput($asset['Identifier'],'Identifier[]');
 		}
+		$editable = array_unique($editable);
 		
 		/* fields that cannot be edited for more than one asset at a time shouldn't be shown */
 		if (count($assets) > 1)
@@ -63,6 +54,16 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 			unset($fields['Files']);
 		}
 	}
+	
+	/* if there are a mix of editable and uneditable assets, provide the user a warning */
+	if( count($editable) > 1 )
+	{
+		$config->html['onload'][] = 'doNonEditableWarning()';
+		$editable = true;
+	}
+	else
+		$editable = $editable[0];
+
 	
 	/* set our location */
 	$s.=SLAM_makeHiddenInput($request->location,'loc');
@@ -81,6 +82,7 @@ jump to <a href='#End'>bottom</a> |
 EOL;
 
 	$b="$f<table id='assetEdit'>\n";
+
 	/* go through each field and put together the html to view/edit it */
 	foreach($fields as $field => $value)
 	{
@@ -100,9 +102,9 @@ EOL;
 				$b.=SLAM_makeFieldHTML($config,$request,$value,$structure[$field],$user->superuser,$hidden);
 				break;
 			
-			case 'Permissions': /* insert the permissions control panel */
-				$b.=SLAM_makePermissionsHTML($config,$user,$value);
-				$b.=SLAM_makeHiddenInput(base64_encode($field['Permissions']),'Permissions');
+			case 'permissions': /* insert the permissions control panel */
+				$b.=SLAM_makePermissionsHTML($config,$user,$assets);
+				$b.=SLAM_makeHiddenInput( base64_encode(json_encode($value)) ,'permissions');
 				break;
 			
 			case 'Project': /* save the default projects array to the structure of the projects field */
@@ -280,43 +282,19 @@ function SLAM_makeIdentifierMenuHTML($config,$request,$v,$s,$n)
 		return '<!-- empty -->';
 }
 
-function SLAM_makePermissionsHTML($config,$user,$string)
+function SLAM_makePermissionsHTML($config,$user,$assets)
 {
 	/* generates a panel that the user can modify the permissions with */
 
 	$s = "<tr>\n<td class='assetEditField'>Permissions:</td><td class='assetEditValue'>";
-
-	if($string == '(multiple)')
-	{
-		$string = base64_encode(':;:;:');
-		$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions_multiple.html','permissionsDiv',{noclose:'true'});populatePermsPanel('$string')\"/ class='assetPermsButton'>";
-	}
+	if( count($assets) == 1 )
+		$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions_single.html','permissionsDiv',{noclose:'true'});populatePermsPanel('permissions')\"/ class='assetPermsButton'>";
 	else
-	{
-		$string = base64_encode($string);
-		$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions_single.html','permissionsDiv',{noclose:'true'});populatePermsPanel('$string')\"/ class='assetPermsButton'>";
-		
-	}
-	//if (!$user->superuser)
-		
-//	$s.= " $user->username:".SLAM_makeMenuHTML($perms['user']['value'],array('R'=>'R','RW'=>'RW'),"name='perms-owner'",false,true);
-//	$s.= " G:".SLAM_makeMenuHTML($perms['user']['value'],array(''=>'','R'=>'R','RW'=>'RW'),"name='perms-group'",false,false);
-//	$s.= " E:".SLAM_makeMenuHTML($perms['user']['value'],array(''=>'','R'=>'R','RW'=>'RW'),"name='perms-user'",false,false);
+		$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions_multiple.html','permissionsDiv',{noclose:'true'});populatePermsPanel('permissions')\"/ class='assetPermsButton'>";
 	
 	$s.= "</td><td class='assetEditFunction'></td>\n</tr>\n";
 	
 	return $s;
 }
-
-//function SLAM_makeMenuHTML($c,$a,$attrs,$b=false,$r=false)
-//{
-	/* returns a HTML drop-down menu
-		$c = selected value
-		$a = array of options
-		$attrs = attributes for the menu
-		$b = prepend a blank option?
-		$r = read only?
-	*/
-
 
 ?>

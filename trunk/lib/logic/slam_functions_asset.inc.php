@@ -88,26 +88,24 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	*/
 
 	/* get asset values from fields that start with "edit_" */
-	$fields = array();
+	$asset = array();
 	foreach($_REQUEST as $key => $value)
 		if (($value != '(multiple)') && (preg_match('/^edit_(.+)$/',$key,$m) > 0))
-			$fields[base64_decode($m[1])] = stripslashes($value);
-		
+			$asset[base64_decode($m[1])] = stripslashes($value);
+	
 	/* go through all the tables we need to insert into */
 	foreach($request->categories as $category=>$identifiers)
 	{
-		$asset = array('category'=>$category, 'fields'=>$fields);
-		
 		/* if permissions field is '(multiple)', don't overwrite asset's existing permissions */
-		if ($_REQUEST['Permissions'] && ($_REQUEST['Permissions'] == '(multiple)'))
+		if ($_REQUEST['permissions'] && ($_REQUEST['permissions'] == '(multiple)'))
 			$asset['permissions'] = false;
-		
+		elseif( $_REQUEST['permissions'] )
+			$asset['permissions'] = json_decode(base64_decode($_REQUEST['permissions']));
+
 		/* identifiers is empty, we must be creating a new entry */
 		if (!is_array($identifiers))
-		{
-			if ( ($s = insertNewAsset( $config, $db, $user, $asset)) !== True)
+			if ( ($s = insertNewAsset( $config, $db, $user, $category, $asset)) !== True)
 				return $s;
-		}
 		
 		/* go through all the assets we have and update the changed fields */
 		foreach($identifiers as $identifier)
@@ -115,7 +113,7 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 			/* replace the insertion statement identifier with the correct one */
 			$fields['Identifier'] = $identifier;
 			
-			if (($s = replaceExistingAsset( $config, $db, $user, $asset)) !== True)
+			if (($s = replaceExistingAsset( $config, $db, $user, $category, $asset)) !== True)
 				return $s;
 		}
 	}
@@ -125,10 +123,10 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	return '';
 }
 
-function insertNewAsset( $config, $db, $user, $asset )
+function insertNewAsset( $config, $db, $user, $category, $asset )
 {
 	/* see if there's an entry with the specified identifier already */
-	$r = $db->GetRecords("SELECT * FROM `{$asset['category']}` WHERE identifier='{$asset['fields']['Identifier']}' LIMIT 1");
+	$r = $db->GetRecords("SELECT * FROM `$category` WHERE identifier='{$asset['Identifier']}' LIMIT 1");
 	
 	if ($r === false)
 		 return SLAM_makeErrorHTML('Database error: could not check for duplicate identifiers: '.mysql_error(),true);
@@ -137,7 +135,7 @@ function insertNewAsset( $config, $db, $user, $asset )
 	{
 		// pre-existing entry with that identifier!, get next highest asset number and regenerate identifier
 		
-		if(($results = $db->Query("SHOW TABLE STATUS WHERE `name`='{$asset['category']}'")) === false)
+		if(($results = $db->Query("SHOW TABLE STATUS WHERE `name`='$category'")) === false)
 			return SLAM_makeErrorHTML('Database error: error retrieving table status:'.mysql_error(),true);
 			
 		$row = mysql_fetch_assoc($results);
@@ -145,47 +143,75 @@ function insertNewAsset( $config, $db, $user, $asset )
 			return SLAM_makeErrorHTML('Database error: could not get table\'s next available identifier.',true);
 		else
 		{
-			$asset['fields']['Serial'] = $row['Auto_increment'];
-			$asset['fields']['Identifier'] = "{$config->values['lab_prefix']}{$config->categories[ $asset['category'] ]['prefix']}_{$row['Auto_increment']}";
+			$asset['Serial'] = $row['Auto_increment'];
+			$asset['Identifier'] = "{$config->values['lab_prefix']}{$config->categories[ $category ]['prefix']}_{$row['Auto_increment']}";
 		}
 	}
 	
-	$q = SLAM_makeInsertionStatement( $db, 'INSERT', $asset['category'], $asset['fields'] );
+	/* separate the permissions from the asset attributes to be saved */
+	$permissions = (array)$asset['permissions'];
+	unset($asset['permissions']);
+	
+	/* insert the asset attributes into the database */
+	$q = SLAM_makeInsertionStatement( $db, 'INSERT', $category, $asset );
 	if ($db->Query($q) === false)
 		return SLAM_makeErrorHTML('Database error: could not save record: '.mysql_error(),true);
 	
-	if( $asset['permissions'] )
-	{
-		$q = SLAM_makeInsertionStatement( $db, 'INSERT', $config->values['perms_table'], $asset['permissions'] );
-		if ($db->Query($q) === false)
-			return SLAM_makeErrorHTML('Database error: could not save record permissions: '.mysql_error(),true);				
-	}
+	/* save the permissions as well */
+	$asset['permissions'] = $permissions;
+	if( ($ret = SLAM_saveAssetPerms($config, $db, $asset)) !== true)
+		return $ret;
 	
 	return True;
 }
 
-function replaceExistingAsset( $config, $db, $user, $asset )
+function replaceExistingAsset( $config, $db, $user, $category, $asset )
 {
-	$r = $db->GetRecords("SELECT * FROM `{$asset['category']}` WHERE `Identifier`='{$asset['fields']['Identifier']}' LIMIT 1");
-
-	/* make sure we're not editing a removed asset */
-	if (($r[0]['Removed'] == '1') && (!$config->values['edit_removed']) && (!$user->superuser))
-		return SLAM_makeErrorHTML('Authentication error: Unauthorized attempt to edit removed record.',true);
-	elseif (SLAM_getAssetAccess($user,$r[0]) < 2)
-		return SLAM_makeErrorHTML('Authentication error: You are not authorized to save edits to this asset.',true);
+	/* save the asset perms for now */
+	$permissions = (array)$asset['permissions'];
+	unset($asset['permissions']);
 	
-	$q = SLAM_makeInsertionStatement( $db, 'REPLACE', $asset['category'], $asset['fields'] );
+	/* don't trust the user-provided asset, check permissions separately */
+	$old_perms = $db->GetRecords("SELECT * FROM `{$config->values['perms_table']}` WHERE `Identifier`='{$asset['Identifier']}' LIMIT 1");
+	if( count($old_perms) == 1 )
+		$asset['permissions'] = $old_perms[0];
+	else
+		SLAM_setDefaultPerms( $asset, $config );
+	
+	/* verify that the current user is qualified */
+	if (SLAM_getAssetAccess($user,$asset) < 2)
+		return SLAM_makeErrorHTML('Authentication error: You are not authorized to save edits to this asset.',true);
+
+	/* don't try and save the permissions field into the asset table */
+	unset($asset['permissions']);
+	
+	$q = SLAM_makeInsertionStatement( $db, 'REPLACE', $category, $asset );
 	if ($db->Query($q) === false)
 		return SLAM_makeErrorHTML('Database error: could not save record: '.mysql_error(),true);
 	
-	if( $asset['permissions'] )
-	{
-		$q = SLAM_makeInsertionStatement( $db, 'REPLACE', $config->values['perms_table'], $asset['permissions'] );
-		if ($db->Query($q) === false)
-			return SLAM_makeErrorHTML('Database error: could not save record permissions: '.mysql_error(),true);
-	}
+	$asset['permissions'] = $permissions;
+	if( ($ret = SLAM_saveAssetPerms($config, $db, $asset)) !== true)
+		return $ret;
 	
 	return True;
+}
+
+function SLAM_saveAssetPerms(&$config, $db, $asset)
+{
+	if( !$asset['permissions'] )
+		return true;
+	
+	/* permissions are sometimes provided as a JSON object */
+	$permissions = (array)$asset['permissions'];
+	$permissions['Identifier'] = $asset['Identifier'];
+	$permissions['group'] = join(',',$permissions['group']);
+	
+	$q = SLAM_makeInsertionStatement( $db, 'REPLACE', $config->values['perms_table'], $permissions );	
+	
+	if ($db->Query($q) === false)
+		return SLAM_makeErrorHTML('Database error: could not save record permissions: '.mysql_error(),true);
+
+	return true;
 }
 
 function SLAM_deleteAssets(&$config, $db, &$user, &$request)
@@ -224,7 +250,7 @@ function SLAM_deleteAssets(&$config, $db, &$user, &$request)
 function SLAM_setDefaultPerms( &$asset, $config, $user=false, $clone=false )
 {
 	/* sets an asset's permissions array to stand in for output from the SLAM_perms table */
-	
+
 	$asset['permissions'] = array();
 
 	if ($user)
@@ -244,21 +270,18 @@ function SLAM_setDefaultPerms( &$asset, $config, $user=false, $clone=false )
 		return;
 	}
 	
-	if($user !== false)
-		$asset['permissions']['owner_access'] = 2;
-	else
-		$asset['permissions']['owner_access'] = (int)$config->values['permissions']['default_owner_perms'];
+	$asset['permissions']['owner_access'] = (int)$config->values['permissions']['default_owner_access'];
 
-	/* if first group of config file defaults is empty, autopopulate with specified user field */
-	if( ($config->values['permissions']['default_group'][0] == '') && ($config->values['permissions']['owner_field'] != '') )
-		$config->values['permissions']['default_group'][0] = $asset['fields'][ $config->values['permissions']['owner_field'] ];
-				
+	/* if first group of config file defaults is empty, autopopulate with specified group field */
+	if( ($config->values['permissions']['default_group'][0] == '') && ($config->values['permissions']['group_field'] != '') )
+		$default_group = array($asset[ $config->values['permissions']['group_field'] ]);
+	
 	if ($user !== false)
-		$asset['permissions']['groups'] = $user->groups;
-	elseif( is_array( $config->values['permissions']['default_group'] ) )
-		$asset['permissions']['groups'] = $config->values['permissions']['default_group'];
+		$asset['permissions']['group'] = $user->group;
+	elseif( is_array( $default_group ) )
+		$asset['permissions']['group'] = $default_group;
 	else
-		$asset['permissions']['groups'] = array();
+		$asset['permissions']['group'] = array();
 	
 	if( is_numeric($user->prefs['default_group_access']) )
 		$asset['permissions']['group_access'] = $user->prefs['default_group_access'];
@@ -268,8 +291,8 @@ function SLAM_setDefaultPerms( &$asset, $config, $user=false, $clone=false )
 	if( is_numeric($user->prefs['default_access']) )
 		$asset['permissions']['default_access'] = $user->prefs['default_access'];
 	else
-		$asset['permissions']['default_access'] = (int)$config->values['permissions']['default_perms'];
-	
+		$asset['permissions']['default_access'] = (int)$config->values['permissions']['default_access'];
+
 	return true;
 }
 
@@ -305,7 +328,6 @@ function SLAM_getAssetAccess($user,$asset)
 	2 = read + write access
 	
 	*/
-
 	if ($user->superuser)
 		return 2;
 	
@@ -318,11 +340,11 @@ function SLAM_getAssetAccess($user,$asset)
 			$access = $asset['permissions']['owner_access'];
 		
 	/* check user groups against asset groups */
-	foreach($user->groups as $group)
-		if( in_array( $group, $asset['permissions']['groups'] ) )
+	foreach($user->group as $group)
+		if( in_array( $group, $asset['permissions']['group'] ) )
 			if( $asset['permissions']['group_access'] > $access )
 				$access = $asset['permissions']['group_access'];
-		
+	
 	return $access;
 }
 

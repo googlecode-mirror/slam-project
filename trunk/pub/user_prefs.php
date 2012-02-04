@@ -22,7 +22,7 @@
 				<td>
 					<textarea readonly='readonly' cols='17' rows='4'>
 <?php
-	foreach ($user->groups as $group)
+	foreach ($user->group as $group)
 		echo $group."\n";
 ?>
 					</textarea>

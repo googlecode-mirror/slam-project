@@ -44,7 +44,7 @@
 
 ../js
 ../js/asset.js
-../js/base64.js
+../js/convert.js
 ../js/dash.js
 ../js/files.js
 ../js/global.js
