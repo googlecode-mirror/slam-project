@@ -14,7 +14,7 @@ $sql_create_required['researchers']="CREATE TABLE `SLAM_Researchers` (
 	`salt` varchar( 8 ) NOT NULL,
 	`email` varchar( 255 ) NOT NULL,
 	`superuser` tinyint( 4 ) NOT NULL DEFAULT '0',
-	`groups` varchar( 255 ) NOT NULL DEFAULT '',
+	`group` varchar( 255 ) NOT NULL DEFAULT '',
 	`prefs` text NOT NULL,
 	PRIMARY KEY ( `username` )
 ) ENGINE = MyISAM DEFAULT CHARSET = latin1;";

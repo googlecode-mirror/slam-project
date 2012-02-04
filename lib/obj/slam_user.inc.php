@@ -5,7 +5,7 @@ class SLAMuser
 	public $username;
 	public $email;
 	public $prefs;
-	public $groups;
+	public $group;
 	public $authenticated;
 	public $superuser;
 	
@@ -21,9 +21,9 @@ class SLAMuser
 			$this->email = $ret['email'];
 			
 			/* extract user groups */
-			$this->groups = split(',',$ret['groups']);
-			if(count($this->groups) == 0)
-				$this->groups = array( $this->values['username'] );
+			$this->group = split(',',$ret['group']);
+			if(count($this->group) == 0)
+				$this->group = array( $this->values['username'] );
 			
 			/* extract user prefs */
 			$this->prefs = unserialize($ret['prefs']);

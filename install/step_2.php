@@ -23,7 +23,7 @@
 		<title>SLAM installer - Step 2</title>
 		<link type='text/css' href='install.css' rel='stylesheet' />
 		<script type='text/javascript' src='check.js'></script>
-		<script type='text/javascript' src='../js/base64.js'></script>
+		<script type='text/javascript' src='../js/convert.js'></script>
 	</head>
 	<body>
 		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Step 2</div>

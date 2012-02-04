@@ -24,7 +24,7 @@ class SLAMresult
 		if (!is_array($request->categories))
 			return true;
 			
-		foreach($request->categories as $category => $identifiers)
+		foreach($request->categories as $category=>$identifiers)
 		{
 			$this->fields[$category] = array();
 			if(($this->fields[$category] = $db->getStructure($category)) === false)
@@ -89,7 +89,7 @@ class SLAMresult
 		
 		# compile the list of identifiers we're to retrieve
 		$list = array();
-		foreach( $this->assets as $name=>$category)
+		foreach( $this->assets as $category)
 			foreach( $category as $asset )
 				$list[] = "'{$asset['Identifier']}'";
 		
@@ -104,7 +104,10 @@ class SLAMresult
 		# reconfigure the perms so that the identifier is the key
 		$permissions = array();
 		foreach( $rows as $row )
+		{
 			$permissions[ $row['Identifier'] ] = $row;
+			$permissions[ $row['Identifier'] ]['group'] = explode(',',$permissions[ $row['Identifier'] ]['group']);
+		}
 
 		$identifiers = @array_keys( $permissions );
 		
@@ -116,7 +119,7 @@ class SLAMresult
 				if( in_array($asset['Identifier'], $identifiers) )
 					$asset['permissions'] = $permissions[ $asset['Identifier'] ];
 				else
-					SLAM_setDefaultPerms( $asset, $config, null );
+					SLAM_setDefaultPerms( $asset, $config );
 			}
 		}
 

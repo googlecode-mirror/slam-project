@@ -5,7 +5,7 @@ class SLAMdb
 	public $link = null;
 	public $tables = array();
 	
-	private $required_fields = array('Serial','Identifier','Permissions','Removed');
+	private $required_fields = array('Serial','Identifier','Removed');
 	
 	public function __construct(&$config)
 	{

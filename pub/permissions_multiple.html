@@ -19,22 +19,23 @@
 		<tr>
 			<td>
 				<select id='perms-owner' name='perms-owner' style='width:75px'>
-					<option value='R'>Read</option>
-					<option value='RW'>Read/Write</option>
+					<option value='0' disabled='disabled'>No access</option>
+					<option value='1' disabled='disabled'>Read</option>
+					<option value='2'>Read/Write</option>
 				</select>
 			</td>
 			<td>
 				<select id='perms-group' name='perms-group' style='width:75px'>
-					<option value='R'>Read</option>
-					<option value='RW'>Read/Write</option>
-					<option value=''>No access</option>
+					<option value='0'>No access</option>
+					<option value='1'>Read</option>
+					<option value='2'>Read/Write</option>
 				</select>
 			</td>
 			<td>
 				<select id='perms-user' name='perms-user' style='width:75px'>
-					<option value='R'>Read</option>
-					<option value='RW'>Read/Write</option>
-					<option value=''>No access</option>
+					<option value='0'>No access</option>
+					<option value='1'>Read</option>
+					<option value='2'>Read/Write</option>
 				</select>
 			</td>
 		</tr>

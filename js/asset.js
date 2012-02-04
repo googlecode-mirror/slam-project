@@ -21,59 +21,53 @@ function doNonEditableWarning( )
 	return;
 }
 
-function populatePermsPanel( perms )
+function populatePermsPanel( id )
 {
-	var arr = base64_decode(perms).split(';');
-	
-	var o = arr[0].split(':');
-	var g = arr[1].split(':');
-	var u = arr[2];
+	var string = document.getElementById( id ).value;
+	var perms = eval("(" + base64_decode(string) + ")");
 	
 	/* set owner fields & menu */
 	var field = document.getElementById('perms-ownername');
-	field.value = o[0];
+	field.value = perms.owner;
 
 	var menu = document.getElementById('perms-owner');
 	for (var i=0; i<menu.length; i++)
-		if (menu.options[i].value == o[1]){ menu.options[i].selected=true; }
+		if (i == perms.owner_access){ menu.options[i].selected=true; }
 	
 	/* set group fields & menu */
-	var groups = g[0].split(',');
 	field = document.getElementById('perms-grouplist');
-	field.value = groups.join("\n");
+	field.value = perms.group.join("\n");
 	
 	menu = document.getElementById('perms-group');
 	for (var i=0; i<menu.length; i++)
-		if (menu.options[i].value == g[1]){ menu.options[i].selected=true; }
+		if (i == perms.group_access){ menu.options[i].selected=true; }
 
 	/* set user (everyone) status */
 	menu = document.getElementById('perms-user');
 	for (var i=0; i<menu.length; i++)
-	{
-		if (menu.options[i].value == u){ menu.options[i].selected=true; }
-	}
+		if (i == perms.default_access){ menu.options[i].selected=true; }
 	
 	return;
 }
 
 function returnPermsPanel()
 {
-	var owner_name = document.getElementById('perms-ownername').value;
+	var perms = {};
+	perms.owner = document.getElementById('perms-ownername').value;
 	var temp = document.getElementById('perms-owner');
-	var owner_perms = temp.options[temp.options.selectedIndex].value;
+	perms.owner_access = temp.options[temp.options.selectedIndex].value;
 
 	var temp = document.getElementById('perms-grouplist').value;
-	var temp2 = temp.split("\n");
-	var group_list = temp2.join(',');
+	perms.group = temp.split("\n");
+	
 	var temp = document.getElementById('perms-group');
-	var group_perms = temp.options[temp.options.selectedIndex].value;
+	perms.group_access = temp.options[temp.options.selectedIndex].value;
 	
 	var temp = document.getElementById('perms-user');
-	var user_perms = temp.options[temp.options.selectedIndex].value;
+	perms.default_access = temp.options[temp.options.selectedIndex].value;
 	
-	var field = document.getElementById('Permissions');
-	field.value = base64_encode(owner_name+':'+owner_perms+';'+group_list+':'+group_perms+';'+user_perms);
-	
+	var field = document.getElementById('permissions');
+	field.value = base64_encode(JSON.stringify(perms));
 	return;
 }
 
