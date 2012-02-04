@@ -28,11 +28,11 @@ class SLAMuser
 			/* extract user prefs */
 			$this->prefs = unserialize($ret['prefs']);
 			
-			if(!is_numeric($this->prefs['default_groupAccess']))
-				$this->prefs['default_groupAccess'] = (int)$config->values['permissions']['default_group_perms'];
+			if(!is_numeric($this->prefs['default_group_access']))
+				$this->prefs['default_group_access'] = (int)$config->values['permissions']['default_group_perms'];
 			
-			if(!is_numeric($this->prefs['default_Access']))
-				$this->prefs['default_Access'] = (int)$config->values['permissions']['default_perms'];
+			if(!is_numeric($this->prefs['default_access']))
+				$this->prefs['default_access'] = (int)$config->values['permissions']['default_perms'];
 		}
 			
 		return;

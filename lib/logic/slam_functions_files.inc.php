@@ -47,7 +47,7 @@ function SLAM_checkAssetOwner(&$config,$db,$user,$category,$identifier)
 	if(empty($r)) // asset doesn't exist (a new asset)
 		return true;
 	else
-		return (bool)(SLAM_getAssetPermission($user,$r[0]) > 1);
+		return (bool)(SLAM_getAssetAccess($user,$r[0]) > 1);
 }
 
 function SLAM_getArchiveFiles(&$config,$path)

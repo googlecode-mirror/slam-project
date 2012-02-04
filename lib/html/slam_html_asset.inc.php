@@ -25,12 +25,12 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 	if ($request->action == 'new')
 	{
 		$editable = true;
-		$fields	= SLAM_getNewAssetFields($config,$db,$user,$category,$structure,null);
+		$fields	= SLAM_setAssetFields($config,$db,$user,$category,$structure,null);
 	}
 	elseif ($request->action == 'clone')
 	{
 		$editable = true;
-		$fields	= SLAM_getNewAssetFields($config,$db,$user,$category,$structure,$assets[0]);
+		$fields	= SLAM_setAssetFields($config,$db,$user,$category,$structure,$assets[0]);
 	}
 	else
 	{
@@ -50,7 +50,7 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 		foreach($assets as $asset)
 		{
 			/* save the editable status for every asset */
-			$editable[] = (SLAM_getAssetPermission($user,$asset) > 1);
+			$editable[] = (SLAM_getAssetAccess($user,$asset) > 1);
 			
 			/* save all of the identifiers we're to update into the form */		
 			$s.=SLAM_makeHiddenInput($asset['Identifier'],'Identifier[]');

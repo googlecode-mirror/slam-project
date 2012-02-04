@@ -15,6 +15,7 @@ class SLAMresult
 		{
 			$this->getStructures($config,$db,$user,$request);
 			$this->getRecords($config,$db,$user,$request);
+			$this->getPermissions($config, $db, $user, $request);
 		}
 	}
 	
@@ -78,9 +79,6 @@ class SLAMresult
 			
 			$this->counts[$category] = $count[0]['COUNT(*)'];
 		}
-
-		/* associate the retrieved records with their permissions*/
-		$this->getPermissions($config, $db, $user, $request);
 		
 		return true;
 	}
@@ -116,9 +114,9 @@ class SLAMresult
 			foreach( $list as &$asset)
 			{
 				if( in_array($asset['Identifier'], $identifiers) )
-					$asset['Permissions'] = $permissions[ $asset['Identifier'] ];
+					$asset['permissions'] = $permissions[ $asset['Identifier'] ];
 				else
-					SLAM_setDefaultPerms( $config, $asset, null );
+					SLAM_setDefaultPerms( $asset, $config, null );
 			}
 		}
 

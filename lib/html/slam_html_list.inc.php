@@ -138,7 +138,7 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 		$url = $request->makeRequest($config,array('identifier'=>array($asset['Identifier']),'action'=>'open'),true);
 
 		/* is the current user qualified to edit this record ? */
-		$s.= (SLAM_getAssetPermission($user,$asset) > 1) ? "<a href='$url'>open</a>\n" : "<a href='$url'>view</a>\n";
+		$s.= (SLAM_getAssetAccess($user,$asset) > 1) ? "<a href='$url'>open</a>\n" : "<a href='$url'>view</a>\n";
 		
 		$s.="</td>\n";
 		

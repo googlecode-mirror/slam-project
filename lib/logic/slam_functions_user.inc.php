@@ -49,26 +49,26 @@ function SLAM_setUserPreferences(&$config,$db,&$user)
 	switch( $_REQUEST['defaultReadable'] )
 	{
 		case 1:
-			$user->prefs['default_groupAccess'] = 1;
-			$user->prefs['default_Access'] = 0;
+			$user->prefs['default_group_access'] = 1;
+			$user->prefs['default_access'] = 0;
 			break;
 		case 2:
-			$user->prefs['default_groupAccess'] = 1;
-			$user->prefs['default_Access'] = 1;
+			$user->prefs['default_group_access'] = 1;
+			$user->prefs['default_access'] = 1;
 			break;
 		default:
-			$user->prefs['default_groupAccess'] = 0;
-			$user->prefs['default_Access'] = 0;
+			$user->prefs['default_group_access'] = 0;
+			$user->prefs['default_access'] = 0;
 	}
 	
 	switch( $_REQUEST['defaultEditable'] )
 	{
 		case 1:
-			$user->prefs['default_groupAccess'] = 2;
+			$user->prefs['default_group_access'] = 2;
 			break;
 		case 2:
-			$user->prefs['default_groupAccess'] = 2;
-			$user->prefs['default_Access'] = 2;
+			$user->prefs['default_group_access'] = 2;
+			$user->prefs['default_access'] = 2;
 			break;
 	}
 		
