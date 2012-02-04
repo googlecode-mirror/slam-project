@@ -41,22 +41,39 @@ function SLAM_doUserAction(&$config,$db,&$user)
 }
 
 function SLAM_setUserPreferences(&$config,$db,&$user)
-{
-	/*
-	$email = urldecode($_REQUEST['user_email']);
-	if (filter_var($email, FILTER_VALIDATE_EMAIL) === false)
-		$config->errors[] = 'User attempted to set email to an invalid address.';
-	 
-	*/
-	
+{	
 	if ($_REQUEST['defaultProject'])
 		$user->prefs['default_project'] = urldecode($_REQUEST['defaultProject']);
+		
+	/* interpret the permission menu selections */
+	switch( $_REQUEST['defaultReadable'] )
+	{
+		case 1:
+			$user->prefs['default_groupAccess'] = 1;
+			$user->prefs['default_Access'] = 0;
+			break;
+		case 2:
+			$user->prefs['default_groupAccess'] = 1;
+			$user->prefs['default_Access'] = 1;
+			break;
+		default:
+			$user->prefs['default_groupAccess'] = 0;
+			$user->prefs['default_Access'] = 0;
+	}
 	
-	$user->prefs['default_entryEditable'] = urldecode($_REQUEST['defaultEditable']);
-	$user->prefs['default_entryReadable'] = urldecode($_REQUEST['defaultReadable']);
-	
+	switch( $_REQUEST['defaultEditable'] )
+	{
+		case 1:
+			$user->prefs['default_groupAccess'] = 2;
+			break;
+		case 2:
+			$user->prefs['default_groupAccess'] = 2;
+			$user->prefs['default_Access'] = 2;
+			break;
+	}
+		
 	$user->savePrefs($config,$db);
-	
+
 	return;
 }
 
@@ -144,7 +161,10 @@ function SLAM_sendUserResetMail(&$config,$db)
 	$email = mysql_real_escape($_REQUEST['user_email'],$db->link);
 
 	$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `email`='$email'");
-	if ($auth === false){ //GetRecords returns false on error
+	
+	//GetRecords returns false on error
+	if ($auth === false)
+	{
 		$config->errors[] = 'Database error: Could not send reset email, could not access user table:'.mysql_error();
 		return;
 	}

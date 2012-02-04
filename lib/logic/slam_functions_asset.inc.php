@@ -59,24 +59,8 @@ function SLAM_getNewAssetFields($config,$db,$user,$category,$structure,$clone=nu
 				$fields[ $name ] = date('Y-m-d');
 	
 	/* set permissions */
-	$a = split(';',$clone['Permissions']); // do it this way in case the the clone entry has malformed permissions
-	if (count($a) < 3)
-	{
-		$a = array();
-		/* 0 - me
-		 * 1 - groups
-		 * 2 - everyone
-		 */
-		for ($i = 1; $i<=$user->prefs['default_entryReadable']; $i++)
-			$a[ $i ] = 'R';
-		for ($i = 1; $i<=$user->prefs['default_entryEditable']; $i++)
-			$a[ $i ].= 'W';
-		
-		$groups = join(',',$user->groups);
-		$fields['Permissions'] = "$user->username:RW;$groups:{$a[1]};{$a[2]}";
-	}
-	else
-		$fields['Permissions'] = "$user->username:RW;{$a[1]};{$a[2]}";
+	SLAM_setDefaultPerms( $config, $fields, $user );
+	
 	
 	/* set user-default project */
 	if ($clone != null)

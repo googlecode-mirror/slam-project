@@ -31,7 +31,7 @@
 			<tr>
 				<td style='text-align:right;font-weight:bold'>Email:</td>
 				<td>
-					<input readonly='readonly' type='text' size='20' value='<?php echo($user->values['email']) ?>' id='user_email' />
+					<input readonly='readonly' type='text' size='20' value='<?php echo($user->email) ?>' id='user_email' />
 				</td>
 			</tr>
 			<tr>
@@ -44,9 +44,9 @@
 
 	/* get the user's default project from his preferences */
 	$current = empty($user->prefs['default_project']) ? 'Other' : $user->prefs['default_project'];
-	
+
 	/* fill out the project menu with options from the config */
-	$options = array_combine($config->values['default_project'],$config->values['default_project']);
+	$options = array_combine($config->projects,$config->projects);
 	
 	$selected = (in_array($current,$options) || ($current == '')) ? $current : 'Other';
 	$vis = (in_array($current,$options) || ($current == '')) ? "style='display:none'" : ''; // hide the other input text box if the option is in the menu
@@ -55,10 +55,10 @@
 	if($config->values['novel_projects'])
 	{
 		$options['Other'] = 'Other'; //Append "Other" option to menu
-		$input = SLAM_makeInputHTML($v,10,10,"name='defaultProject' id='defaultProject' $vis",false);
+		$input = SLAM_makeInputHTML($current,10,10,"name='defaultProject' id='defaultProject' $vis",false);
 	}
 	else
-		$input = SLAM_makeInputHTML($v,10,10,"name='defaultProject' id='defaultProject' $vis",true);
+		$input = SLAM_makeInputHTML($current,10,10,"name='defaultProject' id='defaultProject' $vis",true);
 
 	echo SLAM_makeMenuHTML($selected,$options,"name='user_projectMenu' onChange=\"doUserPreferencesProjectMenu(this.options[this.selectedIndex].value, 'defaultProject')\"",false,false);
 	echo $input;
@@ -67,22 +67,30 @@
 			</tr>
 			<tr>
 				<td colspan='2' style='text-align:right'>Editable by
-<?php
-	if (empty($user->prefs['newEntry_EditPermissions']))
-		$user->prefs['newEntry_EditPermissions'] = 0;
-
+<?php	
+	/* determine the settings for the permissions menus */
+	$edit_sel = 0;
+	$read_sel = 0;
 	$options = array('Just me'=>0,'Me and my groups'=>1,'Anyone'=>2);
-	echo SLAM_makeMenuHTML($user->prefs['default_entryEditable'],$options,"name='defaultEditable'",false);
+	
+	if( $user->prefs['default_groupAccess'] > 0 )
+		$read_sel++;
+	if( $user->prefs['default_groupAccess'] == 2 )
+		$edit_sel++;
+	
+	if( $user->prefs['default_Access'] > 0 )
+		$read_sel++;
+	if( $user->prefs['default_Access'] == 2 )
+		$edit_sel++;
+
+	echo SLAM_makeMenuHTML($edit_sel,$options,"name='defaultEditable'",false);
 ?>
 				</td>
 			</tr>
 			<tr>
 				<td colspan='2' style='text-align:right'>Readable by
 <?php
-	if (empty($user->prefs['newEntry_ReadPermissions']))
-		$user->prefs['newEntry_ReadPermissions'] = 2;
-
-	echo SLAM_makeMenuHTML($user->prefs['default_entryReadable'],$options,"name='defaultReadable'",false);
+	echo SLAM_makeMenuHTML($read_sel,$options,"name='defaultReadable'",false);
 ?>
 				</td>
 			</tr>

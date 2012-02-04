@@ -118,7 +118,7 @@ class SLAMresult
 				if( in_array($asset['Identifier'], $identifiers) )
 					$asset['Permissions'] = $permissions[ $asset['Identifier'] ];
 				else
-					SLAM_setDefaultPerms( $config, $asset );
+					SLAM_setDefaultPerms( $config, $asset, null );
 			}
 		}
 
