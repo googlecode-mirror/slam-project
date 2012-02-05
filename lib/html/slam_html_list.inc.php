@@ -138,7 +138,9 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 		$url = $request->makeRequest($config,array('identifier'=>array($asset['Identifier']),'action'=>'open'),true);
 
 		/* is the current user qualified to edit this record ? */
-		$s.= (SLAM_getAssetAccess($user,$asset) > 1) ? "<a href='$url'>open</a>\n" : "<a href='$url'>view</a>\n";
+		$editable = (SLAM_getAssetAccess($user,$asset) > 1);
+		$d = ($editable) ? '' : "disabled='disabled'";
+		$s.= ($editable) ? "<a href='$url'>open</a>\n" : "<a href='$url'>view</a>\n";
 		
 		$s.="</td>\n";
 		
@@ -151,7 +153,13 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 			$value = (strlen($asset[$field]) > $config->values['field_truncate']) ? substr($asset[$field],0,$config->values['field_truncate']).'...' : $asset[$field];
 				
 			if ($field == 'Files') // special treatment for files field
-				$s.="<td class='assetListField'><input type='button' class='listFileButton' onClick=\"showFileManager('ext/files.php?i={$asset['Identifier']}'); return false\" value='View' />\n";
+			{
+				/* change the status of the button if there are no attached files */
+				if( $asset[ $field ] == '' )
+					$s.="<td class='assetListField'><input type='button' class='listFileButton' onClick=\"showFileManager('ext/files.php?i={$asset['Identifier']}'); return false\" value='None' />\n";
+				else
+					$s.="<td class='assetListField'><input type='button' class='listFileButton' onClick=\"showFileManager('ext/files.php?i={$asset['Identifier']}'); return false\" value='View' />\n";					
+			}
 			else
 				$s.= ($f_value == $value) ? "<td class='$class'>$value</td>\n" : "<td class='$class' title='{$asset[$field]}'>$value</td>\n";
 		}
