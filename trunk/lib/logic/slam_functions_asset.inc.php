@@ -29,7 +29,7 @@ function SLAM_getAssetFields($config,$db,$user,$assets)
 	return $ret;
 }
 
-function SLAM_setAssetFields($config,$db,$user,$category,$structure,$clone=null)
+function SLAM_setAssetFields($config,$db,$user,$category,$structure,$clone=false)
 {
 	/*
 		returns fields set to default values, or from a clone if provided
@@ -40,32 +40,33 @@ function SLAM_setAssetFields($config,$db,$user,$category,$structure,$clone=null)
 	/* if we're not cloning an entry, save default values to all fields */
 	foreach($structure as $name => $value)
 	{
-		if ($clone != null)
+		if ($clone)
 			$fields[ $name ]=$clone[ $name ];
 		else
 			$fields[ $name ]=$value['default'];
 	}
-	
-	/* set the specified user fields, if needed */
-	if (is_array($config->values['user_field']))
-		foreach($config->values['user_field'] as $field)
-			if ($fields[ $name ] == '')
-				$fields[ $name ] = $user->username;
-
-	/* set the specified date fields, if needed */
-	if (is_array($config->values['date_field']))
-		foreach($config->values['date_field'] as $field)
-			if ($fields[ $name ] == '')
-				$fields[ $name ] = date('Y-m-d');
-	
+					
 	/* set permissions */
 	SLAM_setDefaultPerms( $fields, $config, $user, $clone );
-	
-	/* set user-default project */
-	if ($clone != null)
+	print_r( $fields );
+	if(array_key_exists($config->values['permissions']['owner_field'],$fields))
+		$fields[$config->values['permissions']['owner_field']] = $user->username;
+		
+	if (!$clone)
 	{
-		if ((!empty($user->prefs['default_project'])) && (!empty($fields['Project'])))
+		/* set user-default project */
+		if ( ($user->prefs['default_project'] != '') && ($fields['Project'] == ''))
 			$fields[ 'Project'] = $user->prefs['default_project'];
+		
+		/* set the specified user fields, if needed */
+		if (is_array($config->values['user_fields']))
+			foreach($config->values['user_fields'] as $name)
+				$fields[ $name ] = $user->username;
+
+		/* set the specified date fields, if needed */
+		if (is_array($config->values['date_fields']))
+			foreach($config->values['date_fields'] as $name)
+				$fields[ $name ] = date('Y-m-d');
 	}
 			
 	/* generate the unique identifier */
@@ -263,7 +264,7 @@ function SLAM_setDefaultPerms( &$asset, $config, $user=false, $clone=false )
 		$asset['permissions']['owner'] = null;
 
 	/* a shortcut if we're just cloning an existing asset */
-	if( ($clone !== false) && ($user !== false) )
+	if( ($clone) && ($user !== false) )
 	{
 		$asset['permissions'] = $clone['Permissions'];
 		$asset['permissions']['owner_access'] = 2;
@@ -275,7 +276,7 @@ function SLAM_setDefaultPerms( &$asset, $config, $user=false, $clone=false )
 	/* if first group of config file defaults is empty, autopopulate with specified group field */
 	if( ($config->values['permissions']['default_group'][0] == '') && ($config->values['permissions']['group_field'] != '') )
 		$default_group = array($asset[ $config->values['permissions']['group_field'] ]);
-	
+
 	if ($user !== false)
 		$asset['permissions']['group'] = $user->group;
 	elseif( is_array( $default_group ) )

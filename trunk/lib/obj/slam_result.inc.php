@@ -26,22 +26,42 @@ class SLAMresult
 			
 		foreach($request->categories as $category=>$identifiers)
 		{
-			$this->fields[$category] = array();
-			if(($this->fields[$category] = $db->getStructure($category)) === false)
+			if(($structure = $db->getStructure($category)) === false)
 				die('Error retrieving table info:'.mysql_error());
 				
 			/* set hidden status for fields */
-			foreach($this->fields[$category] as &$field)
+			foreach($structure as &$field)
 				if (in_array($field['name'],$config->values['hide_fields']))
 					$field['hidden'] = true;
+				
+			/* set the correct field ordering */
+			$fields = $config->categories[ $category ]['field_order'];
+			$fields = array_merge( $fields, array_keys($structure) );
+			array_unshift( $fields, 'permissions' );
+			array_unshift( $fields, 'Identifier' );
+			array_push( $fields, 'Files');
+			$fields = array_unique( $fields );
+			
+			/* now build the actual structure */
+			$this->fields[ $category ] = array();
+			foreach( $fields as $name  )
+			{
+				if( $name == '' )
+					pass;
+				elseif( is_array($structure[ $name ]) )
+					$this->fields[ $category ][ $name ] = $structure[ $name ];
+				else
+					$this->fields[ $category ][ $name ] = array();
+			}
 		}
-
 		return true;
 	}
 	
 	public function getRecords(&$config,$db,$user,$request)
 	{
 		if (!is_array($request->categories))
+			return true;
+		if($request->action == 'new')
 			return true;
 
 		foreach($request->categories as $category => $identifiers)
@@ -53,6 +73,7 @@ class SLAMresult
 				$request->order['field'] = 'Identifier';
 			
 			/* retrieve assets from the table */
+			
 			if(empty($identifiers) || ($request->action == 'save'))
 			{
 				$select = "1=1";
@@ -85,7 +106,12 @@ class SLAMresult
 	
 	public function getPermissions( &$config, $db, $user, $request )
 	{
-		/* this function creates a list of all the identifiers in the result and associates their permissions */
+		/*
+		 * this function creates a list of all the identifiers in the result and associates their permissions
+		 */
+		
+		if( count($this->assets) < 1 )
+			return true;
 		
 		# compile the list of identifiers we're to retrieve
 		$list = array();
