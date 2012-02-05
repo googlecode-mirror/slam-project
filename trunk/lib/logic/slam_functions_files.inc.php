@@ -28,28 +28,6 @@ function SLAM_getArchivePath(&$config,$category,$identifier)
 	return false;
 }
 
-function SLAM_checkAssetOwner(&$config,$db,$user,$category,$identifier)
-{
-	/*
-		Determines whether or not the current user is authorized to modify the archive.
-		Returns true if yes, a string describing the problem otherwise
-	*/
-	
-	/* get the entry to check permissions */
-	$r = $db->GetRecords("SELECT Permissions FROM `$category` WHERE (`Identifier`='$identifier') LIMIT 1");
-	
-	if ($r === false)
-	{
-		$config->errors[] = 'Database error: could not check for presence of specified identifier: '.mysql_error();
-		return false;
-	}
-	
-	if(empty($r)) // asset doesn't exist (a new asset)
-		return true;
-	else
-		return (bool)(SLAM_getAssetAccess($user,$r[0]) > 1);
-}
-
 function SLAM_getArchiveFiles(&$config,$path)
 {
 	global $slam_file_errors;

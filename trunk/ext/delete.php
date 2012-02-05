@@ -9,26 +9,31 @@ $user	= new SLAMuser($config,$db);
 $slam_file_errors['zip_errors'] = array('No error','No error','Unexpected end of zip file','A generic error in the zipfile format was detected.','zip was unable to allocate itself memory','A severe error in the zipfile format was detected','Entry too large to be split with zipsplit','Invalid comment format','zip -T failed or out of memory','The user aborted zip prematurely','zip encountered an error while using a temp file','Read or seek error','zip has nothing to do','Missing or empty zip file','Error writing to a file','zip was unable to create a file to write to','bad command line parameters','zip could not open a specified file to read'); //exit status descriptions from the zip man page 
 $slam_file_errors['unzip_errors'] = array('No error','One or more warning errors were encountered, but processing completed successfully anyway','A generic error in the zipfile format was detected','A severe error in the zipfile format was detected.','unzip was unable to allocate itself memory.','unzip was unable to allocate memory, or encountered an encryption error','unzip was unable to allocate memory during decompression to disk','unzip was unable allocate memory during in-memory decompression','unused','The specified zipfiles were not found','Bad command line parameters','No matching files were found','50'=>'The disk is (or was) full during extraction',51=>'The end of the ZIP archive was encountered prematurely.',80=>'The user aborted unzip prematurely.',81=>'Testing or extraction of one or more files failed due to unsupported compression methods or unsupported decryption.',82=>'No files were found due to bad decryption password(s)');
 
-if ($user->authenticated)
+if( !$user->authenticated )
 {
-	$request = new SLAMrequest($config,$db,$user);
-	$category = @array_shift(@array_keys($request->categories));
-	$identifier = @array_shift($request->categories[$category]);
+	echo "You are not logged in.\n";
+	return;
+}
 
-	if (empty($identifier))
-		$config->errors[] = 'Invalid asset identifier provided.';
-	elseif(SLAM_checkAssetOwner($config,$db,$user,$category,$identifier) === false)
-		$config->errors[] = 'You cannot modify this asset.';
-	elseif(($path = SLAM_getArchivePath(&$config,$category,$identifier)) === false)
-		$config->errors[] = 'There are no files attached to this asset.';
+$request = new SLAMrequest($config,$db,$user);
+$result = new SLAMresult($config,$db,$user,$request);
+$category = array_shift(array_keys($request->categories));
+$access = 0;
+
+/* get the category and identifier from the request object */
+if( count($result->assets[$category]) == 1 )
+{
+	$asset = array_shift($result->assets[ $category ]);	
+	$identifier = $asset['Identifier'];
+	$access = SLAM_getAssetAccess($user, $asset);		
 }
 else
-	$config->errors[] = "Please <a href='{$config->html['url']}'>log in</a>";
+	$config->errors[] = 'Invalid asset identifier provided.';
 
-if (count($config->errors) == 0)
+if( (count($config->errors) == 0) && ($access > 1) )
 {
-	/* remove the specified file from the archive */
-	$path = escapeshellarg($path);
+	if(($path = SLAM_getArchivePath(&$config,$category,$identifier)) === false)
+		die('There are no files attached to this asset.');
 			
 	/* go through the arguments and look for files for deletion */
 	foreach($_REQUEST as $name => $value)
