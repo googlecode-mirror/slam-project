@@ -78,6 +78,7 @@ class SLAMdb
 			else
 			{
 				$config->categories[ $category['Name'] ]['prefix'] = $category['Prefix'];
+				$config->categories[ $category['Name'] ]['field_order'] = explode(',',$category['Field Order']);
 				$config->categories[ $category['Name'] ]['list_fields'] = explode(',',$category['List Fields']);
 				$config->categories[ $category['Name'] ]['title_field'] = $category['Title Field'];
 				$config->categories[ $category['Name'] ]['owner_field'] = $category['Owner Field'];
@@ -85,7 +86,7 @@ class SLAMdb
 				$config->values['lettercodes'][ $category['Prefix'] ] = $category['Name'];
 			}
 		}
-		
+				
 		// define the regex
 		$config->values['identifier_regex'] = "/([A-Za-z][A-Za-z])(".implode('|',array_keys($config->values['lettercodes'])).")[_]?(\d+)/";
 		

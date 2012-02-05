@@ -24,12 +24,12 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 	/* retrieve the field values, either for a new entry or for editing existing ones */
 	if ($request->action == 'new')
 	{
-		$editable = true;
+		$editable[] = true;
 		$fields	= SLAM_setAssetFields($config,$db,$user,$category,$structure,null);
 	}
 	elseif ($request->action == 'clone')
 	{
-		$editable = true;
+		$editable[] = true;
 		$fields	= SLAM_setAssetFields($config,$db,$user,$category,$structure,$assets[0]);
 	}
 	else
@@ -63,7 +63,6 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 	}
 	else
 		$editable = $editable[0];
-
 	
 	/* set our location */
 	$s.=SLAM_makeHiddenInput($request->location,'loc');
@@ -83,34 +82,35 @@ EOL;
 
 	$b="$f<table id='assetEdit'>\n";
 
-	/* go through each field and put together the html to view/edit it */
-	foreach($fields as $field => $value)
+	/* go through the structure and put together each fields's html */
+	foreach($structure as $name=>$scheme)
 	{
 		/* when we run across the title field, save it to the $t variable for later use */
 		if ($field == $config->categories[$category]['title_field'])
-			$t="<div id='assetEditTitle'>$category : $value</div>\n";
+			$t="<div id='assetEditTitle'>$category : $fields[$name]</div>\n";
 
-		/* hide empty fields */
-		if (($value != '') || ($request->action == 'new'))
+		/* hide fields from non-users and empty fields */
+		if( ($scheme['hidden']) && (!$user->superuser) )
+			$hidden = true;
+		elseif (($fields[$name] != '') || ($request->action == 'new'))
 			$hidden = false;
-		elseif($value == '')
+		elseif( in_array($fields[$name], $config->values['hide_empty']) )
 			$hidden = true;
 
-		switch($field)
+		switch($name)
 		{
 			case 'Identifier': /* identifier should not be editable if the user is not a superuser */
-				$b.=SLAM_makeFieldHTML($config,$request,$value,$structure[$field],$user->superuser,$hidden);
+				$b.=SLAM_makeFieldHTML($config,$request,$fields[$name],$scheme,$user->superuser,$hidden);				
 				break;
 			
 			case 'permissions': /* insert the permissions control panel */
 				$b.=SLAM_makePermissionsHTML($config,$user,$assets);
-				$b.=SLAM_makeHiddenInput( base64_encode(json_encode($value)) ,'permissions');
+				$b.=SLAM_makeHiddenInput( base64_encode(json_encode($fields[$name])) ,'permissions');
 				break;
 			
 			case 'Project': /* save the default projects array to the structure of the projects field */
-				$tmp = $structure[$field];
-				$tmp['values'] = $config->projects;
-				$b.=SLAM_makeFieldHTML($config,$request,$value,$tmp,$editable,$hidden);
+				$scheme['values'] = $config->projects;
+				$b.=SLAM_makeFieldHTML($config,$request,$fields[$name],$scheme,$editable,$hidden);
 				break;
 				
 			case 'Files': /* if there's a "Files" field, show a link to the file browser instead */
@@ -118,10 +118,10 @@ EOL;
 				break;
 		
 			default:
-				if ($structure[$field]['hidden'] && !$user->superuser)
-					$b.=SLAM_makeHiddenInput($value,'edit_'.base64_encode($structure[$field]['name']));
+				if ($cheme['hidden'] && !$user->superuser)
+					$b.=SLAM_makeHiddenInput($fields[$name],'edit_'.base64_encode($scheme['name']));
 				else
-					$b.=SLAM_makeFieldHTML($config,$request,$value,$structure[$field],$editable,$hidden);
+					$b.=SLAM_makeFieldHTML($config,$request,$fields[$name],$scheme,$editable,$hidden);
 		}
 	}
 	$s.="$t$b</table>\n";
@@ -211,6 +211,10 @@ function SLAM_makeFieldHTML($config,$request,$v,$s,$e,$h)
 		$s['comment'] = str_replace($m[1],'',$s['comment']); // remove the link field specifier from the title
 	}
 	
+	/* if set, the field signifying ownership should be marked read-only */
+	if( $config->values['permissions']['owner_field'] == $s['name'] )
+		$b=SLAM_makeInputHTML($v,40,$s['size'],"name='$n' id='$n'",true);
+	
 	/* make linked identifier fields bold */
 	$g = (empty($f)) ? "{$s['name']}" : "<b>{$s['name']}</b>";
 	
@@ -287,10 +291,11 @@ function SLAM_makePermissionsHTML($config,$user,$assets)
 	/* generates a panel that the user can modify the permissions with */
 
 	$s = "<tr>\n<td class='assetEditField'>Permissions:</td><td class='assetEditValue'>";
-	if( count($assets) == 1 )
-		$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions_single.html','permissionsDiv',{noclose:'true'});populatePermsPanel('permissions')\"/ class='assetPermsButton'>";
-	else
+
+	if( count($assets) > 1 )
 		$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions_multiple.html','permissionsDiv',{noclose:'true'});populatePermsPanel('permissions')\"/ class='assetPermsButton'>";
+	else
+		$s.= "<input type='button' value='Open Editor' onClick=\"showPopupDiv('pub/permissions_single.html','permissionsDiv',{noclose:'true'});populatePermsPanel('permissions')\"/ class='assetPermsButton'>";
 	
 	$s.= "</td><td class='assetEditFunction'></td>\n</tr>\n";
 	
