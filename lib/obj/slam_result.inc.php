@@ -109,16 +109,16 @@ class SLAMresult
 		/*
 		 * this function creates a list of all the identifiers in the result and associates their permissions
 		 */
-		
-		if( count($this->assets) < 1 )
-			return true;
-		
+				
 		# compile the list of identifiers we're to retrieve
 		$list = array();
 		foreach( $this->assets as $category)
 			foreach( $category as $asset )
 				$list[] = "'{$asset['Identifier']}'";
 		
+		if( count($list) < 1 )
+			return true;
+				
 		# run a single query to get all available info
 		$query = "SELECT * FROM `{$config->values['perms_table']}` WHERE `Identifier` IN (".join(',',$list).')';
 		if( ($rows = $db->GetRecords( $query )) === false)

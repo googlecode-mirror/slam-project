@@ -21,19 +21,28 @@ $slam_file_errors['unzip_errors'] = array('No error','One or more warning errors
 		<div id='fileListContainer'>
 <?php
 
-if ($user->authenticated)
+if( !$user->authenticated )
 {
-	$request = new SLAMrequest($config,$db,$user);
-	
-	/* get the category and identifier from the request object */
-	if(!empty($request->categories))
-	{
-		$category = array_shift(array_keys($request->categories));
-		$identifier = array_shift($request->categories[$category]);
-		
-		/* is the current user qualified to make changes to the archive? */
-		$editable = SLAM_checkAssetOwner($config,$db,$user,$category,$identifier);
+	echo "<div id='fileEmpty'>You are not logged in</div>\n";
+	echo "</div>\n</body>\n</html>";
+	return;
+}
 
+$request = new SLAMrequest($config,$db,$user);
+$result = new SLAMresult($config,$db,$user,$request);
+$category = array_shift(array_keys($request->categories));
+$access = 0;
+
+/* get the category and identifier from the request object */
+if( count($result->assets[$category]) == 1 )
+{
+	$asset = array_shift($result->assets[ $category ]);	
+	$identifier = $asset['Identifier'];
+	$access = SLAM_getAssetAccess($user, $asset);
+
+	/* is the current user qualified to make changes to the archive? */
+	if( $access > 0)
+	{
 		/* attempt to retrieve the asset's archive path*/
 		if(($path = SLAM_getArchivePath($config,$category,$identifier)) !== false)
 		{
@@ -58,14 +67,10 @@ if ($user->authenticated)
 			echo "<div id='fileEmpty'>No files to show</div>\n";
 	}
 	else
-		$config->errors[] = 'Invalid identifier provided';
+		echo "<div id='fileEmpty'>You do not have access to this asset's files.</div>\n";
 }
 else
-{
-	echo "<div id='fileEmpty'>You are not logged in</div>\n</div>\n";
-	echo "</body>\n</html>";
-	return;
-}
+	$config->errors[] = 'Invalid identifier provided';
 
 if(!empty($config->values['debug']))
 {
@@ -75,7 +80,7 @@ if(!empty($config->values['debug']))
 	echo "</div>\n";
 }
 
-if ($editable)
+if ($access > 1)
 	SLAM_updateArchiveFileList($config,$db,$category,$identifier,$files);
 else
 {
