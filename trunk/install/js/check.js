@@ -1,6 +1,6 @@
 function checkGeneralForm()
 {
-	var str="./check_gen.php?";
+	var str="./ext/check_gen.php?";
 	str += "SLAM_CONF_PREFIX="+document.getElementById('SLAM_CONF_PREFIX').value;
 	str += "&SLAM_CONF_PATH="+base64_encode(document.getElementById("SLAM_CONF_PATH").value);
 	showPopupDiv( str, "checkGeneral", []);	
@@ -8,7 +8,7 @@ function checkGeneralForm()
 
 function checkDatabaseForm()
 {
-	var str="./check_db.php?";
+	var str="./ext/check_db.php?";
 	str += "SLAM_DB_HOST="+base64_encode(document.getElementById("SLAM_DB_HOST").value);
 	str += "&SLAM_DB_NAME="+base64_encode(document.getElementById("SLAM_DB_NAME").value);
 	str += "&SLAM_DB_USER="+base64_encode(document.getElementById("SLAM_DB_USER").value);
@@ -19,7 +19,7 @@ function checkDatabaseForm()
 
 function checkFilesForm()
 {
-	var str="./check_file.php?";
+	var str="./ext/check_file.php?";
 	str += "SLAM_FILE_ARCH_DIR="+base64_encode(document.getElementById("SLAM_FILE_ARCH_DIR").value);
 	str += "&SLAM_FILE_TEMP_DIR="+base64_encode(document.getElementById("SLAM_FILE_TEMP_DIR").value);
 	

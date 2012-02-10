@@ -23,19 +23,27 @@ function write_SLAM_config( )
 	# converts all the options from the individual step files to the slam config file
 	#
 	
+	$ret = array();
+	
 	if( ($step_1_ini = parse_ini_file('./step_1.ini')) == false)
-		return "Could not read option file from step 1";
+		$ret[] =  "Could not read option file from step 1";
 	if( ($step_2_ini = parse_ini_file('./step_2.ini')) == false)
-		return "Could not read option file from step 2";
+		$ret[] =  "Could not read option file from step 2";
 	if( ($step_3_ini = parse_ini_file('./step_3.ini')) == false)
-		return "Could not read option file from step 3";
+		$ret[] = "Could not read option file from step 3";
+	
+	if( count($ret) > 0 )
+		return $ret;
 	
 	$opt_array = array_merge( $step_1_ini, $step_2_ini, $step_3_ini );
 	
 	if( ($config_ini = file_get_contents( './configuration.ini' )) == false)
-		return "Could not read configuration file template.";
+		$ret[] = "Could not read configuration file template.";
 	if( ($prefs_ini = file_get_contents( './preferences.ini' )) == false)
-		return "Could not read preference file template.";
+		$ret[] = "Could not read preference file template.";
+	
+	if( count($ret) > 0 )
+		return $ret;
 	
 	# realpath() and trim() replacements
 	$opt_array['SLAM_CONF_PATH'] = realpath( trim($opt_array['SLAM_CONF_PATH'],'/'));

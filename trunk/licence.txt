@@ -1,53 +1,3 @@
-<?php
-	require('lib/constants.inc.php');
-	require('lib/file_actions.inc.php');
-	
-	$fail = array();
-	$pathinfo = pathinfo($_SERVER['SCRIPT_FILENAME']);
-	
-	# make sure we're running a compatible version of PHP
-	if (version_compare(PHP_VERSION, $req_php_version, '<'))
-		$fail[] = "The installed PHP version must be at least $req_php_version, the currently installed version is ".PHP_VERSION;
-	
-	# make sure we're not installing into an existing install
-	if((!$fail) && (file_exists('../configurations.ini')))
-		$fail[] = "A completed SLAM installation is already present.";
-	
-	# make sure we have all the necessary files
-	if(((!$fail) && !checkFileList('./file_list.txt')))
-		$fail[] = "Required installation files are missing. Please download the SLAM installer and try again.";
-	
-	# make sure the install directory is writeable
-	if((!$fail) && (!is_writable( $pathinfo['dirname'])))
-		$fail[] = "Installation directory is not writeable. Please contact your system administrator";		
-?>
-<html>
-	<head>
-		<title>SLAM installer - Welcome</title>
-		<link type='text/css' href='css/install.css' rel='stylesheet' />
-		<script type='text/javascript' src='../js/detect.js'></script>
-	</head>
-	<body><div id='container'>
-		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Welcome</div>
-		<div id='installerVer'>Version: <?php print($slam_version) ?></div>
-<script>
-	var stat = checkBrowser();
-	if (stat < 1)
-		document.write("<div class='error'>This browser is not supported for use with SLAM.</div>");
-	else if (stat < 2)
-		document.write("<div class='error'>SLAM requires that browser cookies be enabled.</div>");
-
-</script>
-<?php
-	foreach( $fail as $text )
-		print "<div class='fatalFail'>$text</div>\n";
-	if( count($fail) == 0 )
-		print <<<EOD
-<div id='welcome'>
-Before beginning this installation, please read and agree to the following license agreement:
-<br />
-<br />
-<textarea id='eula'>
 SLAM Copyright (C) 2012 SteelSnowflake LLC
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
@@ -60,8 +10,7 @@ Version 2, June 1991
 Copyright (C) 1989, 1991 Free Software Foundation, Inc.
 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
-Everyone is permitted to copy and distribute verbatim copies
-of this license document, but changing it is not allowed.
+Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
 
 Preamble
 
@@ -146,14 +95,3 @@ NO WARRANTY
 12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
 END OF TERMS AND CONDITIONS
-</textarea>
-</div>
-EOD;
-?>
-		<form name='forward' action='step_1.php'>
-			<div class='actionButtons'>
-				<input type='submit' class="submitButton" value='Start Installation' />
-			</div>
-		</form>
-	</div></body>
-</html>

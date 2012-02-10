@@ -1,16 +1,12 @@
 <?php
-	require('constants.inc.php');
-	require('actions.inc.php');
-	
-	$fail = false;
-	
-	$pathinfo = pathinfo($_SERVER['SCRIPT_FILENAME']);
-	
+	require('lib/constants.inc.php');
+	require('lib/actions.inc.php');
+			
 	# Read the default settings either from the previously-entered options, or from the default file
 	if (file_exists('./step_1.ini'))
-		$defaults = parse_ini_file('./step_1.ini',true);
+		$defaults = parse_ini_file('./step_1.ini');
 	else
-		$defaults = parse_ini_file('./defaults.ini',true);
+		$defaults = parse_ini_file('./defaults.ini');
 	
 	if ($defaults['SLAM_CONF_PATH'] == 'auto')
 		$defaults['SLAM_CONF_PATH'] = str_replace('/install','',dirname(realpath($_SERVER['SCRIPT_FILENAME'])));
@@ -26,21 +22,20 @@
 <html>
 	<head>
 		<title>SLAM installer - Step 1</title>
-		<link type='text/css' href='install.css' rel='stylesheet' />
-		<script type='text/javascript' src='check.js'></script>
+		<link type='text/css' href='css/install.css' rel='stylesheet' />
+		<script type='text/javascript' src='js/check.js'></script>
 		<script type='text/javascript' src='../js/convert.js'></script>
 	</head>
-	<body>
+	<body><div id='container'>
 		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Step 1</div>
-		<div id='installerVer'>Version: <?php print($version) ?></div>
-<?php
-
-	if ($fail !== false)
-		print "<div id='fatalFail'>$fail</div>\n";		
-?>		
-		<form name='config' action='step_2.php'>
+		<div id='installerVer'>Version: <?php print($slam_version) ?></div>
+		
+		<form name='forward' action='step_2.php'  method='post'>
 			<input type='hidden' name='STEP' value='1' />
 			<table id='configTable'>
+				<tr>
+					 <td class='helpHeader' colspan="2">For assistance, please refer to the SLAM [<a href='http://code.google.com/p/slam-project/wiki/Installation' target='_new'>installation wiki</a>].</td>
+				</tr>
 				<tr>
 					<td class='inputCategory' colspan='2'>General Settings</td>
 				</tr>
@@ -101,7 +96,15 @@
 					<td class='checkCategory' colspan='2'><input type='button' value='Check these values' onClick='checkFilesForm()' /></td>
 				</tr>
 			</table>
-			<input type="submit" />
+			<br />
+			<div class='actionButtons'>
+				<input type='submit' class='submitButton' value='Save these settings and Continue' />
+			</div>
 		</form>
-	</body>
+		<form name='back' action='index.php' method='post'>
+			<div class='actionButtons'>
+				<input type='submit' class="submitButton" value='Cancel these settings and Go Back' />
+			</div>
+		</form>
+	</div></body>
 </html>
