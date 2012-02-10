@@ -5,18 +5,29 @@
 # Version 1.x.x
 #
 
-./check.js
-./check_db.php
-./check_file.php
-./check_gen.php
-./check_table.php
-./configuration.ini
-./db_actions.inc.php
-./defaults.ini
-./file_actions.inc.php
+./.htaccess
 ./index.php
-./install.css
+./step_1.php
+./step_2.php
+./step_3.php
+./complete.php
+
+./defaults.ini
+./configuration.ini
 ./preferences.ini
+
+./css/install.css
+
+./ext/check_db.php
+./ext/check_file.php
+./ext/check_gen.php
+./ext/check_table.php
+
+./js/check.js
+
+./lib/db_actions.inc.php
+./lib/file_actions.inc.php
+
 
 ../.htaccess
 ../index.php

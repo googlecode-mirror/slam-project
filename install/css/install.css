@@ -3,6 +3,31 @@ body
 	color: #444444;
 }
 
+form
+{
+	margin: 0px;
+	
+}
+
+#container
+{
+	width: 500px;
+	margin-top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 100px;
+}
+
+a:link, a:visited{
+	text-decoration: none;
+	color: #045FB4;
+}
+
+a:hover, a:active{
+	text-decoration: underline;
+	color: #FF8000;
+}
+
 #installerTitle
 {
 	font-size: 18pt;
@@ -15,11 +40,27 @@ body
 	font-size: 10pt;
 }
 
-#fatalFail
+.fatalFail
 {
+	width: 100%;
 	margin:20px;
 	font-weight:bold;
 	color: red;
+}
+
+#welcome
+{
+	width: 500px;
+	text-align:center;
+	margin: 20px;
+	font-weight: bold;
+}
+
+#eula
+{
+	width: 480px;
+	height: 200px;
+	
 }
 
 #configTable, #optionalCategoriesTable
@@ -28,6 +69,15 @@ body
 	text-align: left;
 	margin-top: 10px;
 	margin-left: 20px;
+	margin-bottom: 10px;
+}
+
+td.helpHeader
+{
+	 text-align: center;
+	 font-size: 11pt;
+	 padding-top: 0px;
+	 padding-bottom: 10px;
 }
 
 td.inputCategory
@@ -89,6 +139,22 @@ td.optionalCategoryPrefix
 td.optionalCategoryDescription
 {
 	width:250px;
+}
+
+div.actionButtons
+{
+	width:	500px;
+	text-align: center;
+	margin-top: 0px;
+}
+
+div.actionButtons>input
+{
+	width:200px;
+	text-align: center;
+	border: 1px solid gray;
+	background-color: #EEEEEE;
+	cursor: pointer;
 }
 
 #checkGeneral

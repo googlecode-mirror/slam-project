@@ -1,6 +1,6 @@
 <?php
 
-require('db_actions.inc.php');
+require('../lib/db_actions.inc.php');
 
 $server = base64_decode($_REQUEST['SLAM_DB_HOST']);
 $dbname = base64_decode($_REQUEST['SLAM_DB_NAME']);
@@ -25,10 +25,14 @@ else
 		if (mysql_select_db( $dbname, $link ))
 			$message = true;
 		else
-			$message = "Could not open the '$dbname' database.";
+			$message = "Could not access the '$dbname' database with these credentials.";
 		
+		// get the provided db user's privileges
+//		$priv = getDbUserPrivs($link, $dbuser);
+
 		// check for the existence of preexisting SLAM tables
 		$stat = checkForSLAMTables($link, $dbname);
+		
 		mysql_close($link);
 	}
 }
@@ -36,7 +40,7 @@ else
 if ($message === true)
 {
 	if ($stat > 0)
-	    print "<span style='color:red'>This database already contains a SLAM installation.</span>";
+	    print "<span style='color:orange'>Warning: This database contains an existing SLAM installation.</span>";
 	else
 	    print "<span style='color:green'>These settings are OK.</span>";
 

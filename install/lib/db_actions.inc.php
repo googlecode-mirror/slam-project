@@ -31,8 +31,24 @@ function checkForSLAMTables( $dblink, $dbname )
     
     return $ret;
 }
-/*
- * UPDATE `Cell Strains` SET Permissions=CONCAT(`Researcher`,':RW',`Researcher`,':RW;R')
- */
+
+function getDbUserPrivs($link, $dbuser)
+{
+	/* inoperative function for now */
+	
+	$q = "SHOW GRANTS";
+	$result = mysql_query( $q, $link );
+	
+	if (!$result)
+		return mysql_error();
+	
+	$privs = array();
+	while( $row = mysql_fetch_row($result) )
+		$privs[] = $row;
+	
+	/* have to do some complex parsing of MySQL's output */
+	
+	return true;
+}
 
 ?>

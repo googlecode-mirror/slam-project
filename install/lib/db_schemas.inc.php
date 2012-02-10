@@ -61,7 +61,6 @@ $sql_create_optional = array();
 $sql_create_optional['Template']=array();
 $sql_create_optional['Template']['description']="A minimal category that can be used as the basis for creating custom categories.";
 $sql_create_optional['Template']['prefix']='TP';
-$sql_create_optional['Template']['checked']=true;
 $sql_create_optional['Template']['sql']="CREATE TABLE `Template` (
 	`Serial`			  mediumint( 9 )		NOT NULL AUTO_INCREMENT,
 	`Identifier`	  varchar( 20 )		NOT NULL,
@@ -79,7 +78,6 @@ $sql_create_optional['Template']['sql']="CREATE TABLE `Template` (
 $sql_create_optional['Samples']=array();
 $sql_create_optional['Samples']['description']="A category for protein and RNA sample solutions.";
 $sql_create_optional['Samples']['prefix']="SP";
-$sql_create_optional['Samples']['checked']=true;
 $sql_create_optional['Samples']['sql']="CREATE TABLE IF NOT EXISTS `Samples` (
   `Serial` mediumint(9) NOT NULL AUTO_INCREMENT,
   `Identifier` varchar(255) NOT NULL,
@@ -112,7 +110,6 @@ $sql_create_optional['Samples']['sql']="CREATE TABLE IF NOT EXISTS `Samples` (
 $sql_create_optional['NMR Samples']=array();
 $sql_create_optional['NMR Samples']['description']="A category for NMR samples.";
 $sql_create_optional['NMR Samples']['prefix']="NS";
-$sql_create_optional['NMR Samples']['checked']=false;
 $sql_create_optional['NMR Samples']['sql']="CREATE TABLE IF NOT EXISTS `NMR Samples` (
   `Serial` mediumint(9) NOT NULL AUTO_INCREMENT,
   `Identifier` varchar(20) NOT NULL,
@@ -144,7 +141,6 @@ $sql_create_optional['NMR Samples']['sql']="CREATE TABLE IF NOT EXISTS `NMR Samp
 $sql_create_optional['Plasmids']=array();
 $sql_create_optional['Plasmids']['description']="A category for plasmids.";
 $sql_create_optional['Plasmids']['prefix']="PL";
-$sql_create_optional['Plasmids']['checked']=true;
 $sql_create_optional['Plasmids']['sql']="CREATE TABLE IF NOT EXISTS `Plasmids` (
   `Serial` mediumint(9) NOT NULL AUTO_INCREMENT,
   `Identifier` varchar(255) NOT NULL,
@@ -184,8 +180,7 @@ $sql_create_optional['Plasmids']['sql']="CREATE TABLE IF NOT EXISTS `Plasmids` (
 
 $sql_create_optional['Primers']=array();
 $sql_create_optional['Primers']['description']="A category for primers used in vector engineering.";
-$sql_create_optional['Primers']['prefix']="PR";
-$sql_create_optional['Primers']['checked']=true;
+$sql_create_optional['Primers']['prefix']="PI";
 $sql_create_optional['Primers']['sql']="CREATE TABLE IF NOT EXISTS `Primers` (
   `Serial` mediumint(9) NOT NULL AUTO_INCREMENT,
   `Identifier` varchar(255) NOT NULL,
@@ -214,7 +209,6 @@ $sql_create_optional['Primers']['sql']="CREATE TABLE IF NOT EXISTS `Primers` (
 $sql_create_optional['Protocols']=array();
 $sql_create_optional['Protocols']['description']="An category for storing useful lab protocols.";
 $sql_create_optional['Protocols']['prefix']="PR";
-$sql_create_optional['Protocols']['checked']=false;
 $sql_create_optional['Protocols']['sql']="CREATE TABLE IF NOT EXISTS `Protocols` (
   `Serial` mediumint(9) NOT NULL AUTO_INCREMENT,
   `Identifier` varchar(255) NOT NULL,
@@ -237,8 +231,7 @@ $sql_create_optional['Protocols']['sql']="CREATE TABLE IF NOT EXISTS `Protocols`
 
 $sql_create_optional['Protein Types']=array();
 $sql_create_optional['Protein Types']['description']="An experimental category for storing protein variants.";
-$sql_create_optional['Protein Types']['prefix']="PR";
-$sql_create_optional['Protein Types']['checked']=false;
+$sql_create_optional['Protein Types']['prefix']="PT";
 $sql_create_optional['Protein Types']['sql']="CREATE TABLE IF NOT EXISTS `Protein Types` (
   `Serial` int(11) NOT NULL AUTO_INCREMENT,
   `Identifier` varchar(255) NOT NULL,
