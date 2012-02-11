@@ -3,7 +3,12 @@
 	require('lib/actions.inc.php');
 	
 	$fail = array();
-		
+	
+	# save the previous page settings
+	if ($_REQUEST['STEP'] == 3)
+		if( ($ret = write_SLAM_options( './step_3.ini' )) != true )
+			$fail[] = "Could not save your progress. Please contact your system administrator: $ret";
+
 	# Read the default settings either from the previously-entered options, or from the default file
 	if (file_exists('./step_4.ini'))
 		$defaults = parse_ini_file('./step_4.ini');
@@ -14,12 +19,7 @@
 	if (file_exists('./step_3.ini'))
 		$projects = parse_ini_file('./step_3.ini');
 	else
-		$projects = parse_ini_file('./defaults.ini');
-	
-	# save the previous page settings
-	if ($_REQUEST['STEP'] == 3)
-		if( ($ret = write_SLAM_options( './step_3.ini' )) != true )
-			$fail[] = "Could not save your progress. Please contact your system administrator: $ret"
+		$projects = parse_ini_file('./defaults.ini');	
 ?>
 <html>
 	<head>
@@ -27,6 +27,7 @@
 		<link type='text/css' href='css/install.css' rel='stylesheet' />
 		<script type='text/javascript' src='js/check.js'></script>
 		<script type='text/javascript' src='js/clone.js'></script>
+		<script type='text/javascript' src='js/validate.js'></script>
 		<script type='text/javascript' src='../js/convert.js'></script>
 	</head>
 	<body><div id='container'>
@@ -54,12 +55,12 @@
 				</tr>
 				<tr>
 					<td class='inputField'>Superuser name:</td>
-					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_ROOT_NAME'] ?>' size='20' id='SLAM_ROOT_NAME' name='SLAM_ROOT_NAME' /></td>
+					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_ROOT_NAME'] ?>' size='20' name='SLAM_ROOT_NAME' onkeyup="validateNeg( this, '[&#34\'\,\`]+')" /></td>
 					
 				</tr>
 				<tr>
 					<td class='inputField'>Superuser password:</td>
-					<td class='inputValue'><input type='password' value='<?php print $defaults['SLAM_ROOT_PASS'] ?>' size='20' id='SLAM_ROOT_PASS' name='SLAM_ROOT_PASS' /></td>
+					<td class='inputValue'><input type='password' value='<?php print $defaults['SLAM_ROOT_PASS'] ?>' size='20' name='SLAM_ROOT_PASS' /></td>
 				</tr>
 				<tr>
 					<td class='inputCategory' colspan='2'><br />User setup</td>
@@ -84,7 +85,7 @@
 	{
 		print "<tr>\n";
 		print "<td class='inputField'>Username:</td>\n";
-		print "<td class='inputValue'><input type='text' value='$user' size='10' name='SLAM_USERS[]' /></td>\n";
+		print "<td class='inputValue'><input type='text' value='$user' size='10' name='SLAM_USERS[]' onkeyup=\"validateNeg( this, '[&#34\'\,\`]+')\" /></td>\n";
 		print "</tr>\n";
 		print "<tr>\n";
 		print "<td class='inputField'>Password:</td>\n";

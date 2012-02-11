@@ -3,17 +3,17 @@
 	require('lib/actions.inc.php');
 	
 	$fail = array();
-		
+	
+	# save the previous page settings
+	if ($_REQUEST['STEP'] == 2)
+		if( ($ret = write_SLAM_options( './step_2.ini' )) != true )
+			$fail[] = "Could not save your progress. Please contact your system administrator: $ret";
+	
 	# Read the default settings either from the previously-entered options, or from the default file
 	if (file_exists('./step_3.ini'))
 		$defaults = parse_ini_file('./step_3.ini');
 	else
 		$defaults = parse_ini_file('./defaults.ini');
-	
-	# save the previous page settings
-	if ($_REQUEST['STEP'] == 2)
-		if( ($ret = write_SLAM_options( './step_2.ini' )) != true )
-			$fail[] = "Could not save your progress. Please contact your system administrator: $ret"
 ?>
 <html>
 	<head>
@@ -26,7 +26,7 @@
 	</head>
 	<body><div id='container'>
 		<script type='text/javascript'>
-			document.cloneTRcounter=<?php echo count($defaults['SLAM_PROJECT_NAME'])-1 ?>;
+			document.cloneTRcounter=<?php echo count($defaults['SLAM_PROJECT_NAME']) ?>;
 		</script>
 		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Step 3/4</div>
 		<div id='installerVer'>Version: <?php print($slam_version) ?></div>
@@ -66,7 +66,7 @@
 	{
 		print "<tr>\n";
 		print "<td class='inputField'>Project name:</td>\n";
-		print "<td class='inputValue'><input type='text' value='$project' size='10' name='SLAM_PROJECT_NAME[]' onkeyup=\"validate( this, '[a-zA-Z0-9\_]')\" /></td>\n";
+		print "<td class='inputValue'><input type='text' value='$project' size='10' name='SLAM_PROJECT_NAME[]' onkeyup=\"validateNeg( this, '[&#34\'\,\`]+')\" /></td>\n";
 		print "</tr>\n";
 	}
 ?>

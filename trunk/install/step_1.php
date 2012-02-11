@@ -51,7 +51,7 @@
 				</tr>
 				<tr>
 					<td class='inputField'>Lab prefix:</td>
-					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_CONF_PREFIX'] ?>' size='2' maxlength='2' id='SLAM_CONF_PREFIX' name='SLAM_CONF_PREFIX' onkeyup="validate( this, '[a-zA-Z]')"/></td>
+					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_CONF_PREFIX'] ?>' size='2' maxlength='2' id='SLAM_CONF_PREFIX' name='SLAM_CONF_PREFIX' onkeyup="validatePos( this, '[a-zA-Z]')"/></td>
 				</tr>
 				<tr>
 					<td class='inputField'>Mail header:</td>
