@@ -21,13 +21,14 @@
 ?>
 <html>
 	<head>
-		<title>SLAM installer - Step 1</title>
+		<title>SLAM installer - Step 1/4</title>
 		<link type='text/css' href='css/install.css' rel='stylesheet' />
 		<script type='text/javascript' src='js/check.js'></script>
+		<script type='text/javascript' src='js/validate.js'></script>
 		<script type='text/javascript' src='../js/convert.js'></script>
 	</head>
 	<body><div id='container'>
-		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Step 1</div>
+		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Step 1/4</div>
 		<div id='installerVer'>Version: <?php print($slam_version) ?></div>
 		
 		<form name='forward' action='step_2.php'  method='post'>
@@ -50,7 +51,7 @@
 				</tr>
 				<tr>
 					<td class='inputField'>Lab prefix:</td>
-					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_CONF_PREFIX'] ?>' size='2' maxlength='2' id='SLAM_CONF_PREFIX' name='SLAM_CONF_PREFIX' /></td>
+					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_CONF_PREFIX'] ?>' size='2' maxlength='2' id='SLAM_CONF_PREFIX' name='SLAM_CONF_PREFIX' onkeyup="validate( this, '[a-zA-Z]')"/></td>
 				</tr>
 				<tr>
 					<td class='inputField'>Mail header:</td>

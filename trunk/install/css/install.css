@@ -1,5 +1,6 @@
 body
 {
+	font-size: 12pt;
 	color: #444444;
 }
 
@@ -90,7 +91,9 @@ td.inputCategory
 td.categoryInfo
 {
 	 text-align: left;
+	 font-size: 11pt;
 	 padding-left: 20px;
+	 padding-bottom: 10px;
 }
 
 td.inputField

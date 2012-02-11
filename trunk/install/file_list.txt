@@ -10,6 +10,7 @@
 ./step_1.php
 ./step_2.php
 ./step_3.php
+./step_4.php
 ./complete.php
 
 ./defaults.ini
@@ -24,6 +25,7 @@
 ./ext/check_table.php
 
 ./js/check.js
+./js/validate.js
 
 ./lib/db_actions.inc.php
 ./lib/file_actions.inc.php

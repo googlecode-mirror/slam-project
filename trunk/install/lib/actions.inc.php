@@ -8,8 +8,16 @@ function write_SLAM_options( $filename )
 	
 	$output = '';
 	foreach( $_REQUEST  as $key=>$value )
+	{
 		if( strpos($key, 'SLAM_') === 0 )
-			$output .= "$key=\"$value\"\n";
+		{
+			if( is_array($value) )
+				foreach( $value as $v )
+					$output .= "{$key}[]=\"$v\"\n";
+			else
+				$output .= "$key=\"$value\"\n";
+		}
+	}
 	
 	if( file_put_contents( $filename, $output) === false)
 		return "Could not write option file.";
