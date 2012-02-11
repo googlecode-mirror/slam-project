@@ -53,9 +53,9 @@ if( count($result->assets[$category]) == 1 )
 				echo "<div id='fileListScrollbox'>\n";
 				echo "<form name='assetFileRemove' id='assetFileRemove' method='POST' action='delete.php'>\n";
 				echo "<input type='hidden' name='i' value='$identifier' />\n";
-				echo SLAM_makeArchiveFilesHTML($config,$db,$category,$identifier,$files,$editable);
+				echo SLAM_makeArchiveFilesHTML($config,$db,$category,$identifier,$files,($access>1));
 				echo "</div>\n";
-				if ($editable)
+				if ($access>1)
 					echo "<input type='button' id='deleteButton' value='Delete' onClick=\"delete_submit('assetFileRemove')\" />\n";
 				echo "</form>\n";
 				echo "</div>\n";

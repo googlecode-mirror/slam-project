@@ -11,13 +11,15 @@ function SLAM_getArchivePath(&$config,$category,$identifier)
 	*/
 		
 	$cats = array_flip($config->values['lettercodes']);
-	$path = "{$config->values['file manager']['archive_dir']}/{$config->values['lab_prefix']}{$cats[$category]}/{$identifier}.zip";
+	$path = "{$config->values['file manager']['archive_dir']}/{$config->values['lab_prefix']}{$cats[$category]}/{$identifier}.zip";	
 		
 	if (file_exists($path) && (!is_readable($path)))
 		$config->errors[]='File manager error: Asset file exists, but is not readable. (Permissions error?)';
 	elseif (!file_exists($path))
 	{
 		if (is_writable(dirname($path)))
+			return $path;
+		elseif(mkdir(dirname($path)))
 			return $path;
 		else
 			$config->errors[]="File manager error: Asset file path '$path' does not exist, and cannot be created.";

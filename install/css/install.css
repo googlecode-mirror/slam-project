@@ -151,13 +151,19 @@ div.actionButtons
 	margin-top: 0px;
 }
 
-div.actionButtons>input
+td.confirmButtons
+{
+	 text-align: center;
+}
+
+.submitButton
 {
 	width:200px;
 	text-align: center;
 	border: 1px solid gray;
 	background-color: #EEEEEE;
 	cursor: pointer;
+	margin-bottom: 4px;
 }
 
 #checkGeneral
@@ -169,7 +175,8 @@ div.actionButtons>input
 	top: 20%;
 	left: 50%;
 	right: 50%;
-	margin-left: -400px;
+	margin-left: -120px;
+	margin-right: -120px;
 	padding: 5px;
 	
 	border: 2px solid gray;

@@ -4,17 +4,17 @@
 	require('lib/db_schemas.inc.php');
 	
 	$fail = array();
-		
-	# Read the default settings either from the previously-entered options, or from the default file
-	if (file_exists('./step_2.ini'))
-		$defaults = parse_ini_file('./step_2.ini');
-	else
-		$defaults = parse_ini_file('./defaults.ini');
 	
 	# save the previous page settings
 	if ($_REQUEST['STEP'] == 1)
 		if( ($ret = write_SLAM_options( './step_1.ini' )) != true )
 			$fail[] = "Could not save your progress. Please contact your system administrator: $ret";
+	
+	# Read the default settings either from the previously-entered options, or from the default file
+	if (file_exists('./step_2.ini'))
+		$defaults = parse_ini_file('./step_2.ini');
+	else
+		$defaults = parse_ini_file('./defaults.ini');
 ?>
 <html>
 	<head>
@@ -72,7 +72,7 @@
 		print "/></td>\n";
 		print "<td class='optionalCategoryName'>$name</td>\n";
 		print "<td class='optionalCategoryPrefix'>";
-		print "<input type='text' size='2' name='SLAM_OPTIONAL_PREFIX[]' id='SLAM_OPTIONAL_PREFIX_{$i}' value='$prefix' onkeyup=\"validate( this,'[a-zA-Z]')\" />";
+		print "<input type='text' size='2' name='SLAM_OPTIONAL_PREFIX[]' id='SLAM_OPTIONAL_PREFIX_{$i}' value='$prefix' onkeyup=\"validatePos( this,'[a-zA-Z]')\" />";
 		print "</td>\n";
 		print "<td class='optionalCategoryDescription'>".$sql_create_optional[$name]['description']."</td>\n";
 		print "</tr>\n";
