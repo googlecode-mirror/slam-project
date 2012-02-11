@@ -18,13 +18,14 @@
 ?>
 <html>
 	<head>
-		<title>SLAM installer - Step 2</title>
+		<title>SLAM installer - Step 2/4</title>
 		<link type='text/css' href='css/install.css' rel='stylesheet' />
 		<script type='text/javascript' src='js/check.js'></script>
+		<script type='text/javascript' src='js/validate.js'></script>
 		<script type='text/javascript' src='../js/convert.js'></script>
 	</head>
 	<body><div id='container'>
-		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Step 2</div>
+		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Step 2/4</div>
 		<div id='installerVer'>Version: <?php print($slam_version) ?></div>
 <?php
 	foreach( $fail as $text )
@@ -54,21 +55,28 @@
 <?php
 	$table_names = array_keys($sql_create_optional);
 
+	$i = 0;
 	foreach( $table_names as $name )
-	{
-		$index = array_search( $name, $defaults['SLAM_OPTIONAL_TABLES'] );
-		
+	{	
+		if( $defaults['SLAM_OPTIONAL_PREFIX'][ $i ] != '' )
+			$prefix = $defaults['SLAM_OPTIONAL_PREFIX'][ $i ];
+		else
+			$prefix = $sql_create_optional[$name]['prefix'];
+			
 		print "<tr>\n";
-		print "<td class='optionalCategoryBox'><input type='checkbox' name='SLAM_OPTIONAL_TABLES[]' value='".base64_encode($name)."' ";
-		if ($index !== false)
+		print "<td class='optionalCategoryBox'>\n";
+		print "<input type='hidden' name='SLAM_OPTIONAL_TABLE[]' value='".base64_encode($name)."' />\n";
+		print "<input type='checkbox' name='SLAM_OPTIONAL_INSTALL[]' value='$i' ";
+		if ( in_array($i, $defaults['SLAM_OPTIONAL_INSTALL']) )
 			print "checked='checked' ";
 		print "/></td>\n";
 		print "<td class='optionalCategoryName'>$name</td>\n";
-		if( ($prefix = $defaults['SLAM_OPTIONAL_PREFIX'][$index]) == '')
-			$prefix = $sql_create_optional[$name]['prefix'];
-		print "<td class='optionalCategoryPrefix'><input type='text' size='2' name='SLAM_OPTIONAL_PREFIX[]' value='$prefix'/></td>\n";
+		print "<td class='optionalCategoryPrefix'>";
+		print "<input type='text' size='2' name='SLAM_OPTIONAL_PREFIX[]' id='SLAM_OPTIONAL_PREFIX_{$i}' value='$prefix' onkeyup=\"validate( this,'[a-zA-Z]')\" />";
+		print "</td>\n";
 		print "<td class='optionalCategoryDescription'>".$sql_create_optional[$name]['description']."</td>\n";
 		print "</tr>\n";
+		$i++;
 	}
 ?>
 			</table>

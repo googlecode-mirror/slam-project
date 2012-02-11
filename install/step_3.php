@@ -17,46 +17,59 @@
 ?>
 <html>
 	<head>
-		<title>SLAM installer - Step 3</title>
+		<title>SLAM installer - Step 3/4</title>
 		<link type='text/css' href='css/install.css' rel='stylesheet' />
 		<script type='text/javascript' src='js/check.js'></script>
+		<script type='text/javascript' src='js/clone.js'></script>
+		<script type='text/javascript' src='js/validate.js'></script>
 		<script type='text/javascript' src='../js/convert.js'></script>
 	</head>
 	<body><div id='container'>
-		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Step 3</div>
+		<script type='text/javascript'>
+			document.cloneTRcounter=<?php echo count($defaults['SLAM_PROJECT_NAME'])-1 ?>;
+		</script>
+		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Step 3/4</div>
 		<div id='installerVer'>Version: <?php print($slam_version) ?></div>
 <?php
 	foreach( $fail as $text )
-		print "<div class='fatalFail'>$text</div>\n";		
+		print "<div class='fatalFail'>$text</div>\n";
 ?>		
-		<form name='forward' action='complete.php' method='post'>
+		<form name='forward' action='step_4.php' method='post'>
 			<input type='hidden' name='STEP' value='3' />
 			<table id='configTable'>
 				<tr>
 					 <td class='helpHeader' colspan="2">For assistance, please refer to the SLAM [<a href='http://code.google.com/p/slam-project/wiki/Installation' target='_new'>installation wiki</a>].</td>
 				</tr>
 				<tr>
-					<td class='inputCategory' colspan='2'>Administrator setup</td>
+					<td class='inputCategory' colspan='2'>Project Setup</td>
 				</tr>
 				<tr>
-					 <td class='categoryInfo' colspan="2">A "superuser" account that can act as an administrator is required. This user can modify or remove any user's assets.</td>
+					 <td class='categoryInfo' colspan="2">Projects are a convenient way to segregate assets. Users can make their own projects, choose from a pre-set list, or both. Projects can also be used to share editing capabilities of assets with multiple users.</td>
 				</tr>
 				<tr>
-					<td class='inputField'>Superuser name:</td>
-					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_ROOT_NAME'] ?>' size='20' id='SLAM_ROOT_NAME' name='SLAM_ROOT_NAME' /></td>
+					<td class='inputField'><input type='checkbox' id='SLAM_CUSTOM_PROJECT' name='SLAM_CUSTOM_PROJECT' value='1' <?php if( $defaults['SLAM_CUSTOM_PROJECT']==1 ){ echo "checked='checked'"; } ?> /></td>
+					<td class='inputValue'>Allow users to create their own projects.</td>
 					
 				</tr>
 				<tr>
-					<td class='inputField'>Superuser password:</td>
-					<td class='inputValue'><input type='password' value='<?php print $defaults['SLAM_ROOT_PASS'] ?>' size='20' id='SLAM_ROOT_PASS' name='SLAM_ROOT_PASS' /></td>
+					 <td class='categoryInfo' colspan="2"><br />You can set up some default projects here. A one-word descriptor is best, like "DksA" or "Hsp_40".</td>
 				</tr>
 				<tr>
-					<td class='inputCategory' colspan='2'>User setup</td>
+					<td class='inputField'></td>
+					<td class='inputValue'><input type='button' value="add project" onClick="cloneLastTR('configTable',1)"><input type='button' value="remove project" onClick="removeLastTR('configTable',1)"></td>
 				</tr>
-				<tr>
-					 <td class='categoryInfo' colspan="2">You can now set up additional regular user accounts. (More can always be added later):</td>
-				</tr>
-
+<?php
+	if( !is_array($defaults['SLAM_PROJECT_NAME']) )
+		$defaults['SLAM_PROJECT_NAME'] = array('');
+	
+	foreach( $defaults['SLAM_PROJECT_NAME'] as $project )
+	{
+		print "<tr>\n";
+		print "<td class='inputField'>Project name:</td>\n";
+		print "<td class='inputValue'><input type='text' value='$project' size='10' name='SLAM_PROJECT_NAME[]' onkeyup=\"validate( this, '[a-zA-Z0-9\_]')\" /></td>\n";
+		print "</tr>\n";
+	}
+?>
 			</table>
 			<div class='actionButtons'>
 				<input type='submit' class='submitButton' value='Save these settings and Continue' />
