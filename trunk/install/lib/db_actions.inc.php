@@ -1,5 +1,43 @@
 <?php
 
+function checkDbOptions( $server, $dbname, $dbuser, $dbpass )
+{
+	$fail = array();
+
+	if ($server == '')
+		$fail[] = "Please specify a database server IP or 'localhost'";
+	if( $dbname == '')
+		$fail[] = "Please specify a database name.";
+	if( $dbuser == '')
+		$fail[] = "Please specify a database user.";
+	if( $dbpass == '')
+		$fail[] = "Please provide a password for the database user.";
+	
+	if( count($fail) == 0 )
+	{
+		$link = @mysql_connect( $server, $dbuser, $dbpass );
+		
+		if (!$link)
+			$fail[] = "Could not connect to the server '$server' with the provided username '$dbuser'.";
+		else
+		{
+			if (!mysql_select_db( $dbname, $link ))
+				$fail[] = "Could not access the '$dbname' database with these credentials.";
+			else
+			{
+				// check for the existence of preexisting SLAM tables
+				if( checkForSLAMTables($link, $dbname) > 0)
+					$fail[] = "A SLAM installation already exists on this database.";
+				else
+					return true;
+			}
+			mysql_close($link);
+		}
+	}
+	
+	return $fail;
+}
+
 function checkForSLAMTables( $dblink, $dbname )
 {
     /* returns a numeric value containing the suitability of the specified database for installing SLAM
@@ -49,6 +87,27 @@ function getDbUserPrivs($link, $dbuser)
 	/* have to do some complex parsing of MySQL's output */
 	
 	return true;
+}
+
+function SLAM_write_to_table( $link, $table, $data)
+{
+	$fields = array();
+	$values = array();
+	
+	foreach( $data as $key=>$value )
+	{
+		$key = mysql_real_escape_string( $key, $link );
+		$value = mysql_real_escape_string( $value, $link );
+		
+		$fields[] = "`$key`";
+		$values[] = "'$value'";
+	}
+	
+	$fields = '('.implode( ',', $fields ).')';
+	$values = '('.implode( ',', $values ).')';
+
+	$sql = "REPLACE INTO `{$table}` $fields VALUES $values";
+	return mysql_query( $sql, $link );
 }
 
 ?>

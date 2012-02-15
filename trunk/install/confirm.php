@@ -1,5 +1,8 @@
 <?php
 	require('lib/constants.inc.php');
+	
+	require('lib/db_actions.inc.php');
+	require('lib/file_actions.inc.php');
 	require('lib/actions.inc.php');
 
 	$fail = array();
@@ -8,6 +11,9 @@
 	if ($_REQUEST['STEP'] == 4)
 		if( write_SLAM_options( './step_4.ini' ) === false )
 			$fail[] = "Could not save your progress. Please contact your system administrator: $ret";
+
+	# are there any errors?
+	$errors = check_SLAM_options();
 ?>
 <html>
 	<head>
@@ -25,11 +31,15 @@
 			<tr>
 				<td class='helpHeader' colspan="2">For assistance, please refer to the SLAM [<a href='http://code.google.com/p/slam-project/wiki/Installation' target='_new'>installation wiki</a>].</td>
 			</tr>
+<?php
+if( count($errors) == 0 )
+{
+	echo <<<EOL
 			<tr>
 					<td class='inputCategory' colspan='2'>Nearly finished!</td>
 			</tr>
 			<tr>
-					 <td class='categoryInfo' colspan="2">The installer is ready to complete your SLAM installation. If you would like to change any of the options, click on the appropriate step button below. You may return to this page by using your browser's "back" button.</td>
+					 <td class='categoryInfo' colspan="2">The installer is ready to complete your SLAM installation. If you would like to change any of the options, click on the appropriate step button below.</td>
 			</tr>
 			<tr>
 				<td class='confirmButtons' colspan='2'>
@@ -39,6 +49,39 @@
 					<br />
 				</td>
 			</tr>
+EOL;
+}
+else
+{
+	echo <<<EOL
+			<tr>
+					<td class='inputCategory' style='color:red' colspan='2'>Errors detected</td>
+			</tr>
+			<tr>
+					 <td class='categoryInfo' colspan="2">The installer has detected some problems:</td>
+			</tr>
+EOL;
+
+	foreach( $errors as $where=>$text )
+	{
+		echo<<<EOL
+			<tr>
+				<td class='inputField'><b>$where :</b></td>
+				<td class='inputValue'>$text</td>
+			</tr>
+EOL;
+	}
+	if( count($errors) > 0)
+	{
+		echo <<<EOL
+			<tr>
+					<td class='inputCategory' colspan='2'>Review Steps:</td>
+			</tr>
+EOL;
+	}
+		
+}
+?>
 			<tr>
 				<td class='confirmButtons' colspan='2'>
 					<form name='step_1' action='step_1.php'  method='post'>
@@ -68,6 +111,10 @@
 					<br />
 				</td>
 			</tr>
+<?php
+if( count($errors) == 0 )
+{
+	echo <<<EOL
 			<tr>
 				<td class='inputCategory' colspan='2'>All done?</td>
 			</tr>
@@ -81,7 +128,9 @@
 					</form>
 				</td>
 			</tr>
+EOL;
+}
+?>
 		</table>
-		
 	</div></body>
 </html>

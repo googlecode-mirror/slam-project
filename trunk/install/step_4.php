@@ -60,7 +60,7 @@
 				</tr>
 				<tr>
 					<td class='inputField'>Superuser password:</td>
-					<td class='inputValue'><input type='password' value='<?php print $defaults['SLAM_ROOT_PASS'] ?>' size='20' name='SLAM_ROOT_PASS' /></td>
+					<td class='inputValue'><input type='password' value='<?php print $defaults['SLAM_ROOT_PASS'] ?>' size='20' name='SLAM_ROOT_PASS' onkeyup="validateNeg( this, '[&#34\']+')" /></td>
 				</tr>
 				<tr>
 					<td class='inputCategory' colspan='2'><br />User setup</td>
@@ -89,12 +89,12 @@
 		print "</tr>\n";
 		print "<tr>\n";
 		print "<td class='inputField'>Password:</td>\n";
-		print "<td class='inputValue'><input type='password' value='{$defaults['SLAM_PASSWORDS'][ $i ]}' size='20' name='SLAM_PASSWORDS[]' /></td>\n";
+		print "<td class='inputValue'><input type='password' value='{$defaults['SLAM_PASSWORDS'][ $i ]}' size='20' name='SLAM_PASSWORDS[]' onkeyup=\"validateNeg( this, '[&#34\']+')\" /></td>\n";
 		print "</tr>\n";
 		print "<tr>\n";
 		print "<td class='inputField'>Projects:</td>\n";
 		print "<td class='inputValue'>\n";
-		print "<select style='width:100px' name='SLAM_USER_GROUPS_{$i}[]' multiple='multiple'>\n";
+		print "<select style='width:126px' name='SLAM_USER_GROUPS_{$i}[]' multiple='multiple'>\n";
 
 		if( is_array($defaults['SLAM_USER_GROUPS_'.$i]) )
 			$selected = $defaults['SLAM_USER_GROUPS_'.$i];

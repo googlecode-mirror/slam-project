@@ -46,7 +46,7 @@ $sql_create_required['permissions']['sql']="CREATE TABLE IF NOT EXISTS `SLAM_Per
   FULLTEXT KEY `Group` (`group`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
 
-$sql_create_required=array();
+$sql_create_required['projects']=array();
 $sql_create_required['projects']['sql']="CREATE TABLE IF NOT EXISTS `SLAM_Projects` (
   `Name` varchar(255) NOT NULL,
   PRIMARY KEY (`Name`)
@@ -61,7 +61,7 @@ $sql_create_optional = array();
 $sql_create_optional['Template']=array();
 $sql_create_optional['Template']['description']="A minimal category that can be used as the basis for creating custom categories.";
 $sql_create_optional['Template']['prefix']='TP';
-$sql_create_optional['Template']['sql']="CREATE TABLE `Template` (
+$sql_create_optional['Template']['sql']="CREATE TABLE IF NOT EXISTS `Template` (
 	`Serial`			  mediumint( 9 )		NOT NULL AUTO_INCREMENT,
 	`Identifier`	  varchar( 20 )		NOT NULL,
 	`Permissions`	  varchar( 255 )		NOT NULL,

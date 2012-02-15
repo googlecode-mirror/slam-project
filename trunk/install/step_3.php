@@ -47,7 +47,7 @@
 					 <td class='categoryInfo' colspan="2">Projects are a convenient way to segregate assets. Users can make their own projects, choose from a pre-set list, or both. Projects can also be used to share editing capabilities of assets with multiple users.</td>
 				</tr>
 				<tr>
-					<td class='inputField'><input type='checkbox' id='SLAM_CUSTOM_PROJECT' name='SLAM_CUSTOM_PROJECT' value='1' <?php if( $defaults['SLAM_CUSTOM_PROJECT']==1 ){ echo "checked='checked'"; } ?> /></td>
+					<td class='inputField'><input type='checkbox' id='SLAM_CUSTOM_PROJECT' name='SLAM_CUSTOM_PROJECT' value='true' <?php if( $defaults['SLAM_CUSTOM_PROJECT']==1 ){ echo "checked='checked'"; } ?> /></td>
 					<td class='inputValue'>Allow users to create their own projects.</td>
 					
 				</tr>

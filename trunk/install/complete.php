@@ -1,13 +1,12 @@
 <?php
 	require('lib/constants.inc.php');
+	require('lib/db_schemas.inc.php');
+	
+	require('lib/db_actions.inc.php');
+	require('lib/file_actions.inc.php');
 	require('lib/actions.inc.php');
 
-	$fail = array();
-			
-	# create the installation config.ini
-	if( count($fail) == 0 )
-		if( ($ret = write_SLAM_config()) != true )
-			$fail[] = array_merge( $fail, $ret );
+	$fail = write_SLAM_config();
 ?>
 <html>
 	<head>
