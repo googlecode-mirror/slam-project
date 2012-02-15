@@ -1,5 +1,21 @@
 <?php
 
+function checkFileOptions($arch_path, $temp_path)
+{
+	$fail = array();
+	$fail[] = checkDirectoryIsRW($arch_path);
+	$fail[] = checkDirectoryIsRW($temp_path);
+
+	// ok to try and delete these, because rmdir will fail if there are not empty
+	@rmdir($temp_path);
+	@rmdir($arch_path);
+	
+	if( ($fail[0] === true) && ($fail[1] === true) )
+		return true;
+	
+	return $fail;
+}
+
 function checkFileList( $file_list_path )
 {
 	$lines = file($file_list_path);

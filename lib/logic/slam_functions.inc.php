@@ -15,4 +15,18 @@ function mysql_real_escape($a,$link)
 	return $a;
 }
 
+function makeRandomAlpha($length=8)
+{
+	/*
+		generates a random alphanumeric string
+	*/
+	
+	$out = '';
+	$chrs = array_merge(range(48,57),array_merge(range(65,90),range(97,122)));
+	
+	for($i=0;$i<$length;$i++)
+		$out.=chr($chrs[rand(0,count($chrs))]);
+	return $out;
+}
+
 ?>
