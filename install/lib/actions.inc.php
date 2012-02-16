@@ -21,7 +21,7 @@ function write_SLAM_options( $filename )
 		}
 	}
 	
-	if( file_put_contents( $filename, $output) === false)
+	if( file_put_contents( $filename, $output ) === false)
 		return "Could not write option file.";
 	
 	return true;
@@ -62,7 +62,7 @@ function check_SLAM_options()
 	$options = array_merge($ini[0], $ini[1], $ini[2], $ini[3] );
 	
 	/* step 1 options */
-	$path = rtrim( base64_decode($options['SLAM_CONF_PATH']),'/');
+	$path = rtrim( $options['SLAM_CONF_PATH'],'/');
 	if( ($ret = checkDirectoryIsRW( $path )) !== true )
 		$errors['Step 1 A'] ="SLAM installation path error: $ret";
 	if (strlen($options['SLAM_CONF_PREFIX']) != 2)
@@ -131,6 +131,14 @@ function write_SLAM_config( )
 	$options['SLAM_FILE_ARCH_DIR'] = rtrim($options['SLAM_FILE_ARCH_DIR'],'/');
 	$options['SLAM_FILE_TEMP_DIR'] = rtrim($options['SLAM_FILE_TEMP_DIR'],'/');
 	
+	if( !file_exists($options['SLAM_FILE_ARCH_DIR']) )
+		if( !mkdir($options['SLAM_FILE_ARCH_DIR']) )
+			return( array("Could not create {$options['SLAM_FILE_ARCH_DIR']}."));
+			
+	if( !file_exists($options['SLAM_FILE_TEMP_DIR']) )
+		if( !mkdir($options['SLAM_FILE_TEMP_DIR']) )
+			return( array("Could not create {$options['SLAM_FILE_TEMP_DIR']}."));
+			
 	/* step 2 options */
 	/* create the optional categories */
 	foreach( $options['SLAM_OPTIONAL_INSTALL'] as $i )
@@ -198,6 +206,9 @@ function write_SLAM_config( )
 		return array("Could not write configuration file.");
 	if( file_put_contents( "{$path}/preferences_test.ini", $prefs_ini) === false)
 		return array("Could not write preferences file.");
+	
+	if( !unlink('./step_1.ini') || !unlink('./step_2.ini') || !unlink('./step_3.ini') || !unlink('./step_4.ini') )
+		return array("Could not remove step setup files.");
 	
 	return true;
 }
