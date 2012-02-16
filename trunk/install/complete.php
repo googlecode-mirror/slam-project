@@ -14,11 +14,14 @@
 		<link type='text/css' href='css/install.css' rel='stylesheet' />
 	</head>
 	<body><div id='container'>
-		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Finished</div>
+		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Completed</div>
 		<div id='installerVer'>Version: <?php print($slam_version) ?></div>
 <?php
-	foreach( $fail as $text )
-		print "<div class='fatalFail'>$text</div>\n";	
+	if( is_array($fail) )
+		foreach( $fail as $text )
+			print "<div class='fatalFail'>$text</div>\n";
+	else
+		print "<div id='success'>Congratulations! SLAM has been successfully set up.<br />You can access the installation [<a href='../index.php'>here</a>].</div>\n";
 ?>		
 	</div></body>
 </html>

@@ -64,6 +64,13 @@ a:hover, a:active{
 	
 }
 
+#success
+{
+	width: 500px;
+	text-align: center;
+	margin-top: 60px;
+}
+
 #configTable, #optionalCategoriesTable
 {
 	width:	500px;
