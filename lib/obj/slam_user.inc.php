@@ -25,14 +25,14 @@ class SLAMuser
 			if(count($this->group) == 0)
 				$this->group = array( $this->values['username'] );
 			
-			/* extract user prefs */
-			$this->prefs = unserialize($ret['prefs']);
-			
+			/* prefs already loaded by loaduser() */
 			if(!is_numeric($this->prefs['default_group_access']))
 				$this->prefs['default_group_access'] = (int)$config->values['permissions']['default_group_perms'];
 			
 			if(!is_numeric($this->prefs['default_access']))
 				$this->prefs['default_access'] = (int)$config->values['permissions']['default_perms'];
+
+			$this->prefs['failed_logins'] = 0;
 		}
 			
 		return;
@@ -92,17 +92,30 @@ class SLAMuser
 		return false;
 	}
 	
-	function checkPassword($config,$db,$password)
+	function checkPassword(&$config,$db,$password)
 	{
 		$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `username`='".mysql_real_escape($this->username,$db->link)."' LIMIT 1");
 		
 		/* compare the salt+password hash with that stored in the db */
 		if ($auth === false) //GetRecords returns false on error
 			die('Database error: could not check user passphrase: '.mysql_error());
-		if ((count($auth) == 1) && (sha1($auth[0]['salt'].$password) == $auth[0]['crypt']))
-			return $auth;
-
+		
+		/* make sure we haven't exceeded our number of failed logins */
+		if( count($auth) == 1)
+		{
+			$this->prefs = unserialize($auth[0]['prefs']);
+			
+			if( $this->prefs['failed_logins'] > 20 )
+				$config->errors[] = 'Auth error: Maximum number of failed attempts reached!';
+			elseif( sha1($auth[0]['salt'].$password) == $auth[0]['crypt'] )
+				return $auth;
+			
+			/* if we weren't successful, increment the failed login counter */		
+			$this->prefs['failed_logins']++;
+			$this->savePrefs($config, $db);
+		}
 		$config->errors[] = 'Auth error: Invalid username provided.';
+		
 		return false;
 	}
 	
