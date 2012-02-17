@@ -10,7 +10,7 @@
 		$fail[] = "The installed PHP version must be at least $req_php_version, the currently installed version is ".PHP_VERSION;
 	
 	# make sure we're not installing into an existing install
-	if((!$fail) && (file_exists('../configurations.ini')))
+	if((!$fail) && (file_exists('../configuration.ini')))
 		$fail[] = "A completed SLAM installation is already present.";
 	
 	# make sure we have all the necessary files
@@ -148,12 +148,12 @@ NO WARRANTY
 END OF TERMS AND CONDITIONS
 </textarea>
 </div>
+<form name='forward' action='step_1.php'>
+	<div class='actionButtons'>
+		<input type='submit' class="submitButton" value='Start Installation' />
+	</div>
+</form>		
 EOD;
 ?>
-		<form name='forward' action='step_1.php'>
-			<div class='actionButtons'>
-				<input type='submit' class="submitButton" value='Start Installation' />
-			</div>
-		</form>
 	</div></body>
 </html>
