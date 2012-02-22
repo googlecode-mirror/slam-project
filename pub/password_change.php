@@ -8,6 +8,6 @@
 			<tr><td style='text-align:right'>New password: (confirm)</td><td><input type='password' name='new_password_2' value='' id='new_password_2' /></td>&nbsp;</tr>
 		</table>
 		<?php if($_REQUEST['bad_password']){ echo "<span style='color:red'>Bad Password</span><br />\n"; } ?>
-		<input type='button' value='Change Password' onClick="checkPasswordForm('changepassForm','new_password','new_password_2')" />
+		<input type='button' value='Change Password' onClick="checkPasswordForm('changepassForm','new_password','new_password_2')" /><input type='button' value='Cancel' onClick="removeBodyId('userDiv')"/>
 	</form>
 </form>

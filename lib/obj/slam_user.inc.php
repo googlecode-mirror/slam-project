@@ -27,10 +27,10 @@ class SLAMuser
 			
 			/* prefs already loaded by loaduser() */
 			if(!is_numeric($this->prefs['default_group_access']))
-				$this->prefs['default_group_access'] = (int)$config->values['permissions']['default_group_perms'];
+				$this->prefs['default_group_access'] = (int)$config->values['permissions']['default_group_access'];
 			
 			if(!is_numeric($this->prefs['default_access']))
-				$this->prefs['default_access'] = (int)$config->values['permissions']['default_perms'];
+				$this->prefs['default_access'] = (int)$config->values['permissions']['default_access'];
 
 			$this->prefs['failed_logins'] = 0;
 		}
@@ -70,6 +70,7 @@ class SLAMuser
 				setcookie("{$config->values['name']}_slam",$auth[0]['crypt'],time()+$config->values['cookie_expire'],'/');
 				
 				$this->username = $auth[0]['username'];
+				$this->prefs = unserialize($auth[0]['prefs']);
 				return $auth[0];
 			}
 			

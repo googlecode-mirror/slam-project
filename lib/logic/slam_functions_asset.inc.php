@@ -7,7 +7,6 @@ function SLAM_getAssetFields($config,$db,$user,$assets)
 	*/
 	
 	/* compile a list of shared fields in all the assets */
-	
 	$fields = array_keys($assets[0]);
 	foreach($assets as $asset)
 		$fields = array_intersect( $fields, array_keys($asset) );
@@ -24,7 +23,7 @@ function SLAM_getAssetFields($config,$db,$user,$assets)
 		if (count($values) == 1)
 			$ret[ $field ] = $values[0];
 		else
-			$ret[ $field ] = '(multiple)';
+			$ret[ $field ] = $config->values['multiple_value'];
 	}
 	return $ret;
 }
@@ -48,7 +47,6 @@ function SLAM_setAssetFields($config,$db,$user,$category,$structure,$clone=false
 					
 	/* set permissions */
 	SLAM_setDefaultPerms( $fields, $config, $user, $clone );
-	print_r( $fields );
 	if(array_key_exists($config->values['permissions']['owner_field'],$fields))
 		$fields[$config->values['permissions']['owner_field']] = $user->username;
 		
@@ -91,14 +89,14 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	/* get asset values from fields that start with "edit_" */
 	$asset = array();
 	foreach($_REQUEST as $key => $value)
-		if (($value != '(multiple)') && (preg_match('/^edit_(.+)$/',$key,$m) > 0))
+		if (($value != $config->value['multiple_value']) && (preg_match('/^edit_(.+)$/',$key,$m) > 0))
 			$asset[base64_decode($m[1])] = stripslashes($value);
 	
 	/* go through all the tables we need to insert into */
 	foreach($request->categories as $category=>$identifiers)
 	{
-		/* if permissions field is '(multiple)', don't overwrite asset's existing permissions */
-		if ($_REQUEST['permissions'] && ($_REQUEST['permissions'] == '(multiple)'))
+		/* if permissions field is the multiple field value, don't overwrite asset's existing permissions */
+		if ($_REQUEST['permissions'] && ($_REQUEST['permissions'] == $config->values['multiple_value']))
 			$asset['permissions'] = false;
 		elseif( $_REQUEST['permissions'] )
 			$asset['permissions'] = json_decode(base64_decode($_REQUEST['permissions']));
@@ -262,11 +260,12 @@ function SLAM_setDefaultPerms( &$asset, $config, $user=false, $clone=false )
 		$asset['permissions']['owner'] = $config->values['permissions']['default_owner'];
 	else
 		$asset['permissions']['owner'] = null;
-
+	
 	/* a shortcut if we're just cloning an existing asset */
-	if( ($clone) && ($user !== false) )
+	if( ($clone != false) && ($user != false) )
 	{
-		$asset['permissions'] = $clone['Permissions'];
+		$asset['permissions'] = $clone['permissions'];
+		$asset['permissions']['owner'] = $user->username;
 		$asset['permissions']['owner_access'] = 2;
 		return;
 	}
