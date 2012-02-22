@@ -50,8 +50,7 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 		/* fields that cannot be edited for more than one asset at a time shouldn't be shown */
 		if (count($assets) > 1)
 		{
-			unset($fields['Identifier']);
-			unset($fields['Files']);
+			unset($structure['Files']);
 		}
 	}
 	
@@ -81,18 +80,16 @@ jump to <a href='#End'>bottom</a> |
 EOL;
 
 	$b="$f<table id='assetEdit'>\n";
-
+	
 	/* go through the structure and put together each fields's html */
 	foreach($structure as $name=>$scheme)
-	{
+	{		
 		/* when we run across the title field, save it to the $t variable for later use */
-		if ($field == $config->categories[$category]['title_field'])
+		if ($name == $config->categories[$category]['title_field'])
 			$t="<div id='assetEditTitle'>$category : $fields[$name]</div>\n";
-
+		
 		/* hide fields from non-users and empty fields */
-		if( ($scheme['hidden']) && (!$user->superuser) )
-			$hidden = true;
-		elseif (($fields[$name] != '') || ($request->action == 'new'))
+		if( $request->action == 'new' )
 			$hidden = false;
 		elseif( in_array($fields[$name], $config->values['hide_empty']) )
 			$hidden = true;
@@ -118,7 +115,7 @@ EOL;
 				break;
 		
 			default:
-				if ($cheme['hidden'] && !$user->superuser)
+				if ($scheme['hidden'] && !$user->superuser)
 					$b.=SLAM_makeHiddenInput($fields[$name],'edit_'.base64_encode($scheme['name']));
 				else
 					$b.=SLAM_makeFieldHTML($config,$request,$fields[$name],$scheme,$editable,$hidden);
@@ -206,7 +203,8 @@ function SLAM_makeFieldHTML($config,$request,$v,$s,$e,$h)
 		$b = SLAM_makeProjectMenuHTML($config,$v,$s,$n,$e);
 	
 	/* should the file be a linked identifier field? */
-	if (preg_match('/^(\#\S+\s+)/',$s['comment'],$m)>0){
+	if ( preg_match('/^(\#\S+\s+)/',$s['comment'],$m) > 0 )
+	{
 		$f = SLAM_makeIdentifierMenuHTML($config,$request,$v,$s,"name='$n' id='$n'");
 		$s['comment'] = str_replace($m[1],'',$s['comment']); // remove the link field specifier from the title
 	}

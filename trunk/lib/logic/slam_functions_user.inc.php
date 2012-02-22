@@ -44,7 +44,7 @@ function SLAM_setUserPreferences(&$config,$db,&$user)
 {	
 	if ($_REQUEST['defaultProject'])
 		$user->prefs['default_project'] = urldecode($_REQUEST['defaultProject']);
-		
+	
 	/* interpret the permission menu selections */
 	switch( $_REQUEST['defaultReadable'] )
 	{
@@ -71,7 +71,7 @@ function SLAM_setUserPreferences(&$config,$db,&$user)
 			$user->prefs['default_access'] = 2;
 			break;
 	}
-		
+
 	$user->savePrefs($config,$db);
 
 	return;

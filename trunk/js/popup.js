@@ -3,16 +3,15 @@ function togglePopupMenu(url, id, options)
 	options['noclose'] = 'true';
 
 	/* if the popup is already loaded, destroy it */
-	var test=document.getElementById(id);
-	if ((test !== null) && (test.getAttribute('xml-url') == url))
-		document.body.removeChild(test);
-	else
-		showPopupDiv( url, id, options );
+	removeBodyId( id );
+	showPopupDiv( url, id, options );
 }
 
 function showPopupDiv( url, id, options )
 {
 	var sDiv=document.createElement('div');
+	
+	removeBodyId( id );	
 	sDiv.setAttribute('id',id);
 	sDiv.setAttribute('xml-url',url);
 
