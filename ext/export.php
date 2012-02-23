@@ -12,13 +12,10 @@ if ($user->authenticated)
 	
 	switch($request->action)
 	{
-		case 'edit':
-		case 'open':
-		case 'save changes':
-			$result = new SLAMresult($config,$db,$user,$request);
-			break;
 		case 'search':
 			$result = SLAM_loadSearchResults($config,$db,$user,$request);
+		default:
+			$result = new SLAMresult($config,$db,$user,$request);
 	}
 	
 	switch($request->location)
@@ -72,6 +69,9 @@ function makeCSVEntry($a)
 {
 	foreach($a as $k=>$v)
 	{
+		if( is_array($v) ) /* permissions value */
+			$v = '';
+		
 		$a[$k]=str_replace('"','""',stripslashes($v));
 		if (preg_match('/[\r\n\,\"]/',$v)>0)
 			$a[$k]="\"{$a[$k]}\"";
