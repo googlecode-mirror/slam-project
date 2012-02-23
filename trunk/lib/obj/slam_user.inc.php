@@ -78,6 +78,9 @@ class SLAMuser
 			return false;
 		}
 		
+		if( $this->username == false)
+			return false;
+		
 		/* attempt to check out the username and password */
 		$auth = $this->checkPassword($config,$db,$password);
 		
