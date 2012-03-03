@@ -10,8 +10,8 @@
 		$fail[] = "The installed PHP version must be at least $req_php_version, the currently installed version is ".PHP_VERSION;
 	
 	# make sure we're not installing into an existing install
-	if((!$fail) && (file_exists('../configuration.ini')))
-		$fail[] = "A completed SLAM installation is already present.";
+#	if((!$fail) && (file_exists('../configuration.ini')))
+#		$fail[] = "A completed SLAM installation is already present.";
 	
 	# make sure we have all the necessary files
 	if(((!$fail) && !checkFileList('./file_list.txt')))

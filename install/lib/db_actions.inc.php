@@ -15,25 +15,36 @@ function checkDbOptions( $server, $dbname, $dbuser, $dbpass )
 	
 	if( count($fail) == 0 )
 	{
-		$link = @mysql_connect( $server, $dbuser, $dbpass );
+		$link = @mysql_connect( $server, $dbuser, $dbpass, true );
 		
 		if (!$link)
 			$fail[] = "Could not connect to the server '$server' with the provided username '$dbuser'.";
 		else
 		{
-			if (!mysql_select_db( $dbname, $link ))
-				$fail[] = "Could not access the '$dbname' database with these credentials.";
-			else
+			if (mysql_select_db( $dbname, $link ))
 			{
-				// check for the existence of preexisting SLAM tables
 				if( checkForSLAMTables($link, $dbname) > 0)
 					$fail[] = "A SLAM installation already exists on this database.";
-				else
-					return true;
 			}
+			else /* try and temporarily create the database */
+			{
+				if( !mysql_query("CREATE DATABASE '$dbname'", $link) )
+					 $fail[] = "Specified database '$dbname' doesn't exist and couldn't be created!";
+				else
+				{
+					if (!mysql_select_db( $dbname, $link ))
+						$fail[] = "Created database '$dbname', but couldn't select it!";
+					
+					mysql_query("DROP DATABASE '$dbname'", $link);
+				}
+			}
+			
 			mysql_close($link);
 		}
 	}
+	
+	if( count($fail) == 0 )
+		return true;
 	
 	return $fail;
 }

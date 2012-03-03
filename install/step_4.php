@@ -56,11 +56,14 @@
 				<tr>
 					<td class='inputField'>Superuser name:</td>
 					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_ROOT_NAME'] ?>' size='20' name='SLAM_ROOT_NAME' onkeyup="validateNeg( this, '[&#34\'\,\`]+')" /></td>
-					
 				</tr>
 				<tr>
 					<td class='inputField'>Superuser password:</td>
 					<td class='inputValue'><input type='password' value='<?php print $defaults['SLAM_ROOT_PASS'] ?>' size='20' name='SLAM_ROOT_PASS' onkeyup="validateNeg( this, '[&#34\']+')" /></td>
+				</tr>
+				<tr>
+					<td class='inputField'>Superuser email:</td>
+					<td class='inputValue'><input type='text' value='<?php print $defaults['SLAM_ROOT_EMAIL'] ?>' size='20' name='SLAM_ROOT_EMAIL' onkeyup="validateNeg( this, '[&#34\']+')" /></td>
 				</tr>
 				<tr>
 					<td class='inputCategory' colspan='2'><br />User setup</td>
@@ -71,7 +74,7 @@
 				</tr>
 				<tr>
 					<td class='inputField'></td>
-					<td class='inputValue'><input type='button' value="add user" onClick="cloneLastTR('configTable',3)"><input type='button' value="remove user" onClick="removeLastTR('configTable',3)"></td>
+					<td class='inputValue'><input type='button' value="add user" onClick="cloneLastTR('configTable',4)"><input type='button' value="remove user" onClick="removeLastTR('configTable',3)"></td>
 				</tr>
 <?php
 	if( !is_array($defaults['SLAM_USERS']) )
@@ -90,6 +93,10 @@
 		print "<tr>\n";
 		print "<td class='inputField'>Password:</td>\n";
 		print "<td class='inputValue'><input type='password' value='{$defaults['SLAM_PASSWORDS'][ $i ]}' size='20' name='SLAM_PASSWORDS[]' onkeyup=\"validateNeg( this, '[&#34\']+')\" /></td>\n";
+		print "</tr>\n";
+		print "<tr>\n";
+		print "<td class='inputField'>Email:</td>\n";
+		print "<td class='inputValue'><input type='text' value='{$defaults['SLAM_EMAILS'][ $i ]}' size='20' name='SLAM_EMAILS[]' onkeyup=\"validateNeg( this, '[&#34\'\,\`]+')\" /></td>\n";
 		print "</tr>\n";
 		print "<tr>\n";
 		print "<td class='inputField'>Projects:</td>\n";
