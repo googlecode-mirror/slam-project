@@ -115,12 +115,18 @@ function write_SLAM_config( )
 	$dbuser = $options['SLAM_DB_USER'];
 	$dbpass = $options['SLAM_DB_PASS'];
 	
-	$link = @mysql_connect( $server, $dbuser, $dbpass );
+	$link = @mysql_connect( $server, $dbuser, $dbpass, true );
 	if( $link === false)
 		return array("Could not connect to the database with the provided credentials:".mysql_error());
-//	if( mysql_select_db( $dbname, $link ) === false);
-//		return array("The specified database name ($dbname) doesn't exist:".mysql_error());
-
+	
+	if( mysql_select_db( $dbname, $link ) === false)
+	{
+		if( !mysql_query("CREATE DATABASE '$dbname'", $link) )
+			return array("Specified database '$dbname' doesn't exist and couldn't be created!");
+		elseif( !mysql_select_db( $dbname, $link ) )
+			return array("Created database '$dbname', but couldn't select it!");
+	}
+	
 	/* create the required tables */
 	foreach( $sql_create_required as $table )
 		if(mysql_query( $table['sql'], $link ) === false)
@@ -175,6 +181,7 @@ function write_SLAM_config( )
 	$errors = array();
 	foreach( $options['SLAM_USERS'] as $index=>$name )
 	{
+		$email = $options['SLAM_EMAILS'][ $index ];
 		$salt = makeRandomAlpha(8);
 		$crypt = sha1($salt.$options['SLAM_PASSWORDS'][$index]);
 		if( is_array($options["SLAM_USER_GROUPS_{$index}"]) )
@@ -182,7 +189,7 @@ function write_SLAM_config( )
 		else
 			$groups = '';
 		
-		if( SLAM_write_to_table( $link, 'SLAM_Researchers', array('username'=>$name,'crypt'=>$crypt,'salt'=>$salt,'superuser'=>'0','group'=>$groups) ) === false )
+		if( SLAM_write_to_table( $link, 'SLAM_Researchers', array('username'=>$name,'email'=>$email,'crypt'=>$crypt,'salt'=>$salt,'superuser'=>'0','group'=>$groups) ) === false )
 			$errors[] = mysql_error();
 	}
 
