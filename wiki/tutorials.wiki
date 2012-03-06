@@ -29,7 +29,7 @@ Date Field
 
   # Click on "Go"
 
-== Editing an existing category == 
+== Customizing a Category == 
   # Log into phpmyadmin
   # Click on the database name (right side)
   # Click on desired category name (right side)
@@ -43,7 +43,7 @@ Date Field
 "Default (As defined:)"
 "Comments #link"
 
-== Adding a new Project to SLAM ==
+== Adding a new Project ==
   # Log into phpmyadmin
   # Click on the database name (right side)
   # Click on the SLAM_Projects link (right side)
@@ -51,7 +51,7 @@ Date Field
   # Name
   # Click on "Go"
 
-== Adding a new User ("Researcher") to SLAM ==
+== Adding a new User ==
   # Log into phpmyadmin
   # Click on the database name (right side)
   # Click on the SLAM_Researchers link (right side)
