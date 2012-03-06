@@ -10,7 +10,7 @@ If you've already downloaded SLAM, you can follow the step-by-step installation 
 
 Several tutorials are available that make administration and customization of SLAM easy for anyone, even if you've never used a database:
 
-  # Creating a new Category
-  # Customizing an existing Category
-  # Adding a new Project
-  # Adding a new Researcher
+  # [tutorials#Creating_a_new_category Creating a new Category]
+  # [tutorials#Editing_an_existing_category Customizing a Category]
+  # [tutorials#Adding_a_new_Project Adding a new Project]
+  # [tutorials#Adding_a_new_User Adding a new Researcher]
