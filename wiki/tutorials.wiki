@@ -1,0 +1,65 @@
+= Tutorials =
+
+Outlines for now, will flesh out later.
+
+== Creating a new category ==
+
+  # Log into phpmyadmin
+  # Click on the database name (right side)
+  # Click on the Template link (right side)
+  # Click on "Operations" (top)
+  # Lower right: "Copy table to"
+  # Enter name, select "Structure only"
+  # Click on "Go"
+
+== Adding a new category to SLAM ==
+
+  # Log into phpmyadmin
+  # Click on the database name (right side)
+  # Click on the SLAM_Categories link (right side)
+  # Click on Insert (top)
+  # Fields:
+Name
+Prefix
+List Fields
+Field Order
+Title Field
+Owner Field
+Date Field
+
+  # Click on "Go"
+
+== Editing an existing category == 
+  # Log into phpmyadmin
+  # Click on the database name (right side)
+  # Click on desired category name (right side)
+  # Click on "Structure"
+  # To remove, click on "Drop" - WARNING!
+  # To add, scroll down to "Add 1 columns" After (desired field) - "Go"
+  # Fields:
+"Column" (attribute)
+"Type" (INT, VARCHAR, TEXT, Date, Enum,Set)
+"Length/Values" Values: 'value1','value2','value3'
+"Default (As defined:)"
+"Comments #link"
+
+== Adding a new Project to SLAM ==
+  # Log into phpmyadmin
+  # Click on the database name (right side)
+  # Click on the SLAM_Projects link (right side)
+  # Click on Insert (top)
+  # Name
+  # Click on "Go"
+
+== Adding a new User ("Researcher") to SLAM ==
+  # Log into phpmyadmin
+  # Click on the database name (right side)
+  # Click on the SLAM_Researchers link (right side)
+  # Click on Insert (top)
+  # Fields:
+username
+crypt (blank)
+salt (blank)
+email
+group
+  # Click on "Go"
