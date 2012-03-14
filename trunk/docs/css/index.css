@@ -1,0 +1,24 @@
+.docSubject
+{
+	padding-top: 12px;
+	font-size: 14pt;
+}
+
+.docSubject>span
+{
+	display: inline-block;
+	width: 30px;
+}
+
+.docSubjectList
+{
+	width: 100%;
+	padding-left: 30px;
+	font-size: 12pt;
+}
+
+.docSubjectList>p
+{
+	margin: 6px;
+	padding: 0px;
+}

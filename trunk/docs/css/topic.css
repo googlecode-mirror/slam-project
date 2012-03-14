@@ -1,0 +1,15 @@
+#topicTitle
+{
+	font-size: 14pt;
+	font-weight: bold;
+}
+
+#topicContents
+{
+	font-size: 12pt;
+}
+
+.topicIndent
+{
+	margin-left: 12pt;
+}

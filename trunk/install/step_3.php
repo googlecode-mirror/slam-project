@@ -38,7 +38,7 @@
 			<input type='hidden' name='STEP' value='3' />
 			<table id='configTable'>
 				<tr>
-					 <td class='helpHeader' colspan="2">For assistance, please refer to the SLAM [<a href='http://code.google.com/p/slam-project/wiki/Installation' target='_new'>installation wiki</a>].</td>
+					 <td class='helpHeader' colspan="2">For assistance, please refer to the SLAM documentation [<a href='../docs/installation.html' target='_new'>here</a>].</td>
 				</tr>
 				<tr>
 					<td class='inputCategory' colspan='2'>Project Setup</td>
