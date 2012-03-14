@@ -29,7 +29,7 @@
 ?>
 		<table id='configTable'>
 			<tr>
-				<td class='helpHeader' colspan="2">For assistance, please refer to the SLAM [<a href='http://code.google.com/p/slam-project/wiki/Installation' target='_new'>installation wiki</a>].</td>
+				<td class='helpHeader' colspan="2">For assistance, please refer to the SLAM documentation [<a href='../docs/installation.html' target='_new'>here</a>].</td>
 			</tr>
 <?php
 if( count($errors) == 0 )

@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<title>SLAM Documentation</title>
+		<link rel='stylesheet' type='text/css' href='css/global.css' />
+		<link rel='stylesheet' type='text/css' href='css/topic.css' />
+	</head>
+	<body>
+		<div id='docContainer' style='width:600px'>
+			<div id='slamLogo'><a href='index.html'><img src='images/slam_logo_213x129.png' width='213' height='129' alt='slam logo' border='0' /></a></div>
+			<hr width='600' />
+			<div id='topicTitle'>Installing SLAM</div>
+			<div id='topicContent'>
+				<p><b><u>Requirements:</u></b></p>
+				<p>
+					SLAM is designed to work with a standard "LAMP" internet server setup (Linux, Apache, MySQL, PHP). Many academic departments that provide web hosting for your lab website likely already run such a setup. Alternatively, you can set one up for yourself, as most standard Macintosh or Linux distributions (Ubuntu, Fedora, etc.) either come with these components preinstalled, or make it very easy to install them yourself:
+					<br />
+					<ol>
+						<li><a href='http://www.mamp.info/en/mamp/index.html'>www.mamp.info/en/mamp/</a></li>
+						<li><a href='http://fedorasolved.org/server-solutions/lamp-stack'>fedorasolved.org/server-solutions/lamp-stack</a></li>
+					</ol>
+				</p>
+				<p>Regardless of which route you choose, you will need the following before installing SLAM:
+				<br />
+					<ol>
+						<li>A modern browser: Google Chrome, Safari, Firefox 3+, or Internet Explorer 6+ have all been verified, but others may work as well.</li>
+						<li>A folder/directory on the web server on which all of the files attached to SLAM assets can be stored. SLAM compresses attached files on-the-fly to save space, but if you attach many large files to your SLAM assets, this directory could eventually become quite large.</li>
+						<li>Access to MySQL server. This will consist of three or four components: The server name, and a login name and password for access. If system administrator has already created a database for you, he/she will provide you the name of the database as well.</li>
+					</ol>
+				</p>
+				<p>Once you have the required information, download SLAM (e.g. SLAM_1.1.0.tgz), uncompress it, and place it in your web server directory where it can be accessed. You should now load the SLAM installer by opening the installer URL in your browser. (e.g. "yourserver.com/slam/install")</p>
+				<p>If SLAM detects that everything is OK, you will be presented with the license agreement. Please read it careful and click the "Start Installation" to proceed to the first configuration step.</p>
+				<p><b><u>Step 1</u></b></p>
+				<div class='topicIndent'>
+					<p>Here you will fill in some basic information SLAM needs in order to store asset information as well as the files your users will add to those assets. Some options will be automatically filled out, and may not need to be changed. Clicking the "Check these values" buttons for each section will cause SLAM to test their suitability.</p>
+					<p><u>General Settings</u>
+						<div class='topicIndent'>
+							<i>"Installation path"</i> - This option is the absolute file system path to your SLAM installation, and probably shouldn't be changed unless you really know what you're doing.
+							<br /><br /><i>"Lab name"</i> - The name of your lab should go here, and will appear at the top of every SLAM page after the installation is complete.
+							<br /><br /><i>"Lab prefix"</i> - Choose two letters (A-Z) that will uniquely identify your lab. This will be incorporated into the [[Identifier]] SLAM will create for every asset.
+							<br /><br /><i>"Mail header"</i> - If a user forgets their password, SLAM will e-mail them a reset email. If you'd like to change who these emails originate from, you can change them here. The default value is probably just fine.
+						</div>
+					</p>
+					<p><u>Database Settings</u>
+						<div class='topicIndent'>
+							<i>"Server"</i> - The name or IP address of the MySQL server. Many web servers host their own MySQL server, in which case this should be "localhost". 
+							<br /><br /><i>"Database name"</i> - If you already have a database created that you would like SLAM to use, or if one has been provided for you by your IT staff, type it here. Otherwise, SLAM will attempt to create one for you.
+							<br /><br /><i>"Login name"</i> - The username SLAM should use to access the MySQL server.
+							<br /><br /><i>"Login password"</i> - The password SLAM should use to access the MySQL server.
+						</div>
+					</p>
+					<p><u>Attached File Settings</u>
+						<br />SLAM will need to have access to at least one directory at which it can save attached files. These can be pre-existing folders, otherwise SLAM will attempt to create them.
+						<div class='topicIndent'>
+							<i>"Attachment directory"</i> - The directory SLAM will save all attached asset files
+							<br /><br /><i>"Temporary directory"</i> - The directory SLAM will utilize to temporarily store uploaded and downloaded files.
+						</div>
+					</p>
+					<p>Once you have filled these values out, click the "Check these values" button for each section to verify that they are indeed correct and that everything works properly. If SLAM reports that "these settings are OK" for each section, then congratulations! you've just finished the hardest part of the installation.</p>
+					<p>You can proceed to the next step by clicking "Save these settings and Continue". NOTE: Clicking "Cancel these settings and Go Back" will cause you to loose any changes you've currently made. SLAM will always retain any previously saved values, however.</p>
+				</div>
+				<p><b>Step 2</b></p>
+				<div class='topicIndent'>
+					<p>Here you can set up some default asset categories for you to start SLAM out with. After you finish installing, you may of course delete, modify, or copy any categories.</p>
+					<p>Click the checkbox beside each category type you'd like SLAM to set up for you. You can also change the identifier prefix if you like. A brief description of each category is provided.</p>
+					<p>Click "Save these setting and Continue" to go onto the second step.</p>
+				</div>
+				<p><b>Step 3</b></p>
+				<div class='topicIndent'>
+					<p>Here you can define as many projects as you'd like SLAM to initially start with (you can always add or delete projects later). You can also let your users create their own projects, if you wish, by checking the appropriate checkbox.</p>
+					<p>Additional spaces for projects can be added by pressing the "add project" button. Project names should be short and immediately recognizable.</p>
+					<p>Once you've added all the desired projects, click the "Save these settings and Continue" button to go to the last step.</p>
+				</div>
+				<p><b>Step 4</b></p>
+				<div class='topicIndent'>
+					<p>Here you can set up the users "Researchers" that will use SLAM. In addition to regular users, you will also be required to create a "superuser" or "administrator" account that can access, modify, or remove anybody's assets. (By default, SLAM only lets an asset's owner and the other members of its owners projects the ability to modify it). Superusers can also see assets that have been removed, allowing them to "undelete" accidentally removed assets.</p>
+					<p>Choose a superuser name, password, and email address.</p>
+					<p>An unlimited number of users can now be set up (although more can be added later, if necessary). You can also connect users and projects now, if you specified any projects in the previous step. A user can belong to multiple projects, just control or command click to select them.</p>
+					<p>Click the "Save the settings and Continue" button to go to the confirmation page.</p>
+				</div>
+				<p><b>Confirmation</b></p>
+				<div class='topicIndent'>
+					<p>SLAM will attempt to verify all your settings one last time, and will display any errors it has encountered. If none have been found, you can still go back and change any options you wish by clicking on the appropriate button.</p>
+					<p>If you are satisfied with your options, complete the SLAM installation by clicking the "Complete Installation" button.</p>
+					<p>The installer will now create the necessary configuration and preference files, as well as categories, users, and projects on the database.</p>
+				</div>
+				<br />
+				<p>Congratulations! Installation is now complete, and you can immediately start using SLAM.</p>
+				<br />
+			</div>
+			<hr width='600' />
+			<div id='docCopy'>&copy; 2012 SteelSnowflake LLC, all rights reserved</div>
+		</div>
+	</body>
+</html>
