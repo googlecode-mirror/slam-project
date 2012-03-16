@@ -41,10 +41,10 @@ class SLAMuser
 	private function loaduser(&$config,$db,$username,$password)
 	{
 		if ($_REQUEST['logout']){
-			setcookie("{$config->values['name']}_slam",'',time()-3600,'/');
+			setcookie("slam_{$config->values['lab_prefix']}",'',time()-3600,'/');
 			return false;
 		}
-		
+
 		$this->username = $username;
 		
 		/* is the user attempting to log in? */
@@ -57,9 +57,9 @@ class SLAMuser
 		{
 			list($this->username,$password) = explode(':',base64_decode(rawurldecode($_REQUEST['auth'])));
 		}
-		elseif($_COOKIE["{$config->values['name']}_slam"]) /* does the user possess an auth cookie? */
+		elseif($_COOKIE["slam_{$config->values['lab_prefix']}"]) /* does the user possess an auth cookie? */
 		{
-			$crypt = mysql_real_escape(urldecode($_COOKIE["{$config->values['name']}_slam"]),$db->link);
+			$crypt = mysql_real_escape(urldecode($_COOKIE["slam_{$config->values['lab_prefix']}"]),$db->link);
 			$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `crypt`='$crypt' LIMIT 1");
 			
 			if ($auth === false) //GetRecords returns false on error
@@ -67,7 +67,7 @@ class SLAMuser
 			elseif (count($auth) == 1)
 			{
 				/* refresh the cookie */
-				setcookie("{$config->values['name']}_slam",$auth[0]['crypt'],time()+$config->values['cookie_expire'],'/');
+				setcookie("slam_{$config->values['lab_prefix']}",$auth[0]['crypt'],time()+$config->values['cookie_expire'],'/');
 				
 				$this->username = $auth[0]['username'];
 				$this->prefs = unserialize($auth[0]['prefs']);
@@ -75,6 +75,10 @@ class SLAMuser
 			}
 			
 			$config->errors[] = 'Auth error: Invalid crypt key.';
+			
+			# erase the bad cookie
+			setcookie("slam_{$config->values['lab_prefix']}",'',time()-3600,'/');
+			
 			return false;
 		}
 		
@@ -87,7 +91,7 @@ class SLAMuser
 		/* set the cookie to keep the user logged in and copy the user prefs, etc to the user */
 		if ($auth !== false)
 		{
-			setcookie("{$config->values['name']}_slam",sha1($auth[0]['salt'].urldecode($_REQUEST['login_password'])),time()+$config->values['cookie_expire'],'/');
+			setcookie("slam_{$config->values['lab_prefix']}",sha1($auth[0]['salt'].urldecode($_REQUEST['login_password'])),time()+$config->values['cookie_expire'],'/');
 			return $auth[0];
 		}
 		else
