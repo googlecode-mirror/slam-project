@@ -22,7 +22,6 @@
 		<script type='text/javascript' src='js/check.js'></script>
 		<script type='text/javascript' src='js/clone.js'></script>
 		<script type='text/javascript' src='js/validate.js'></script>
-		<script type='text/javascript' src='../js/convert.js'></script>
 	</head>
 	<body><div id='container'>
 		<script type='text/javascript'>

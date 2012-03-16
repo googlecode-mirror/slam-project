@@ -1,8 +1,8 @@
 <?php
 require('../lib/file_actions.inc.php');
 
-$arch_path = rtrim( base64_decode($_REQUEST['SLAM_FILE_ARCH_DIR']),'/');
-$temp_path = rtrim( base64_decode($_REQUEST['SLAM_FILE_TEMP_DIR']),'/');
+$arch_path = rtrim( ($_REQUEST['SLAM_FILE_ARCH_DIR']),'/');
+$temp_path = rtrim( ($_REQUEST['SLAM_FILE_TEMP_DIR']),'/');
 
 $ret = checkFileOptions( $arch_path, $temp_path );
 
