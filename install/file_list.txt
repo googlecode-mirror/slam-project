@@ -33,7 +33,6 @@
 
 ../.htaccess
 ../index.php
-../preferences.ini
 
 ../css
 ../css/asset.css

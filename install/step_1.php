@@ -25,7 +25,6 @@
 		<link type='text/css' href='css/install.css' rel='stylesheet' />
 		<script type='text/javascript' src='js/check.js'></script>
 		<script type='text/javascript' src='js/validate.js'></script>
-		<script type='text/javascript' src='../js/convert.js'></script>
 	</head>
 	<body><div id='container'>
 		<div id='installerTitle'><span style='font-family:Impact'>SLAM</span> installer - Step 1/4</div>

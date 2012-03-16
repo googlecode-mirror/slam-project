@@ -80,7 +80,9 @@ function check_SLAM_options()
 	/* step 4 options */
 	if( $options['SLAM_ROOT_NAME'] == '')
 		$errors['Step 4 A'] = "Must specify a root user.";
-	if( $options['SLAM_ROOT_PASS'] == '')
+	if( $options['SLAM_ROOT_PASS_1'] != $options['SLAM_ROOT_PASS_2'] )
+		$errors['Step 4 B'] = "Root user passwords do not match.";
+	if( $options['SLAM_ROOT_PASS_1'] == '')
 		$errors['Step 4 B'] = "Must specify a root password.";
 
 	return $errors;
@@ -173,7 +175,7 @@ function write_SLAM_config( )
 		
 	/* make the superuser account */
 	$salt = makeRandomAlpha(8);
-	$crypt = sha1($salt.$options['SLAM_ROOT_PASS']);
+	$crypt = sha1($salt.$options['SLAM_ROOT_PASS_1']);
 	if( SLAM_write_to_table( $link, 'SLAM_Researchers', array('username'=>$options['SLAM_ROOT_NAME'],'crypt'=>$crypt,'salt'=>$salt,'superuser'=>'1') ) === false )
 		return array(mysql_error());
 	

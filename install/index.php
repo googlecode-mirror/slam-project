@@ -11,7 +11,7 @@
 	
 	# make sure we're not installing into an existing install
 #	if((!$fail) && (file_exists('../configuration.ini')))
-#		$fail[] = "A completed SLAM installation is already present.";
+#		$fail[] = "A completed SLAM installation is already present. Click <a href='../index.php'>here</a> to access it.";
 	
 	# make sure we have all the necessary files
 	if(((!$fail) && !checkFileList('./file_list.txt')))

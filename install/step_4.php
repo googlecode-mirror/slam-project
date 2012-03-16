@@ -28,7 +28,6 @@
 		<script type='text/javascript' src='js/check.js'></script>
 		<script type='text/javascript' src='js/clone.js'></script>
 		<script type='text/javascript' src='js/validate.js'></script>
-		<script type='text/javascript' src='../js/convert.js'></script>
 	</head>
 	<body><div id='container'>
 		<script type='text/javascript'>
@@ -59,7 +58,11 @@
 				</tr>
 				<tr>
 					<td class='inputField'>Superuser password:</td>
-					<td class='inputValue'><input type='password' value='<?php print $defaults['SLAM_ROOT_PASS'] ?>' size='20' name='SLAM_ROOT_PASS' onkeyup="validateNeg( this, '[&#34\']+')" /></td>
+					<td class='inputValue'><input type='password' value='<?php print $defaults['SLAM_ROOT_PASS_1'] ?>' size='20' name='SLAM_ROOT_PASS_1' onkeyup="validateNeg( this, '[&#34\']+')" /></td>
+				</tr>
+				<tr>
+					<td class='inputField'>Confirm password:</td>
+					<td class='inputValue'><input type='password' value='<?php print $defaults['SLAM_ROOT_PASS_2'] ?>' size='20' name='SLAM_ROOT_PASS_2' onkeyup="validateNeg( this, '[&#34\']+')" /></td>
 				</tr>
 				<tr>
 					<td class='inputField'>Superuser email:</td>
