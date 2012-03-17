@@ -45,7 +45,7 @@ class SLAMconfig
 		*/
 				
 		if (($r = @parse_ini_file('configuration.ini',true)) === false)
-			die('Fatal error: Could not read your "configuration.ini" file. Please re-install SLAM or contact your system administrator.');
+			die('Fatal error: Could not read your "configuration.ini" file. Please <a href="install/index.php">install SLAM</a> or contact your system administrator.');
 		
 		return $r;
 	}
@@ -57,7 +57,7 @@ class SLAMconfig
 		*/
 		
 		if (($r = @parse_ini_file('preferences.ini',true)) === false)
-			die('Fatal error: Could not read your "preferences.ini" file. Please re-install SLAM or contact your system administrator.');
+			die('Fatal error: Could not read your "preferences.ini" file. Please Please <a href="install/index.php">install SLAM</a> or contact your system administrator.');
 			
 		return $r;
 	}

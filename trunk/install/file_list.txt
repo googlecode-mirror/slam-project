@@ -22,7 +22,6 @@
 ./ext/check_db.php
 ./ext/check_file.php
 ./ext/check_gen.php
-./ext/check_table.php
 
 ./js/check.js
 ./js/validate.js
