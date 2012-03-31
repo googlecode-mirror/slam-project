@@ -14,7 +14,7 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 	/* register the javascript plugin stub */
 	$config->html['onload'][] = 'doEditJS()';
 	
-	$s="<form id='editRecord' action='{$config->html['url']}' method='GET'>\n";
+	$s="<form id='editRecord' action='{$config->html['url']}' method='POST'>\n";
 	
 	$category	= array_shift(array_keys($request->categories)); //the first category
 	$assets		= $result->assets[$category];
@@ -88,16 +88,15 @@ EOL;
 		if ($name == $config->categories[$category]['title_field'])
 			$t="<div id='assetEditTitle'>$category : $fields[$name]</div>\n";
 		
-		/* hide fields from non-users and empty fields */
-		if( $request->action == 'new' )
-			$hidden = false;
-		elseif( in_array($fields[$name], $config->values['hide_empty']) )
-			$hidden = true;
+		/* collapse fields that are empty */
+		$collapsed = false;
+		if( in_array($fields[$name], $config->values['hide_empty']) )
+			$collapsed = true;
 
 		switch($name)
 		{
 			case 'Identifier': /* identifier should not be editable if the user is not a superuser */
-				$b.=SLAM_makeFieldHTML($config,$request,$fields[$name],$scheme,$user->superuser,$hidden);				
+				$b.=SLAM_makeFieldHTML($config,$request,$fields[$name],$scheme,$user->superuser,$collapsed);				
 				break;
 			
 			case 'permissions': /* insert the permissions control panel */
@@ -107,7 +106,7 @@ EOL;
 			
 			case 'Project': /* save the default projects array to the structure of the projects field */
 				$scheme['values'] = $config->projects;
-				$b.=SLAM_makeFieldHTML($config,$request,$fields[$name],$scheme,$editable,$hidden);
+				$b.=SLAM_makeFieldHTML($config,$request,$fields[$name],$scheme,$editable,False);
 				break;
 				
 			case 'Files': /* if there's a "Files" field, show a link to the file browser instead */
@@ -118,7 +117,7 @@ EOL;
 				if ($scheme['hidden'] && !$user->superuser)
 					$b.=SLAM_makeHiddenInput($fields[$name],'edit_'.base64_encode($scheme['name']));
 				else
-					$b.=SLAM_makeFieldHTML($config,$request,$fields[$name],$scheme,$editable,$hidden);
+					$b.=SLAM_makeFieldHTML($config,$request,$fields[$name],$scheme,$editable,$collapsed);
 		}
 	}
 	$s.="$t$b</table>\n";

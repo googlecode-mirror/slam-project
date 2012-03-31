@@ -88,10 +88,12 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 
 	/* get asset values from fields that start with "edit_" */
 	$asset = array();
+
 	foreach($_REQUEST as $key => $value)
-		if (($value != $config->value['multiple_value']) && (preg_match('/^edit_(.+)$/',$key,$m) > 0))
-			$asset[base64_decode($m[1])] = stripslashes($value);
-	
+		if( ($value != '') && ($value != $config->values['multiple_value']) )
+			if( preg_match('/^edit_(.+)$/',$key,$m) > 0)
+				$asset[base64_decode($m[1])] = stripslashes($value);
+
 	/* go through all the tables we need to insert into */
 	foreach($request->categories as $category=>$identifiers)
 	{
@@ -100,7 +102,7 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 			$asset['permissions'] = false;
 		elseif( $_REQUEST['permissions'] )
 			$asset['permissions'] = json_decode(base64_decode($_REQUEST['permissions']));
-
+		
 		/* identifiers is empty, we must be creating a new entry */
 		if (!is_array($identifiers))
 			if ( ($s = insertNewAsset( $config, $db, $user, $category, $asset)) !== True)
@@ -110,7 +112,7 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 		foreach($identifiers as $identifier)
 		{
 			/* replace the insertion statement identifier with the correct one */
-			$fields['Identifier'] = $identifier;
+			$asset['Identifier'] = $identifier;
 			
 			if (($s = replaceExistingAsset( $config, $db, $user, $category, $asset)) !== True)
 				return $s;
@@ -184,7 +186,8 @@ function replaceExistingAsset( $config, $db, $user, $category, $asset )
 	/* don't try and save the permissions field into the asset table */
 	unset($asset['permissions']);
 	
-	$q = SLAM_makeInsertionStatement( $db, 'REPLACE', $category, $asset );
+	$q = SLAM_makeUpdateStatement( $db, $category, $asset, "`Identifier`='".mysql_real_escape($asset['Identifier'],$db->link)."'", 1 );
+
 	if ($db->Query($q) === false)
 		return SLAM_makeErrorHTML('Database error: could not save record: '.mysql_error(),true);
 	
@@ -206,7 +209,7 @@ function SLAM_saveAssetPerms(&$config, $db, $asset)
 	$permissions['group'] = join(',',$permissions['group']);
 	
 	$q = SLAM_makeInsertionStatement( $db, 'REPLACE', $config->values['perms_table'], $permissions );	
-	
+
 	if ($db->Query($q) === false)
 		return SLAM_makeErrorHTML('Database error: could not save record permissions: '.mysql_error(),true);
 
