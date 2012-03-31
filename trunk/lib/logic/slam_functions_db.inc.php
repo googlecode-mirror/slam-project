@@ -7,6 +7,17 @@ function SLAM_makeInsertionStatement( $db, $f, $table, $array )
 	return "$f INTO `$table` (`$a`) VALUES ('$b')";
 }
 
+function SLAM_makeUpdateStatement( $db, $table, $array, $where, $limit=False )
+{
+	$a = array();
+	foreach( $array as $k => $v )
+		$a[]="`".mysql_real_escape($k,$db->link)."`='".mysql_real_escape($v,$db->link)."'";
+	$a = implode( ',', $a );
+	
+	$b = ($limit === false) ? '' : "LIMIT $limit";
+	return "UPDATE `$table` SET $a WHERE ($where) $b";
+}
+
 function SLAM_makePermsQuery($config, $db, $user, $return, $table, $match=false, $order=false, $limit=false)
 {
 	if (!$match)
