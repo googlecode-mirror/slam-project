@@ -125,14 +125,14 @@
 	vertical-align: middle;
 }
 
-#userDiv input, #userActionsDiv input, #userChangePass input, #userDiv textarea
+#userDiv input, #userDiv textarea, #userActionsDiv input, #userChangePass input, #createNewUser input
 {
 	margin-left: 2px;
 	border: 1px solid gray;
 	background-color: #EEEEEE;
 }
 
-#userChangePass
+#userChangePass, #createNewUser
 {
 	text-align: center;
 	font-family:"Georgia", Times, serif;

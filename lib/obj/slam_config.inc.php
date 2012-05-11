@@ -10,10 +10,11 @@ class SLAMconfig
 	public $categories;
 	public $projects;
 	
-	function __construct(){
+	function __construct()
+	{
 		$this->errors = array();
 		
-		$this->values['version'] = '1.0.7a';
+		$this->values['version'] = '1.0.8a';
 		
 		// do some basic initializing
 		$http = ($_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';

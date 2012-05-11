@@ -26,7 +26,7 @@ function SLAM_makeBreadcrumbHTML($config,$db,$user,$request,$results)
 			$s.=" &raquo; (Multiple Assets)";
 	}
 	
-	return "$s$a<a id='breadCrumbUser' href='#' onClick=\"togglePopupMenu('pub/user_actions.html','userActionsDiv',alignToBottomRight('breadCrumbUser')); return false\">$user->username</a></div>\n";
+	return "$s$a<a id='breadCrumbUser' href='#' onClick=\"togglePopupMenu('pub/user_actions.php','userActionsDiv',alignToBottomRight('breadCrumbUser')); return false\">$user->username</a></div>\n";
 }
 
 function SLAM_makeCategoryListHTML($config,$db,$user,$request)

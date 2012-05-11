@@ -7,7 +7,7 @@ Installing SLAM
 
 3. Ensure that all the scripts and directories have the appropriate owner permissions (they must be readable/writable by the webserver user)
 
-4. Open the slam/install/ directory your web browser to setup and configure this SLAM installation. For detailed step-by-step instructions, please read docs/installation.html
+4. Open the slam/install/ directory your web browser to setup and configure this SLAM installation. For detailed step-by-step instructions, please read steelsnowflake.com/slam/docs/installation.html
 
 5. The web-based install and configuration, will create two files in the SLAM directory: "configuration.ini" and "preferences.ini" These files may be edited by hand if you wish to change any advanced options.
 

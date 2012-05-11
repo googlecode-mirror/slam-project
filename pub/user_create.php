@@ -9,5 +9,5 @@
 		</table>
 		<?php if($_REQUEST['bad_password']){ echo "<span style='color:red'>Bad Password</span><br />\n"; } ?>
 		<input type='button' value='Change Password' onClick="checkPasswordForm('changepassForm','new_password','new_password_2')" /><input type='button' value='Cancel' onClick="removeBodyId('userDiv')"/>
-	</div>
+	</form>
 </form>

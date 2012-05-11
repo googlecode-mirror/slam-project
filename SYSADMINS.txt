@@ -10,7 +10,7 @@ Basic Requirements
 ------------------
 
 * PHP 5.2.0+ (SLAM will not install with earlier versions)
-* MySQL 4.0+ (Earlier versions may work, but have not been tested).
+* MySQL 5.0+ (Earlier versions may work, but have not been tested).
 
 Installation Options
 --------------------
