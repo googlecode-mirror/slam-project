@@ -23,9 +23,9 @@ Summary
 -------
 
 SLAM (SQL-based Laboratory Asset Management) is A PHP MySQL client that provides easy and customizable lab asset tracking and data storage.
-For a detailed description and introduction, please see docs/introduction.html
+For a detailed description and introduction, please see steelsnowflake.com/slam/docs/introduction.html
 
-For step-by-step instructions on configuring SLAM, please see docs/installation.html
+For step-by-step instructions on configuring SLAM, please see steelsnowflake.com/slam/docs/installation.html
 
 Installation
 ------------
