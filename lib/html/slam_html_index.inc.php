@@ -25,8 +25,9 @@ function SLAM_makeBreadcrumbHTML($config,$db,$user,$request,$results)
 		elseif(count($request->assets)>1)
 			$s.=" &raquo; (Multiple Assets)";
 	}
-	
-	return "$s$a<a id='breadCrumbUser' href='#' onClick=\"togglePopupMenu('pub/user_actions.php','userActionsDiv',alignToBottomRight('breadCrumbUser')); return false\">$user->username</a></div>\n";
+
+	$b = ($user->superuser) ? '?superuser=true' : '';
+	return "$s$a<a id='breadCrumbUser' href='#' onClick=\"togglePopupMenu('pub/user_actions.php$b','userActionsDiv',alignToBottomRight('breadCrumbUser')); return false\">$user->username</a></div>\n";
 }
 
 function SLAM_makeCategoryListHTML($config,$db,$user,$request)

@@ -4,12 +4,12 @@
 
 a:link, a:visited{
 	text-decoration: none;
-	color: #045FB4;
+	color: #666666;
 }
 
 a:hover, a:active{
 	text-decoration: underline;
-	color: #FF8000;
+	color: #045FB4;
 }
 
 /*
@@ -70,7 +70,7 @@ a:hover, a:active{
 	padding: 5px;
 	
 	border: 1px solid gray;
-	background-color: #EEEEEE;
+	background-color: #DDDDDD;
 	text-align: left;
 	font-size: 12px;
 	font-weight: bold;
@@ -99,7 +99,7 @@ a:hover, a:active{
 	margin-bottom: 200px;
 	
 	border: 1px solid gray;
-	background-color: #EEEEEE;
+	background-color: #DDDDDD;
 	padding: 5px;
 }
 
@@ -123,11 +123,11 @@ td.categoryListElement, td.categoryListElementSelected
 }
 
 td.categoryListElementSelected>a:link, td.categoryListElementSelected>a:visited{
-	color: #E67300;
+	color: #222222;
 }
 
 td.categoryListElementSelected>a:hover, td.categoryListElementSelected>a:active{
-	color: #FF8000;
+	color: #045FB4;
 }
 
 /*
