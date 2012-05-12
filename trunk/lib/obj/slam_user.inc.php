@@ -18,6 +18,7 @@ class SLAMuser
 		if(($ret = $this->loaduser($config,$db,$username,$password)) !== false)
 		{
 			$this->authenticated = true;
+			$this->superuser = ($ret['superuser'] > 0) ? True : False;
 			$this->email = $ret['email'];
 			
 			/* extract user groups */

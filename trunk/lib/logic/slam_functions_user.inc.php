@@ -33,6 +33,12 @@ function SLAM_doUserAction(&$config,$db,&$user)
 			SLAM_saveUserResetPass($config,$db);
 			
 			return;
+			
+		case 'create_user':
+			if( ($msg = SLAM_createNewUser($config,$db,$user)) !== true)
+				$config->html['onload'][] = 'showPopupDiv("pub/user_create.php?error=true&error_text='.rawurlencode($msg).'","userDiv",{})';
+			else
+				return;
 		default:
 			return;
 	}
@@ -252,6 +258,39 @@ function SLAM_saveUserResetPass(&$config,$db)
 		$config->errors[] = 'Database error:  Could not remove secret key from user record:'.mysql_error();
 	
 	return;
+}
+
+function SLAM_createNewUser( &$config, $db, $user )
+{
+	if( ! $user->superuser )
+		return "Only superusers can add a new user.";
+	
+	$username	= mysql_real_escape(urldecode($_REQUEST['new_user_name']),$db->link);		
+	$email		= mysql_real_escape(urldecode($_REQUEST['new_user_email']),$db->link);		
+	$password	= mysql_real_escape(urldecode($_REQUEST['new_user_password']),$db->link);
+	$groups		= mysql_real_escape(urldecode($_REQUEST['new_user_groups']),$db->link);		
+	
+	$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `username`='$username' LIMIT 1");
+	if ($auth === false){ //GetRecords returns false on error
+		$config->errors[] = 'Database error: Could not save new password, could not access user table:'.mysql_error();
+		return;
+	}
+	elseif (count($auth) > 0){
+		return "A user with that username already exists.";
+	}
+	
+	$result = $db->Query("INSERT INTO `{$config->values['user_table']}` (`username`,`email`,`group`) VALUES ('$username','$email','$groups')");
+	if( $result === false)
+	{
+		$config->errors[] = 'Database error:  Could not create the new user:'.mysql_error();
+		return "Could not create the user.";
+	}
+	
+	if( ! SLAM_changeUserPassword($config,$db,$username,$password) ){
+		return "Created user, but could not set password!";
+	}
+	
+	return true;
 }
 
 ?>

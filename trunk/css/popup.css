@@ -98,7 +98,7 @@
 	padding-bottom: 20px;
 	
 	border: 2px solid gray;
-	background-color: #EEEEEE;
+	background-color: #DDDDDD;
 	text-align: center;
 	vertical-align: middle;
 	border-radius: 12px;
@@ -120,7 +120,7 @@
 	padding-bottom: 5px;
 	
 	border: 1px solid gray;
-	background-color: #EEEEEE;
+	background-color: #DDDDDD;
 	text-align: right;
 	vertical-align: middle;
 }
@@ -130,6 +130,7 @@
 	margin-left: 2px;
 	border: 1px solid gray;
 	background-color: #EEEEEE;
+	margin: 2px;
 }
 
 #userChangePass, #createNewUser
