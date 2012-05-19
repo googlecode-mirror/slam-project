@@ -19,6 +19,11 @@
 	margin-left: 10px;
 }
 
+#searchContainer select
+{
+	max-width: 130px;
+}
+
 #searchTerms
 {
 	display: inline-block;
