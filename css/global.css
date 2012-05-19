@@ -4,7 +4,7 @@
 
 a:link, a:visited{
 	text-decoration: none;
-	color: #666666;
+	color: #444444;
 }
 
 a:hover, a:active{
@@ -66,7 +66,7 @@ a:hover, a:active{
 	position: relative;
 	top: 0px;
 	left: 0px;
-	width: 780px;
+	width: 770px;
 	padding: 5px;
 	
 	border: 1px solid gray;
@@ -100,7 +100,7 @@ a:hover, a:active{
 	
 	border: 1px solid gray;
 	background-color: #DDDDDD;
-	padding: 5px;
+	padding: 5px 5px 5px 5px;
 }
 
 #categoryList
@@ -123,7 +123,7 @@ td.categoryListElement, td.categoryListElementSelected
 }
 
 td.categoryListElementSelected>a:link, td.categoryListElementSelected>a:visited{
-	color: #222222;
+	color: #045FB4;
 }
 
 td.categoryListElementSelected>a:hover, td.categoryListElementSelected>a:active{

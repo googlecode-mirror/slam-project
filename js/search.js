@@ -30,7 +30,7 @@ function addSearchGroup(num)
 		id = oDiv.childNodes[i].id;
 		if(id == 'search_toggle_'+num)
 		{
-			oDiv.childNodes[i].innerHTML = '-';
+			oDiv.childNodes[i].value = '-';
 			oDiv.childNodes[i].setAttribute('onClick','removeSearchGroup('+num+'); return false;');	
 		}
 		else if(id == 'search_join_'+num)

@@ -10,7 +10,7 @@ function SLAM_makeSearchBoxHTML($config,$db,$user,$request,$result)
 	$config->html['css'][] = 'css/search.css';
 	$config->html['js'][] = 'js/search.js';
 	
-	$s="<form name='searchForm' action='{$config->html['url']}' method='GET'>\n";
+	$s="<form name='searchForm' action='{$config->html['url']}' method='POST'>\n";
 	$s.=SLAM_makeHiddenInput($request->location,'loc');
 	
 	$categories = array_keys($request->categories);
@@ -52,22 +52,20 @@ function SLAM_makeSearchBoxHTML($config,$db,$user,$request,$result)
 		$s.=SLAM_makeMenuHTML($terms['field'],@array_combine($fields,$fields),"name='s_field[]' id='search_field_$i'",false);
 		$s.=SLAM_makeMenuHTML($terms['mode'],$modes,"name='s_mode[]' id='search_mode_$i'",false);
 		$s.=SLAM_makeInputHTML($terms['value'],16,255,"name='s_value[]' id='search_value_$i'");
-		$s.=SLAM_makeMenuHTML($terms['join'],$joins,"name='s_join[]' id='search_join_$i' onChange='doSearchGroup($i,this.options[this.selectedIndex].value); return false;'");
+		$s.=" ".SLAM_makeMenuHTML($terms['join'],$joins,"name='s_join[]' id='search_join_$i' onChange='doSearchGroup($i,this.options[this.selectedIndex].value); return false;'");
 		
 		/* the last field should have a plus sign so as to be able to add more terms */
 		$c = ($i == (count($search) -1)) ? '+' : '-';
 		$f = ($i == (count($search) -1)) ? "addSearchGroup($i)" : "removeSearchGroup($i)";
-		$s.="<a href='#' id='search_toggle_$i' onClick=\"$f; return false;\">$c</a>\n";
+		$s.="<input type='button' class='searchClassButton' id='search_toggle_$i' onClick=\"$f; return false;\" value='$c' />\n";
 		
 		$s.="</div>\n";
 		$i++;
 	}
 	$s.="</div>\n";
-	
-	$s.="<div id='searchConditions'>";
-	$s.="&nbsp;&nbsp;<input type='submit' name='action' value='Search' />\n</div>\n";
-	
-	$s.="</div>\n</form>\n";
+	$s.="<input type='submit' name='action' value='Search' />\n";
+	$s.="</div>\n";
+	$s.="</form>\n";
 	return $s;
 }
 

@@ -16,9 +16,10 @@ function SLAM_makeDashboardHTML(&$config,$db,$user,$request,$result)
 	$config->html['onload'][] = 'doDashJS()';
 	
 	$s = "<div id='dashboardTitle'>{$user->username}'s Dashboard</div>\n";
-
+	
+	$categories = array_keys($request->categories);
 	if($_REQUEST['d_status'])
-		$s.="<div id='dashboardStatus'>Searching categories</div>\n";
+		$s.="<div id='dashboardStatus'>Searching ".count($categories)." categories</div>\n";
 	elseif(!empty($request->search))
 		$s.="<div id='dashboardStatus'>Viewing search results</div>\n";
 	else
@@ -40,10 +41,10 @@ function SLAM_makeDashboardSearchHTML($config,$db,$user,$request)
 
 	$s ="<form name='selectSearchCategories' action='".$request->makeRequest($config,array('category'=>array()),true)."&d_status=select' method='POST'>\n";
 	$s.="<div id='dashboardSearchContainer'>\n";
-		
-	$s.=SLAM_makeButtonHTML('Multi-category search',"onClick=\"toggleHideBodyId('dashboardSearchReveal')\"",false);
-	if ($_REQUEST['d_status']=='select')
-		$s.=SLAM_makeButtonHTML('Cancel',"onClick=\"hideBodyId('searchContainer')\"",false);
+	if (! $_REQUEST['d_status']=='select')
+		$s.=SLAM_makeButtonHTML('Multi-category search',"onClick=\"toggleHideBodyId('dashboardSearchReveal')\"",false);
+//	else
+//		$s.=SLAM_makeButtonHTML('Cancel',"onClick=\"hideBodyId('searchContainer')\"",false);
 	$s.="<div id='dashboardSearchReveal' style='display:none'>\n";
 	$s.="<select name='cat[]' multiple='true'>\n";
 	foreach($tables as $category)

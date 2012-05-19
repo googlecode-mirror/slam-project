@@ -2,24 +2,19 @@
 {
 	float: left;
 	position: relative;
+	width: 630px;
 	top: 10px;
 	left: 10px;
+	margin: 6px 0px 0px 0px;
 	
-	max-width: 630px;
 	overflow: visible;
 }
 
 .assetListName
 {
-	width: 25%;
-	height: 20px;
-	padding: 2px;
-	padding-left: 8px;
-	margin-top: 4px;
-	
-	white-space: nowrap;
-	text-align: right;
-	
+	float: left;
+	height: 24px;
+
 	font-size:14pt;
 	font-family:"Georgia", Times, serif;
 	color: #045FB4;
@@ -30,25 +25,32 @@
 
 .assetListName a
 {
+	display: block;
 	float: left;
+	min-width: 100px;
+	height: 20px;
+	margin: 2px 2px 2px 8px;
+	
+	text-align: left;
 }
 
 .assetListName input
 {
-	display: inline;
-	margin-top: 2px;
-	height: 18px;
+	float: left;
+	right: 4px;
 	width: 36px;
-
+	height: 20px;
+	margin: 2px 2px 2px 8px;
+	
 	text-align: center;	
 	border: 1px solid gray;
-	padding-bottom: 4px;
 	background-color: #EEEEEE;
 	cursor: pointer;
 }
 
 .assetListEmpty
 {
+	clear: left;
 	width: 630px;
 	text-align: center;
 	margin-top: 0px;
@@ -62,6 +64,7 @@
 
 .assetList
 {
+	clear: left;
 	width: 630px;
 	border-collapse: collapse;
 	overflow: visible;
