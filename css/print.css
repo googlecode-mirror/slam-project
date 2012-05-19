@@ -1,0 +1,45 @@
+body
+{
+	background-color: white;
+	width: 100%;
+	margin: 5%;
+	font-size: 12pt;
+	font-family: monospace;
+}
+
+table
+{
+	border-collapse: collapse;
+}
+
+.printFieldTitle
+{
+	padding-right: 20px;
+}
+
+#printHeader table
+{
+	margin: 2% 2% 2% 0%;
+	font-size: 10pt;
+}
+
+#printContent table
+{
+	margin: 2% 10% 2% 2%;
+}
+
+#printContent table td
+{
+	border-bottom: 1px solid gray;
+}
+
+#printIdentifier, #printCategory
+{
+	margin: 0% 0% 0% 2%;
+	
+	text-align: left;
+	font-weight: bold;
+	font-size: 18pt;
+}
+
+
