@@ -121,6 +121,7 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	
 	$user->savePrefs($config,$db);
 	
+	# returns nothing on success (maybe a status message in the future?)
 	return '';
 }
 
@@ -233,7 +234,7 @@ function SLAM_deleteAssets(&$config, $db, &$user, &$request)
 		foreach($assets as $i=>$asset)
 		{
 			if (SLAM_getAssetAccess($user,$asset) > 1)
-				$q = "UPDATE `$category` SET `Removed`='1' WHERE `Identifier`='{$asset['Identifier']}' LIMIT 1";
+				$q ="UPDATE `$category` SET `Removed`='1' WHERE `Identifier`='{$asset['Identifier']}' LIMIT 1";
 			else
 				return SLAM_makeErrorHTML('Authentication error: You are not authorized to remove this asset.',true);
 			
@@ -246,7 +247,8 @@ function SLAM_deleteAssets(&$config, $db, &$user, &$request)
 		}
 	}
 	
-	return True;
+	# returns nothing on success (maybe a status message in the future?)
+	return '';
 }
 
 function SLAM_setDefaultPerms( &$asset, $config, $user=false, $clone=false )

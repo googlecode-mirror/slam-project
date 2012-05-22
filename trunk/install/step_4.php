@@ -72,7 +72,7 @@
 					<td class='inputCategory' colspan='2'><br />User setup</td>
 				</tr>
 				<tr>
-					 <td class='categoryInfo' colspan="2">You can now set up any number of regular user accounts. Additional users can always be added later, if necessary.
+					 <td class='categoryInfo' colspan="2">You can now set up any number of regular user accounts. Additional users can always be added later by a superuser, if necessary.
 						 <br /><br />If you specified any projects on step 3, you can associate users with them now. Multiple projects may be selected by cntrl/command clicking.</td>
 				</tr>
 				<tr>

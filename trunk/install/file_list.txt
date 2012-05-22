@@ -103,6 +103,6 @@
 ../pub/password_reset.html
 ../pub/permissions_multiple.html
 ../pub/permissions_single.html
-../pub/user_actions.html
+../pub/user_actions.php
 ../pub/user_prefs.php
 ../pub/warning_modal.html

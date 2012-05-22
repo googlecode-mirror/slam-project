@@ -183,6 +183,10 @@ function write_SLAM_config( )
 	$errors = array();
 	foreach( $options['SLAM_USERS'] as $index=>$name )
 	{
+		# prevent an all-whitespace user
+		if( preg_replace('/\s+/',$name) == '' )
+			continue;
+			
 		$email = $options['SLAM_EMAILS'][ $index ];
 		$salt = makeRandomAlpha(8);
 		$crypt = sha1($salt.$options['SLAM_PASSWORDS'][$index]);
@@ -211,9 +215,9 @@ function write_SLAM_config( )
 	# get installation path
 	$path = $options['SLAM_CONF_PATH'];
 
-	if( file_put_contents( "{$path}/configuration_test.ini", $config_ini) === false )
+	if( file_put_contents( "{$path}/configuration.ini", $config_ini) === false )
 		return array("Could not write configuration file.");
-	if( file_put_contents( "{$path}/preferences_test.ini", $prefs_ini) === false)
+	if( file_put_contents( "{$path}/preferences.ini", $prefs_ini) === false)
 		return array("Could not write preferences file.");
 	
 	if( !unlink('./step_1.ini') || !unlink('./step_2.ini') || !unlink('./step_3.ini') || !unlink('./step_4.ini') )
