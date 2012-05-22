@@ -100,8 +100,6 @@ function SLAM_appendToAssetArchive($path,$file)
 	*/
 	
 	/* attempt to append uploaded file to zip archive */
-	$path = escapeshellarg($path);
-	$file = escapeshellarg($file);
 	exec("zip -j $path $file",$output,$status);
 
 	if ($status > 0)

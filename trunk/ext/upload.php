@@ -49,15 +49,18 @@ if( (count($config->errors) == 0) && ($access > 1) )
 				$name = urldecode($_FILES['asset_file']['name'][$i]);
 				$temp = urldecode($_FILES['asset_file']['tmp_name'][$i]);
 				$file = "{$config->values['file manager']['temp_dir']}/$name";
-				
+
+				/* note that this function cannot take escaped paths */
 				if (@move_uploaded_file($temp,$file) !== true)
 					$config->errors[] = "File '$name' could not be moved from temporary upload folder to {$config->values['file manager']['temp_dir']}. Perhaps access permissons are incorrect?";
 				
+				$file = escapeshellarg( $file );
+
 				if (($status = SLAM_appendToAssetArchive($path,$file)) !== true)
 					$config->errors[] = $status;
 				
 				/* remove the temporary file now that it's been added to the archive */
-				exec("rm ".escapeshellarg($file),$output,$status);
+				exec("rm $file", $output,$status);
 			}
 			elseif($error != UPLOAD_ERR_NO_FILE)
 			{
