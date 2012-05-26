@@ -117,7 +117,7 @@ function SLAM_write_to_table( $link, $table, $data)
 	$fields = '('.implode( ',', $fields ).')';
 	$values = '('.implode( ',', $values ).')';
 
-	$sql = "REPLACE INTO `{$table}` $fields VALUES $values";
+	$sql = "INSERT INTO `{$table}` $fields VALUES $values";
 	return mysql_query( $sql, $link );
 }
 

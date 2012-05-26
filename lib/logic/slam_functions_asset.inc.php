@@ -207,8 +207,8 @@ function SLAM_saveAssetPerms(&$config, $db, $asset)
 	/* permissions are sometimes provided as a JSON object */
 	$permissions = (array)$asset['permissions'];
 	$permissions['Identifier'] = $asset['Identifier'];
-	$permissions['group'] = join(',',$permissions['group']);
-	
+	$permissions['projects'] = join(',',$permissions['projects']);
+
 	$q = SLAM_makeInsertionStatement( $db, 'REPLACE', $config->values['perms_table'], $permissions );	
 
 	if ($db->Query($q) === false)
@@ -277,21 +277,21 @@ function SLAM_setDefaultPerms( &$asset, $config, $user=false, $clone=false )
 	
 	$asset['permissions']['owner_access'] = (int)$config->values['permissions']['default_owner_access'];
 
-	/* if first group of config file defaults is empty, autopopulate with specified group field */
-	if( ($config->values['permissions']['default_group'][0] == '') && ($config->values['permissions']['group_field'] != '') )
-		$default_group = array($asset[ $config->values['permissions']['group_field'] ]);
+	/* if first project of config file defaults is empty, autopopulate with specified project field */
+	if( ($config->values['permissions']['default_projects'][0] == '') && ($config->values['permissions']['project_field'] != '') )
+		$default_project = array($asset[ $config->values['permissions']['project_field'] ]);
 
 	if ($user !== false)
-		$asset['permissions']['group'] = $user->group;
-	elseif( is_array( $default_group ) )
-		$asset['permissions']['group'] = $default_group;
+		$asset['permissions']['projects'] = $user->projects;
+	elseif( is_array( $default_project ) )
+		$asset['permissions']['projects'] = $default_project;
 	else
-		$asset['permissions']['group'] = array();
+		$asset['permissions']['projects'] = array();
 	
-	if( is_numeric($user->prefs['default_group_access']) )
-		$asset['permissions']['group_access'] = $user->prefs['default_group_access'];
+	if( is_numeric($user->prefs['default_project_access']) )
+		$asset['permissions']['project_access'] = $user->prefs['default_project_access'];
 	else
-		$asset['permissions']['group_access'] = (int)$config->values['permissions']['default_group_access'];
+		$asset['permissions']['project_access'] = (int)$config->values['permissions']['default_project_access'];
 	
 	if( is_numeric($user->prefs['default_access']) )
 		$asset['permissions']['default_access'] = $user->prefs['default_access'];
@@ -344,11 +344,11 @@ function SLAM_getAssetAccess($user,$asset)
 		if( $asset['permissions']['owner_access'] > $access )
 			$access = $asset['permissions']['owner_access'];
 		
-	/* check user groups against asset groups */
-	foreach($user->group as $group)
-		if( in_array( $group, $asset['permissions']['group'] ) )
-			if( $asset['permissions']['group_access'] > $access )
-				$access = $asset['permissions']['group_access'];
+	/* check user projects against asset projects */
+	foreach($user->projects as $project)
+		if( in_array( $project, $asset['permissions']['projects'] ) )
+			if( $asset['permissions']['project_access'] > $access )
+				$access = $asset['permissions']['project_access'];
 	
 	return $access;
 }

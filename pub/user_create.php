@@ -20,8 +20,8 @@
 				<td><input type='password' name='new_user_password2' id='new_user_password2' value='' /></td>
 			</tr>
 			<tr>
-				<td style='text-align:right'>Groups:</td>
-				<td><input type='text' name='new_user_groups' id='new_user_groups' value='<?php echo($_REQUEST['new_user_groups'])?>' /></td>
+				<td style='text-align:right'>Projects:</td>
+				<td><input type='text' name='new_user_projects' id='new_user_projects' value='<?php echo($_REQUEST['new_user_projects'])?>' /></td>
 			</tr>
 		</table>
 		<br />

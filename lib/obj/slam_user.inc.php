@@ -5,7 +5,7 @@ class SLAMuser
 	public $username;
 	public $email;
 	public $prefs;
-	public $group;
+	public $projects;
 	public $authenticated;
 	public $superuser;
 	
@@ -21,14 +21,17 @@ class SLAMuser
 			$this->superuser = ($ret['superuser'] > 0) ? True : False;
 			$this->email = $ret['email'];
 			
-			/* extract user groups */
-			$this->group = split(',',$ret['group']);
-			if(count($this->group) == 0)
-				$this->group = array( $this->values['username'] );
+			/* extract user project groups */
+			if( $ret['projects'] != '')
+				$this->projects = split(',',$ret['projects']);
+			else
+				$this->projects = array();
+//			if(count($this->projects) == 0)
+//				$this->projects = array( $this->values['username'] );
 			
 			/* prefs already loaded by loaduser() */
-			if(!is_numeric($this->prefs['default_group_access']))
-				$this->prefs['default_group_access'] = (int)$config->values['permissions']['default_group_access'];
+			if(!is_numeric($this->prefs['default_project_access']))
+				$this->prefs['default_project_access'] = (int)$config->values['permissions']['default_project_access'];
 			
 			if(!is_numeric($this->prefs['default_access']))
 				$this->prefs['default_access'] = (int)$config->values['permissions']['default_access'];
@@ -51,12 +54,12 @@ class SLAMuser
 		/* is the user attempting to log in? */
 		if (($_REQUEST['login_username']) && ($_REQUEST['login_password']))
 		{
-			$this->username = urldecode($_REQUEST['login_username']);
-			$password = urldecode($_REQUEST['login_password']);
+			$this->username = $_REQUEST['login_username'];
+			$password = $_REQUEST['login_password'];
 		}
 		elseif($_REQUEST['auth']) /* is the user sending an auth variable? */
 		{
-			list($this->username,$password) = explode(':',base64_decode(rawurldecode($_REQUEST['auth'])));
+			list($this->username,$password) = explode(':',base64_decode($_REQUEST['auth']));
 		}
 		elseif($_COOKIE["slam_{$config->values['lab_prefix']}"]) /* does the user possess an auth cookie? */
 		{
@@ -92,7 +95,7 @@ class SLAMuser
 		/* set the cookie to keep the user logged in and copy the user prefs, etc to the user */
 		if ($auth !== false)
 		{
-			setcookie("slam_{$config->values['lab_prefix']}",sha1($auth[0]['salt'].urldecode($_REQUEST['login_password'])),time()+$config->values['cookie_expire'],'/');
+			setcookie("slam_{$config->values['lab_prefix']}",sha1($auth[0]['salt'].$_REQUEST['login_password']),time()+$config->values['cookie_expire'],'/');
 			return $auth[0];
 		}
 		else

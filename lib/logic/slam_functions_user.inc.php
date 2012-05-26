@@ -6,7 +6,7 @@ function SLAM_doUserAction(&$config,$db,&$user)
 		performs the requested user action
 	*/
 	
-	switch(urldecode($_REQUEST['user_action']))
+	switch($_REQUEST['user_action'])
 	{
 		case 'set_preferences':
 			SLAM_setUserPreferences($config,$db,$user);
@@ -48,32 +48,31 @@ function SLAM_doUserAction(&$config,$db,&$user)
 
 function SLAM_setUserPreferences(&$config,$db,&$user)
 {	
-	if ($_REQUEST['defaultProject'])
-		$user->prefs['default_project'] = urldecode($_REQUEST['defaultProject']);
+	$user->prefs['default_project'] = $_REQUEST['defaultProject'];
 	
 	/* interpret the permission menu selections */
 	switch( $_REQUEST['defaultReadable'] )
 	{
 		case 1:
-			$user->prefs['default_group_access'] = 1;
+			$user->prefs['default_project_access'] = 1;
 			$user->prefs['default_access'] = 0;
 			break;
 		case 2:
-			$user->prefs['default_group_access'] = 1;
+			$user->prefs['default_project_access'] = 1;
 			$user->prefs['default_access'] = 1;
 			break;
 		default:
-			$user->prefs['default_group_access'] = 0;
+			$user->prefs['default_project_access'] = 0;
 			$user->prefs['default_access'] = 0;
 	}
 	
 	switch( $_REQUEST['defaultEditable'] )
 	{
 		case 1:
-			$user->prefs['default_group_access'] = 2;
+			$user->prefs['default_project_access'] = 2;
 			break;
 		case 2:
-			$user->prefs['default_group_access'] = 2;
+			$user->prefs['default_project_access'] = 2;
 			$user->prefs['default_access'] = 2;
 			break;
 	}
@@ -153,8 +152,8 @@ function SLAM_saveUserPassword(&$config,$db,$user)
 	if(!$user->authenticated)
 		$config->errors[] = 'You must be logged in to change your password.';
 	
-	$old_password = urldecode($_REQUEST['old_password']);
-	$new_password = urldecode($_REQUEST['new_password']);
+	$old_password = $_REQUEST['old_password'];
+	$new_password = $_REQUEST['new_password'];
 
 	if ($user->checkPassword($config,$db,$old_password))
 		return SLAM_changeUserPassword($config,$db,$new_password);
@@ -223,9 +222,9 @@ function SLAM_saveUserResetPass(&$config,$db)
 	if (empty($_REQUEST['user_name']) || empty($_REQUEST['new_password']))
 		return false;
 
-	$username = mysql_real_escape(urldecode($_REQUEST['user_name']),$db->link);		
-	$password = mysql_real_escape(urldecode($_REQUEST['new_password']),$db->link);
-	$secret = urldecode($_REQUEST['secret']);
+	$username = mysql_real_escape($_REQUEST['user_name'],$db->link);		
+	$password = mysql_real_escape($_REQUEST['new_password'],$db->link);
+	$secret = $_REQUEST['secret'];
 	
 	$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `username`='$username' LIMIT 1");
 	if ($auth === false){ //GetRecords returns false on error
@@ -265,10 +264,10 @@ function SLAM_createNewUser( &$config, $db, $user )
 	if( ! $user->superuser )
 		return "Only superusers can add a new user.";
 	
-	$username	= mysql_real_escape(urldecode($_REQUEST['new_user_name']),$db->link);		
-	$email		= mysql_real_escape(urldecode($_REQUEST['new_user_email']),$db->link);		
-	$password	= mysql_real_escape(urldecode($_REQUEST['new_user_password']),$db->link);
-	$groups		= mysql_real_escape(urldecode($_REQUEST['new_user_groups']),$db->link);		
+	$username	= mysql_real_escape($_REQUEST['new_user_name'],$db->link);		
+	$email		= mysql_real_escape($_REQUEST['new_user_email'],$db->link);		
+	$password	= mysql_real_escape($_REQUEST['new_user_password'],$db->link);
+	$projects	= mysql_real_escape($_REQUEST['new_user_projects'],$db->link);		
 	
 	$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `username`='$username' LIMIT 1");
 	if ($auth === false){ //GetRecords returns false on error
@@ -279,7 +278,7 @@ function SLAM_createNewUser( &$config, $db, $user )
 		return "A user with that username already exists.";
 	}
 	
-	$result = $db->Query("INSERT INTO `{$config->values['user_table']}` (`username`,`email`,`group`) VALUES ('$username','$email','$groups')");
+	$result = $db->Query("INSERT INTO `{$config->values['user_table']}` (`username`,`email`,`projects`) VALUES ('$username','$email','$projects')");
 	if( $result === false)
 	{
 		$config->errors[] = 'Database error:  Could not create the new user:'.mysql_error();

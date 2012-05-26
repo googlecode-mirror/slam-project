@@ -23,9 +23,9 @@ function SLAM_makePermsQuery($config, $db, $user, $return, $table, $match=false,
 	if (!$match)
 		$match = '1=1';
 	
-	$group_match = '';
-	foreach( $user->group as $group )
-		$group_match .= "OR ( MATCH (`Group`) AGAINST ('$group' IN BOOLEAN MODE) AND `Group_access` > 0)\n";
+	$project_match = '';
+	foreach( $user->projects as $project )
+		$project_match .= "OR ( MATCH (`Projects`) AGAINST ('$project' IN BOOLEAN MODE) AND `project_access` > 0)\n";
 	
 	$query=<<<EOL
 SELECT $return FROM `$table`
@@ -38,7 +38,7 @@ WHERE(
 		(`Identifier` IN (SELECT `Identifier` FROM `{$config->values['perms_table']}` WHERE(
 			(`Default_access` > 0)
 OR (`Owner` = "{$user->username}" AND `Owner_access` > 0)
-$group_match
+$project_match
 		)))
 	)
 	AND

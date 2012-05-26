@@ -34,7 +34,7 @@
 			<input type='hidden' name='STEP' value='2' />
 			<table id='configTable'>
 				<tr>
-					 <td class='helpHeader' colspan="2">For assistance, please refer to the SLAM documentation [<a href='../docs/installation.html' target='_new'>here</a>].</td>
+					 <td class='helpHeader' colspan="2">For assistance, please refer to the SLAM documentation [<a href='http://steelsnowflake.com/SLAM' target='_new'>here</a>].</td>
 				</tr>
 				<tr>
 					<td class='inputCategory' colspan='2'>Default Categories</td>

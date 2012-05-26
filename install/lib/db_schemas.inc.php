@@ -15,7 +15,7 @@ $sql_create_required['researchers']['sql']="CREATE TABLE IF NOT EXISTS `SLAM_Res
 	`salt` varchar( 8 ) NOT NULL,
 	`email` varchar( 255 ) NOT NULL,
 	`superuser` tinyint( 4 ) NOT NULL DEFAULT '0',
-	`group` varchar( 255 ) NOT NULL DEFAULT '',
+	`projects` varchar( 255 ) NOT NULL DEFAULT '',
 	`prefs` text NOT NULL,
 	PRIMARY KEY ( `username` )
 ) ENGINE = MyISAM DEFAULT CHARSET = latin1;
@@ -39,11 +39,11 @@ $sql_create_required['permissions']['sql']="CREATE TABLE IF NOT EXISTS `SLAM_Per
   `Identifier` varchar(255) NOT NULL,
   `owner` varchar(255) NOT NULL,
   `owner_access` tinyint(4) NOT NULL DEFAULT '3',
-  `group` varchar(255) NOT NULL,
-  `group_access` tinyint(4) NOT NULL DEFAULT '3',
+  `projects` varchar(255) NOT NULL,
+  `project_access` tinyint(4) NOT NULL DEFAULT '3',
   `default_access` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`Identifier`),
-  FULLTEXT KEY `Group` (`group`)
+  FULLTEXT KEY `Projects` (`projects`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
 
 $sql_create_required['projects']=array();
