@@ -44,7 +44,7 @@
 			<input type='hidden' name='STEP' value='4' />
 			<table id='configTable'>
 				<tr>
-					 <td class='helpHeader' colspan="2">For assistance, please refer to the SLAM documentation [<a href='../docs/installation.html' target='_new'>here</a>].</td>
+					 <td class='helpHeader' colspan="2">For assistance, please refer to the SLAM documentation [<a href='http://steelsnowflake.com/SLAM' target='_new'>here</a>].</td>
 				</tr>
 				<tr>
 					<td class='inputCategory' colspan='2'>Administrator setup</td>
@@ -104,10 +104,10 @@
 		print "<tr>\n";
 		print "<td class='inputField'>Projects:</td>\n";
 		print "<td class='inputValue'>\n";
-		print "<select style='width:126px' name='SLAM_USER_GROUPS_{$i}[]' multiple='multiple'>\n";
+		print "<select style='width:126px' name='SLAM_USER_PROJECTS_{$i}[]' multiple='multiple'>\n";
 
-		if( is_array($defaults['SLAM_USER_GROUPS_'.$i]) )
-			$selected = $defaults['SLAM_USER_GROUPS_'.$i];
+		if( is_array($defaults['SLAM_USER_PROJECTS_'.$i]) )
+			$selected = $defaults['SLAM_USER_PROJECTS_'.$i];
 		else
 			$selected = array();
 		

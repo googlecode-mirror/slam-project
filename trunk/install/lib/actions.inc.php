@@ -184,18 +184,18 @@ function write_SLAM_config( )
 	foreach( $options['SLAM_USERS'] as $index=>$name )
 	{
 		# prevent an all-whitespace user
-		if( preg_replace('/\s+/',$name) == '' )
+		if( preg_replace('/\s+/','',$name) == '' )
 			continue;
 			
 		$email = $options['SLAM_EMAILS'][ $index ];
 		$salt = makeRandomAlpha(8);
 		$crypt = sha1($salt.$options['SLAM_PASSWORDS'][$index]);
-		if( is_array($options["SLAM_USER_GROUPS_{$index}"]) )
-			$groups = implode(',',$options["SLAM_USER_GROUPS_{$index}"]);
+		if( is_array($options["SLAM_USER_PROJECTS_{$index}"]) )
+			$projects = implode(',',$options["SLAM_USER_PROJECTS_{$index}"]);
 		else
-			$groups = '';
+			$projects = '';
 		
-		if( SLAM_write_to_table( $link, 'SLAM_Researchers', array('username'=>$name,'email'=>$email,'crypt'=>$crypt,'salt'=>$salt,'superuser'=>'0','group'=>$groups) ) === false )
+		if( SLAM_write_to_table( $link, 'SLAM_Researchers', array('username'=>$name,'email'=>$email,'crypt'=>$crypt,'salt'=>$salt,'superuser'=>'0','projects'=>$projects) ) === false )
 			$errors[] = mysql_error();
 	}
 

@@ -132,7 +132,7 @@ class SLAMresult
 		foreach( $rows as $row )
 		{
 			$permissions[ $row['Identifier'] ] = $row;
-			$permissions[ $row['Identifier'] ]['group'] = explode(',',$permissions[ $row['Identifier'] ]['group']);
+			$permissions[ $row['Identifier'] ]['projects'] = explode(',',$permissions[ $row['Identifier'] ]['projects']);
 		}
 
 		$identifiers = @array_keys( $permissions );

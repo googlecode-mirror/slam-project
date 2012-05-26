@@ -18,12 +18,12 @@
 				</td>
 			</tr>
 			<tr>
-				<td style='text-align:right;vertical-align:top;font-weight:bold'>Groups:</td>
+				<td style='text-align:right;vertical-align:top;font-weight:bold'>Projects:</td>
 				<td>
 					<textarea readonly='readonly' cols='17' rows='4'>
 <?php
-	foreach ($user->group as $group)
-		echo $group."\n";
+	foreach ($user->projects as $project)
+		echo $project."\n";
 ?>
 					</textarea>
 				</td>
@@ -71,11 +71,11 @@
 	/* determine the settings for the permissions menus */
 	$edit_sel = 0;
 	$read_sel = 0;
-	$options = array('Just me'=>0,'Me and my groups'=>1,'Anyone'=>2);
+	$options = array('Just me'=>0,'Me and my project members'=>1,'Anyone'=>2);
 	
-	if( $user->prefs['default_group_access'] > 0 )
+	if( $user->prefs['default_project_access'] > 0 )
 		$read_sel++;
-	if( $user->prefs['default_group_access'] == 2 )
+	if( $user->prefs['default_project_access'] == 2 )
 		$edit_sel++;
 	
 	if( $user->prefs['default_access'] > 0 )

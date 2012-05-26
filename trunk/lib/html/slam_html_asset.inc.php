@@ -20,7 +20,7 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 	$assets		= $result->assets[$category];
 	$structure	= $result->fields[$category];
 	$editable	= array();
-	
+
 	/* retrieve the field values, either for a new entry or for editing existing ones */
 	if ($request->action == 'new')
 	{
@@ -92,6 +92,8 @@ EOL;
 		$collapsed = false;
 		if( in_array($fields[$name], $config->values['hide_empty']) )
 			$collapsed = true;
+		if ($request->action == 'new')
+			$collapsed = false;
 
 		switch($name)
 		{

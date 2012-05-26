@@ -34,13 +34,13 @@ function populatePermsPanel( id )
 	for (var i=0; i<menu.length; i++)
 		if (i == perms.owner_access){ menu.options[i].selected=true; }
 	
-	/* set group fields & menu */
-	field = document.getElementById('perms-grouplist');
-	field.value = perms.group.join("\n");
+	/* set project fields & menu */
+	field = document.getElementById('perms-projectlist');
+	field.value = perms.projects.join("\n");
 	
-	menu = document.getElementById('perms-group');
+	menu = document.getElementById('perms-project');
 	for (var i=0; i<menu.length; i++)
-		if (i == perms.group_access){ menu.options[i].selected=true; }
+		if (i == perms.project_access){ menu.options[i].selected=true; }
 
 	/* set user (everyone) status */
 	menu = document.getElementById('perms-user');
@@ -57,11 +57,11 @@ function returnPermsPanel()
 	var temp = document.getElementById('perms-owner');
 	perms.owner_access = temp.options[temp.options.selectedIndex].value;
 
-	var temp = document.getElementById('perms-grouplist').value;
-	perms.group = temp.split("\n");
+	var temp = document.getElementById('perms-projectlist').value;
+	perms.projects = temp.split("\n");
 	
-	var temp = document.getElementById('perms-group');
-	perms.group_access = temp.options[temp.options.selectedIndex].value;
+	var temp = document.getElementById('perms-project');
+	perms.project_access = temp.options[temp.options.selectedIndex].value;
 	
 	var temp = document.getElementById('perms-user');
 	perms.default_access = temp.options[temp.options.selectedIndex].value;
