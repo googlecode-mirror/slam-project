@@ -1,13 +1,13 @@
 Installing SLAM
 ===============
 
-1. Assuming you haven't downloaded the latest version of SLAM, please obtain it from steelsnowflake.com/slam/download/
+1. Assuming you haven't downloaded the latest version of SLAM, please obtain it from steelsnowflake.com/SLAM
 
-2. Untar or unzip the distribution, e.g.: "tar -xzvf SLAM_x.x.x.tar.gz" in your webserver's document root.
+2. Untar or unzip the distribution, e.g.: "tar -xzvf SLAM_x.x.x.tgz" in your webserver's document root.
 
 3. Ensure that all the scripts and directories have the appropriate owner permissions (they must be readable/writable by the webserver user)
 
-4. Open the slam/install/ directory your web browser to setup and configure this SLAM installation. For detailed step-by-step instructions, please read steelsnowflake.com/slam/docs/installation.html
+4. Open slam/install/index.php in your web browser to setup and configure this SLAM installation. For detailed step-by-step instructions, please read the installation instructions available at steelsnowflake.com/SLAM
 
 5. The web-based install and configuration, will create two files in the SLAM directory: "configuration.ini" and "preferences.ini" These files may be edited by hand if you wish to change any advanced options.
 

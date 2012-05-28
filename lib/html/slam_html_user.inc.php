@@ -31,7 +31,7 @@ EOL;
 		
 	$s.="</div>\n</form>\n";
 	
-	return "$s<img id='authImage' src='img/barn_swallow.gif' width='200' height='200' alt='[barn_swallow'] />";
+	return "$s<img id='authImage' src='img/SLAM_splash_300x178.png' width='300' height='178' alt='[SLAM_logo'] />";
 }
 
 ?>
