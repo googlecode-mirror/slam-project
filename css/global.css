@@ -35,7 +35,7 @@ a:hover, a:active{
 	padding-top:20px;
 	font-family:"Georgia", Times, serif;
 	font-size: 10pt;
-	color: red;
+	color: gray;
 }
 
 .error_inline, .note_inline

@@ -11,14 +11,14 @@ function SLAM_doUserAction(&$config,$db,&$user)
 		case 'set_preferences':
 			SLAM_setUserPreferences($config,$db,$user);
 			/* pop up the user prefs panel to show the user that the changes have been applied */
-			$config->html['onload'][] = 'showPopupDiv("pub/user_prefs.php","userDiv",{"noclose":true})';
+			$config->html['onload'][] = 'showPopupDiv("pub/user_prefs.php","userActionPopup",{"noclose":true})';
 
 			return;
 		case 'change_password':
 			if(SLAM_saveUserPassword($config,$db,$user) === true)
 				return;
 			else
-				$config->html['onload'][] = 'showPopupDiv("pub/password_change.php?bad_password=true","userDiv",{})';
+				$config->html['onload'][] = 'showPopupDiv("pub/password_change.php?bad_password=true","userActionPopup",{})';
 		
 			return;
 		case 'reset_send':
@@ -26,7 +26,7 @@ function SLAM_doUserAction(&$config,$db,&$user)
 			
 			return;
 		case 'reset_change':
-			$config->html['onload'][] = "showPopupDiv(\"pub/password_choose.php?user_name={$_REQUEST['user_name']}&secret={$_REQUEST['secret']}\",\"userDiv\",{})";
+			$config->html['onload'][] = "showPopupDiv(\"pub/password_choose.php?user_name={$_REQUEST['user_name']}&secret={$_REQUEST['secret']}\",\"userActionPopup\",{})";
 
 			return;
 		case 'reset_save':
@@ -36,7 +36,7 @@ function SLAM_doUserAction(&$config,$db,&$user)
 			
 		case 'create_user':
 			if( ($msg = SLAM_createNewUser($config,$db,$user)) !== true)
-				$config->html['onload'][] = 'showPopupDiv("pub/user_create.php?error=true&error_text='.rawurlencode($msg).'","userDiv",{})';
+				$config->html['onload'][] = 'showPopupDiv("pub/user_create.php?error=true&error_text='.rawurlencode($msg).'","userActionPopup",{})';
 			else
 				return;
 		default:
