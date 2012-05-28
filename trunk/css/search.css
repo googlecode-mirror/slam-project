@@ -19,11 +19,6 @@
 	margin-left: 10px;
 }
 
-#searchContainer select
-{
-	max-width: 130px;
-}
-
 #searchTerms
 {
 	display: inline-block;
@@ -32,6 +27,11 @@
 	padding-left: 5px;
 
 	text-align: left;
+}
+
+#searchTerms select
+{
+	max-width: 120px;
 }
 
 .searchClass

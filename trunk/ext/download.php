@@ -30,7 +30,7 @@ if( count($result->assets[$category]) == 1 )
 else
 	$config->errors[] = 'Invalid asset identifier provided.';
 
-if( (count($config->errors) == 0) && ($access > 1) )
+if( (count($config->errors) == 0) && ($access > 0) )
 {
 	if (empty($_REQUEST['asset_file']))
 		die('No file specified.');

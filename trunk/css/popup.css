@@ -78,9 +78,9 @@
 
 }
 
-#userDiv
+#userActionPopup
 {
-	width: 250px;
+	min-width: 240px;
 	height: auto;
 	position: fixed;
 	z-index: 10;
@@ -104,9 +104,9 @@
 	border-radius: 12px;
 }
 
-#userActionsDiv
+#userActionsMenu
 {
-	width: 120px;
+	width: 130px;
 	height: auto;
 	position: fixed;
 	z-index: 10;
@@ -125,7 +125,7 @@
 	vertical-align: middle;
 }
 
-#userDiv input, #userDiv textarea, #userActionsDiv input, #userChangePass input, #createNewUser input
+#userActionPopup input, #userActionPopup textarea, #userActionsMenu input, #userChangePass input, #createNewUser input
 {
 	margin-left: 2px;
 	border: 1px solid gray;
@@ -133,21 +133,13 @@
 	margin: 2px;
 }
 
-#userChangePass, #createNewUser
+#setUserPreferences, #userChangePass, #createNewUser
 {
+	width: 240px;
+
 	text-align: center;
 	font-family:"Georgia", Times, serif;
 	font-size: 10pt;
-}
-
-#userChangePass table
-{
-	padding: 10px;
-}
-
-#setUserPreferences
-{
-	width: 250px;
 }
 
 #setUserPreferences input, #setUserPreferences select

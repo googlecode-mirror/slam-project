@@ -27,7 +27,7 @@ else if (stat < 2)
 EOL;
 
 	if (!empty($config->errors))
-		$s.="<div id='authMessage'><a href='#' onClick=\"showPopupDiv('pub/password_reset.html','userDiv',{'noclose':1}); return false\">forgot password?</a></div>\n";
+		$s.="<div id='authMessage'><a href='#' onClick=\"showPopupDiv('pub/password_reset.html','userActionPopup',{'noclose':1}); return false\">forgot password?</a></div>\n";
 		
 	$s.="</div>\n</form>\n";
 	

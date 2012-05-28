@@ -20,7 +20,7 @@
 			<tr>
 				<td style='text-align:right;vertical-align:top;font-weight:bold'>Projects:</td>
 				<td>
-					<textarea readonly='readonly' cols='17' rows='4'>
+					<textarea readonly='readonly' cols='16' rows='4'>
 <?php
 	foreach ($user->projects as $project)
 		echo $project."\n";
@@ -97,7 +97,7 @@
 			<tr>
 				<td colspan='2' style='text-align:right;padding-top:10px'>
 					<input type='submit' value='Save' />
-					<input type='button' value='Cancel' onClick="removeBodyId('userDiv')" />
+					<input type='button' value='Cancel' onClick="removeBodyId('userActionPopup')" />
 				</td>
 			</tr>
 		</table>

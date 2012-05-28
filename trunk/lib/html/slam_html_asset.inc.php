@@ -32,11 +32,11 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 		$editable[] = true;
 		$fields	= SLAM_setAssetFields($config,$db,$user,$category,$structure,$assets[0]);
 	}
-	else
+	elseif( count($assets) > 0)
 	{
 		/* retrieve the consensus field values */
 		$fields	= SLAM_getAssetFields($config,$db,$user,$assets);
-	
+		
 		foreach($assets as $asset)
 		{
 			/* save the editable status for every asset */
@@ -52,6 +52,9 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 		{
 			unset($structure['Files']);
 		}
+	}
+	else{
+		return SLAM_makeNoteHTML("This asset has been removed, or does not exist.",true);
 	}
 	
 	/* if there are a mix of editable and uneditable assets, provide the user a warning */
