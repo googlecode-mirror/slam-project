@@ -36,9 +36,9 @@ function toggleHideBodyId( id )
 	return;
 }
 
-function checkPasswordForm(form, field1, field2)
+function checkPasswordForm(formid, field1, field2)
 {
-	var form = document.getElementById(form);
+	var form = document.getElementById(formid);
 	var val1 = document.getElementById(field1).value;
 	var val2 = document.getElementById(field2).value;
 

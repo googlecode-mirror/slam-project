@@ -343,6 +343,9 @@ function SLAM_getAssetAccess($user,$asset)
 	if( $asset['permissions']['owner'] == $user->username )
 		if( $asset['permissions']['owner_access'] > $access )
 			$access = $asset['permissions']['owner_access'];
+	
+	if( ! is_array($asset['permissions']['projects']) )
+		$asset['permissions']['projects'] = array();
 		
 	/* check user projects against asset projects */
 	foreach($user->projects as $project)

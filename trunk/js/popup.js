@@ -5,6 +5,12 @@ function togglePopupMenu(url, id, options)
 	/* if the popup is already loaded, destroy it */
 	removeBodyId( id );
 	showPopupDiv( url, id, options );
+	
+	setTimeout(function(){
+		document.onclick=function(){hideifOutsideClick(this.id, id)};
+	},100);
+	
+	return;
 }
 
 function showPopupDiv( url, id, options )
@@ -80,3 +86,29 @@ function alignToBottomRight( id )
 	var right = document.documentElement.offsetWidth-(loc['left']+el.offsetWidth);	
 	return { 'top':(loc['top']+el.offsetHeight)+'px', 'right':right+'px'};
 }
+
+function hideifOutsideClick( e, divid )
+{
+	var target = (e && e.target) || (event && event.srcElement); 
+	var parent = document.getElementById( divid );
+	
+	if( !isChildNode(parent, target) )
+	{
+		document.onclick = function(){};
+		return removeBodyId( divid );
+	}
+	return false;
+} 
+
+function isChildNode( parent, testChild )
+{
+	/* see if the testChild node is a subnode of parent */
+	while(testChild.parentNode)
+	{
+		if( testChild == parent )
+			return true;
+		testChild=testChild.parentNode;
+	} 
+	return false;
+}
+

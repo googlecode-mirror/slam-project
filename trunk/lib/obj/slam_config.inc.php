@@ -14,7 +14,7 @@ class SLAMconfig
 	{
 		$this->errors = array();
 		
-		$this->values['version'] = '1.0.8b';
+		$this->values['version'] = '1.1.0RC1';
 		
 		// do some basic initializing
 		$http = ($_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';

@@ -6,8 +6,8 @@
 	$db		= new SLAMdb($config);
 	$user	= new SLAMuser($config,$db);
 ?>
-<form name='userOptions' id='userOptions' action='' method='POST'>
-	<div id='setUserOptions'>
+<form name='userPreferencesForm' id='userPreferencesForm' action='' method='POST'>
+	<div id='setUserPreferences'>
 		<input type='hidden' name='a' value='user' />
 		<input type='hidden' name='user_action' value='set_preferences' />
 		<table>
@@ -71,7 +71,7 @@
 	/* determine the settings for the permissions menus */
 	$edit_sel = 0;
 	$read_sel = 0;
-	$options = array('Just me'=>0,'Me and my project members'=>1,'Anyone'=>2);
+	$options = array('Just me'=>0,'Me and project members'=>1,'Anyone'=>2);
 	
 	if( $user->prefs['default_project_access'] > 0 )
 		$read_sel++;

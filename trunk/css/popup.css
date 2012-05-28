@@ -145,3 +145,12 @@
 	padding: 10px;
 }
 
+#setUserPreferences
+{
+	width: 250px;
+}
+
+#setUserPreferences input, #setUserPreferences select
+{
+	max-width: 120px;
+}
