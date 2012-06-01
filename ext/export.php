@@ -15,9 +15,9 @@ if ($user->authenticated)
 		case 'search':
 			$result = SLAM_loadSearchResults($config,$db,$user,$request);
 		default:
-			$result = new SLAMresult($config,$db,$user,$request);
+			break;
 	}
-	
+
 	switch($request->location)
 	{
 		case 'list':
