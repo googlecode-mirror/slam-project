@@ -10,6 +10,11 @@ form
 	
 }
 
+textarea
+{
+	resize: vertical;
+}
+
 #container
 {
 	width: 500px;

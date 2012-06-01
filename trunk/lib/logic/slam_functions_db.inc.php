@@ -15,6 +15,7 @@ function SLAM_makeUpdateStatement( $db, $table, $array, $where, $limit=False )
 	$a = implode( ',', $a );
 	
 	$b = ($limit === false) ? '' : "LIMIT $limit";
+
 	return "UPDATE `$table` SET $a WHERE ($where) $b";
 }
 

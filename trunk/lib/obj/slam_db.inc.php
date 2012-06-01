@@ -61,7 +61,7 @@ class SLAMdb
 		
 		if (mysql_num_rows($result) < 1)
 			die('Fatal error: Your category database table contains no categories. Please add a category or contact your system administrator.');
-			
+		
 		/* iterate through all of the categories */
 		while ($category = mysql_fetch_assoc($result))
 		{
@@ -75,8 +75,18 @@ class SLAMdb
 				foreach($diff as $error)
 					$config->errors[] = "Table \"{$category['Name']}\" is missing required attribute \"$error\".";
 			}
-			else
+			elseif( strlen($category['Name']) == 0 )
 			{
+				$config->errors[] = "A table with no name has been encountered.";
+				continue;
+			}
+			elseif( strlen($category['Prefix']) != 2 )
+			{
+				$config->errors[] = "Table \"{$category['Name']}\" has a prefix that is not two characters long.";
+				continue;
+			}
+			else
+			{				
 				$config->categories[ $category['Name'] ]['prefix'] = $category['Prefix'];
 				$config->categories[ $category['Name'] ]['field_order'] = explode(',',$category['Field Order']);
 				$config->categories[ $category['Name'] ]['list_fields'] = explode(',',$category['List Fields']);

@@ -75,6 +75,30 @@ $sql_create_optional['Template']['sql']="CREATE TABLE IF NOT EXISTS `Template` (
 	UNIQUE KEY `Serial` ( `Serial` )
 ) ENGINE = MyISAM DEFAULT CHARSET = latin1 AUTO_INCREMENT=0 ;";
 
+$sql_create_optional['Cell Strains']=array();
+$sql_create_optional['Cell Strains']['description']="A category for glycerol stocks of bacteria containing valuable plasmids";
+$sql_create_optional['Cell Strains']['prefix']="CS";
+$sql_create_optional['Cell Strains']['sql']="CREATE TABLE IF NOT EXISTS `Cell Strains` (
+  `Serial` int(11) NOT NULL AUTO_INCREMENT,
+  `Identifier` varchar(20) NOT NULL,
+  `Removed` tinyint(1) NOT NULL DEFAULT '0',
+  `Project` varchar(20) NOT NULL,
+  `Label` varchar(255) NOT NULL COMMENT 'The physical label on the asset',
+  `Researcher` varchar(255) DEFAULT NULL COMMENT 'The person responsible for this asset',
+  `Entered By` varchar(255) NOT NULL COMMENT 'The person who entered this asset',
+  `Date` date DEFAULT NULL COMMENT 'The date this asset was generated/entered',
+  `Labbook Ref.` varchar(255) DEFAULT NULL COMMENT 'The name and page of the labbook on which this asset was generated',
+  `Storage Location` varchar(255) DEFAULT NULL COMMENT 'The physical storage location of this asset',
+  `Type` enum('Glycerol Stock','Competent Cells','Other') NOT NULL DEFAULT 'Glycerol Stock',
+  `Parent Cells` varchar(255) NOT NULL COMMENT '#link The identifier of the parent cell stock this asset was generated from',
+  `Plasmid` varchar(255) NOT NULL COMMENT '#link The plasmid(s) present in this asset',
+  `Notes` mediumtext NOT NULL,
+  `Files` text,
+  PRIMARY KEY (`Identifier`),
+  UNIQUE KEY `Serial` (`Serial`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
+";
+
 $sql_create_optional['Samples']=array();
 $sql_create_optional['Samples']['description']="A category for protein and RNA sample solutions.";
 $sql_create_optional['Samples']['prefix']="SP";

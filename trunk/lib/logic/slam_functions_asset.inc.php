@@ -90,7 +90,7 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 	$asset = array();
 
 	foreach($_REQUEST as $key => $value)
-		if( ($value != '') && ($value != $config->values['multiple_value']) )
+		if( $value != $config->values['multiple_value'] )
 			if( preg_match('/^edit_(.+)$/',$key,$m) > 0)
 				$asset[base64_decode($m[1])] = stripslashes($value);
 
