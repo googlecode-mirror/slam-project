@@ -99,8 +99,8 @@ function SLAM_makeDashboardListHTML(&$config,$db,$user,$request,$result)
 
 function SLAM_makeDashTableActions($id,$search)
 {
-	$export=explode('?',$_SERVER['REQUEST_URI']);
-	
+	$export=http_build_query(array_merge($_GET,$_POST));
+
 	$s=<<<EOL
 <div class='assetListActions' id='assetListActions_{$id}'>
 	<input type='submit' name='action' value='Edit' disabled='true' class='assetListActionButton'/>\n
@@ -115,7 +115,7 @@ EOL;
 	<input type='submit' name='action' value='Clone' disabled='true' class='assetListActionButton'/>
 	<input type='submit' name='action' value='Delete' onClick=\"return confirm('Are you sure you want to delete the selected record?')\" disabled='true' class='assetListActionButton'/>
 	<div class='assetListFunctions'>
-		<a href='ext/export.php?{$export[1]}'>export</a> | 
+		<a href='ext/export.php?$export'>export</a> | 
 		<a href='#' onClick="showPopupDiv('pub/help_dash.html','helpDiv',{}); return false">help</a>
 	</div>
 </div>
