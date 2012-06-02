@@ -21,11 +21,11 @@ function makeRandomAlpha($length=8)
 		generates a random alphanumeric string
 	*/
 	
+	$chrs = 'abcdefghijklmnopqrstuvwxyz0123456789';
 	$out = '';
-	$chrs = array_merge(range(48,57),array_merge(range(65,90),range(97,122)));
-	
-	for($i=0;$i<$length;$i++)
-		$out.=chr($chrs[rand(0,count($chrs))]);
+	for ($i=0; $i < $length; $i++)
+		$out .= $characters[rand(0, strlen($chrs) - 1)];
+
 	return $out;
 }
 
