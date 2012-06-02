@@ -64,7 +64,6 @@ $sql_create_optional['Template']['prefix']='TP';
 $sql_create_optional['Template']['sql']="CREATE TABLE IF NOT EXISTS `Template` (
 	`Serial`			  mediumint( 9 )		NOT NULL AUTO_INCREMENT,
 	`Identifier`	  varchar( 20 )		NOT NULL,
-	`Permissions`	  varchar( 255 )		NOT NULL,
 	`Removed`		  tinyint( 1 )			NOT NULL DEFAULT '0',
 	`Project`		  varchar( 20 )		COMMENT 'The project this asset is used in',
 	`Researcher`	  varchar( 255 )		COMMENT 'The person responsible for this asset',

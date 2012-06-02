@@ -19,24 +19,30 @@ function SLAM_makeSearchBoxHTML($config,$db,$user,$request,$result)
 		
 	$s.="<div id='searchContainer'>\n";
 
-	/* default search field should be identitifer */
+	/* default search action is to search all fields */
 	if (empty($request->search))
-		$search = array(0=>array('field'=>'Identifier','value'=>'','mode'=>'LIKE','join'=>''));
+		$search = array(0=>array('field'=>'(Search all)','value'=>'','mode'=>'LIKE','join'=>''));
 	else /* get the terms used in the last search */
+	{
 		foreach($request->search['field'] as $i=>$field)
 			$search[$i] = array('field'=>$field,'value'=>$request->search['value'][$i],'mode'=>$request->search['mode'][$i],'join'=>$request->search['join'][$i]);
-
+	}
+	
 	/* all the possible fields to search in */
 	$fields = array();
 	foreach($result->fields as $category=>$structure)
+	{
 		if (empty($fields))
 			$fields = array_keys($structure);
 		else
 			$fields = array_intersect($fields,array_keys($structure));
-	
+	}
 	$diff = array_intersect($fields,$config->values['hide_fields']);
 	if(!$user->superuser)
 		$fields = array_diff($fields,$diff);
+	
+	/* prepend the "search all fields" option to the list of searchable fields */
+	array_unshift( $fields, '(Search all)' );
 
 	/* the possible search modes */
 	$modes = array('~'=>'LIKE','!~'=>'NOT LIKE','>'=>'>','='=>'=','<'=>'<');
