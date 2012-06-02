@@ -63,10 +63,11 @@ EOL;
 
 function SLAM_makeAssetTableFunctions($id)
 {
-	$export=explode('?',$_SERVER['REQUEST_URI']);	
+	$export=http_build_query(array_merge($_GET,$_POST));
+
 	$s=<<<EOL
 	<div class='assetListFunctions'>
-		<a href='ext/export.php?{$export[1]}'>export</a> | 
+		<a href='ext/export.php?$export'>export</a> | 
 		<a href='#' onClick="showPopupDiv('pub/help_list.html','helpDiv',{}); return false">help</a>
 	</div>
 </div>
