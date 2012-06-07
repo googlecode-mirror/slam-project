@@ -72,12 +72,12 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 		
 	$s.="<div id='assetEditContainer'>\n";
 
-	$url_args=explode('?',$_SERVER['REQUEST_URI']);
+	$export=http_build_query(array_merge($_GET,$_POST));
 	$f=<<<EOL
 <div id='assetEditFunctions'>
 jump to <a href='#End'>bottom</a> | 
 <a href='#' onClick="setSwitchableTR('none'); return false">hide</a>/<a href='' onClick="setSwitchableTR(''); return false">show</a> unused 
-| <a href='ext/export.php?{$url_args[1]}'>export</a>/<a href='ext/print.php?{$url_args[1]}'>print</a>
+| <a href='ext/export.php?$export'>export</a>/<a href='ext/print.php?$export'>print</a>
 | <a href='#' onClick="showPopupDiv('pub/help_edit.html','helpDiv',{}); return false">help</a>
 </div>\n
 EOL;

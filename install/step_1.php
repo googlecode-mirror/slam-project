@@ -15,9 +15,9 @@
 		$defaults['SLAM_CONF_HEADER'] = 'From: SLAM <'.$_SERVER['SERVER_ADMIN'].'>';
 	
 	if ($defaults['SLAM_FILE_ARCH_DIR'] == 'auto')
-		$defaults['SLAM_FILE_ARCH_DIR'] = str_replace('/slam/install','/slam_files',dirname(realpath($_SERVER['SCRIPT_FILENAME'])));
+		$defaults['SLAM_FILE_ARCH_DIR'] = str_replace('/install','/slam_files',dirname(realpath($_SERVER['SCRIPT_FILENAME'])));
 	if ($defaults['SLAM_FILE_TEMP_DIR'] == 'auto')
-		$defaults['SLAM_FILE_TEMP_DIR'] = str_replace('/slam/install','/slam_files/temp',dirname(realpath($_SERVER['SCRIPT_FILENAME'])));
+		$defaults['SLAM_FILE_TEMP_DIR'] = str_replace('/install','/slam_files/temp',dirname(realpath($_SERVER['SCRIPT_FILENAME'])));
 ?>
 <html>
 	<head>

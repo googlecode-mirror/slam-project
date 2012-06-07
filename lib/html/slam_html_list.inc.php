@@ -33,14 +33,10 @@ function SLAM_makeAssetListHTML(&$config,$db,$user,$request,$result)
 			$s.="</form>\n";
 	}
 	
-	/* if the last category had visible assets, put an extra bunch of action buttons at the end */
-#	if (count($assets)>0)
-#	{
 	$s.=SLAM_makeAssetTableActions($category);
 	$s.=SLAM_makeAssetTableNavigation($config,$request,$result,$category);
 	$s.=SLAM_makeAssetTableFunctions($category);
 	$s.="</form>\n";
-#	}
 	
 	$s.= "</div>\n";
 	
