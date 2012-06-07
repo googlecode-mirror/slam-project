@@ -50,8 +50,8 @@
 ../ext/upload.php
 
 ../img
-../img/barn_swallow.gif
-../img/grey_loader_dots.gif
+../img/SLAM_splash_300x178.png
+../img/grey_loader_circle.gif
 
 ../js
 ../js/asset.js

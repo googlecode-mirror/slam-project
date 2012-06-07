@@ -11,7 +11,7 @@ function SLAM_doUserAction(&$config,$db,&$user)
 		case 'set_preferences':
 			SLAM_setUserPreferences($config,$db,$user);
 			/* pop up the user prefs panel to show the user that the changes have been applied */
-			$config->html['onload'][] = 'showPopupDiv("pub/user_prefs.php","userActionPopup",{"noclose":true})';
+			//$config->html['onload'][] = 'showPopupDiv("pub/user_prefs.php","userActionPopup",{"noclose":true})';
 
 			return;
 		case 'change_password':
