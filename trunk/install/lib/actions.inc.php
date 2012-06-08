@@ -174,10 +174,9 @@ function write_SLAM_config( )
 	/* step 4 options */
 		
 	/* make the superuser account */
-	$email = $options['SLAM_EMAILS'][ $index ];
 	$salt = makeRandomAlpha(8);
-	$crypt = sha1($salt.$options['SLAM_ROOT_EMAIL']);
-	if( SLAM_write_to_table( $link, 'SLAM_Researchers', array('username'=>$options['SLAM_ROOT_NAME'],'email'=>$email,'crypt'=>$crypt,'salt'=>$salt,'superuser'=>'1') ) === false )
+	$crypt = sha1($salt.$options['SLAM_ROOT_PASS_1']);
+	if( SLAM_write_to_table( $link, 'SLAM_Researchers', array('username'=>$options['SLAM_ROOT_NAME'],'email'=>$options['SLAM_ROOT_EMAIL'],'crypt'=>$crypt,'salt'=>$salt,'superuser'=>'1') ) === false )
 		return array(mysql_error());
 	
 	/* create the other accounts */
