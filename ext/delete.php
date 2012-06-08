@@ -15,21 +15,23 @@ if( !$user->authenticated )
 	return;
 }
 
-$request = new SLAMrequest($config,$db,$user);
-$result = new SLAMresult($config,$db,$user,$request);
-$category = array_shift(array_keys($request->categories));
-$access = 0;
+$request	= new SLAMrequest($config,$db,$user);
+$result		= new SLAMresult($config,$db,$user,$request);
+$category	= array_shift(array_keys($request->categories));
+$identifier	= array_shift($request->categories[ $category ]);
+$path		= SLAM_getArchivePath($config,$category,$identifier);
+$access		= 0;
 
-/* get the category and identifier from the request object */
+/* get asset and set the accessibility appropriately */
 if( count($result->assets[$category]) == 1 )
 {
 	$asset = array_shift($result->assets[ $category ]);	
-	$identifier = $asset['Identifier'];
 	$access = SLAM_getAssetAccess($user, $asset);		
 }
-else
-	$config->errors[] = 'Invalid asset identifier provided.';
+else // possibly a new asset
+	$access = 2;
 
+/* if we've encountered any errors at this point, bail */
 if( (count($config->errors) == 0) && ($access > 1) )
 {
 	if(($path = SLAM_getArchivePath(&$config,$category,$identifier)) === false)

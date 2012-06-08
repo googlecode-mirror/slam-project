@@ -28,49 +28,53 @@ if( !$user->authenticated )
 	return;
 }
 
-$request = new SLAMrequest($config,$db,$user);
-$result = new SLAMresult($config,$db,$user,$request);
-$category = array_shift(array_keys($request->categories));
-$access = 0;
+$request	= new SLAMrequest($config,$db,$user);
+$result		= new SLAMresult($config,$db,$user,$request);
+$category	= array_shift(array_keys($request->categories));
+$identifier	= array_shift($request->categories[ $category ]);
+$path		= SLAM_getArchivePath($config,$category,$identifier);
+$access		= 0;
 
-/* get the category and identifier from the request object */
+/* get asset and set the accessibility appropriately */
 if( count($result->assets[$category]) == 1 )
 {
 	$asset = array_shift($result->assets[ $category ]);	
-	$identifier = $asset['Identifier'];
-	$access = SLAM_getAssetAccess($user, $asset);
+	$access = SLAM_getAssetAccess($user, $asset);		
+}
+else /* possibly a new asset */
+{
+	$config->errors[] = 'Invalid identifier provided.';
+	$access = 2;
+}
 
-	/* is the current user qualified to make changes to the archive? */
-	if( $access > 0)
+/* is the current user qualified to make changes to the archive? */
+if( $access > 0)
+{
+	/* attempt to retrieve the asset's archive path*/
+	if(($path = SLAM_getArchivePath($config,$category,$identifier)) !== false)
 	{
-		/* attempt to retrieve the asset's archive path*/
-		if(($path = SLAM_getArchivePath($config,$category,$identifier)) !== false)
+		/* retrieve info on the files in the archive */
+		if(($files = SLAM_getArchiveFiles($config,$path)) !== false)
 		{
-			/* retrieve info on the files in the archive */
-			if(($files = SLAM_getArchiveFiles($config,$path)) !== false)
-			{
-				echo "<div id='assetTitle'>$identifier</div>\n";
-				echo "<div id='fileListScrollbox'>\n";
-				echo "<form name='assetFileRemove' id='assetFileRemove' method='POST' action='delete.php'>\n";
-				echo "<input type='hidden' name='i' value='$identifier' />\n";
-				echo SLAM_makeArchiveFilesHTML($config,$db,$category,$identifier,$files,($access>1));
-				echo "</div>\n";
-				if ($access>1)
-					echo "<input type='button' id='deleteButton' value='Delete' onClick=\"delete_submit('assetFileRemove')\" />\n";
-				echo "</form>\n";
-				echo "</div>\n";
-			}
-			else
-				echo "<div id='fileEmpty'>No files to show</div>\n";
+			echo "<div id='assetTitle'>$identifier</div>\n";
+			echo "<div id='fileListScrollbox'>\n";
+			echo "<form name='assetFileRemove' id='assetFileRemove' method='POST' action='delete.php'>\n";
+			echo "<input type='hidden' name='i' value='$identifier' />\n";
+			echo SLAM_makeArchiveFilesHTML($config,$db,$category,$identifier,$files,($access>1));
+			echo "</div>\n";
+			if ($access>1)
+				echo "<input type='button' id='deleteButton' value='Delete' onClick=\"delete_submit('assetFileRemove')\" />\n";
+			echo "</form>\n";
+			echo "</div>\n";
 		}
 		else
 			echo "<div id='fileEmpty'>No files to show</div>\n";
 	}
 	else
-		echo "<div id='fileEmpty'>You do not have access to this asset's files.</div>\n";
+		echo "<div id='fileEmpty'>No files to show</div>\n";
 }
 else
-	$config->errors[] = 'Invalid identifier provided';
+	echo "<div id='fileEmpty'>You do not have access to this asset's files.</div>\n";
 
 if(!empty($config->values['debug']))
 {
@@ -81,7 +85,7 @@ if(!empty($config->values['debug']))
 }
 
 if ($access > 1)
-	SLAM_updateArchiveFileList($config,$db,$category,$identifier,$files);
+	SLAM_updateArchiveFileList($config,$db,$category,$identifier);
 else
 {
 	echo "</div>\n</body>\n</html>\n";
