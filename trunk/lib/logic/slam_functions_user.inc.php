@@ -199,7 +199,7 @@ function SLAM_sendUserResetMail(&$config,$db)
 	
 		$referrer = explode('?',$_SERVER[HTTP_REFERER]);
 		$reset_urls.= "For the account: \"{$user['username']}\":\n";
-		$reset_urls.= $referrer[0]."?action=user&user_action=reset_change&user_name={$user['username']}&secret=$secret\n\n";
+		$reset_urls.= $referrer[0]."?action=user&user_action=reset_change&user_name=".urlencode($user['username'])."&secret=$secret\n\n";
 	}
 	
 	$message = <<<EOL

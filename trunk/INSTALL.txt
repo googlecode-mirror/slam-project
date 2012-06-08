@@ -1,6 +1,8 @@
 Installing SLAM
 ===============
 
+Please note: if you are upgrading SLAM from a previous version, please read the "UPGRADING.txt" file instead of this one.
+
 1. Assuming you haven't downloaded the latest version of SLAM, please obtain it from steelsnowflake.com/SLAM
 
 2. Untar or unzip the distribution, e.g.: "tar -xzvf SLAM_x.x.x.tgz" in your webserver's document root.

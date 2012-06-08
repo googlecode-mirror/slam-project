@@ -73,8 +73,11 @@ function SLAM_getArchiveFiles(&$config,$path)
 	return $files;
 }
 
-function SLAM_updateArchiveFileList(&$config,$db,$category,$identifier,$files)
+function SLAM_updateArchiveFileList(&$config,$db,$category,$identifier)
 {
+	$path	= SLAM_getArchivePath($config,$category,$identifier);
+	$files	= SLAM_getArchiveFiles($config,$path);
+	
 	if (empty($files))
 		return;
 		

@@ -1,0 +1,25 @@
+Upgrading SLAM from a previous version
+======================================
+
+1. Copy the directory that contains the attached archive files to a SAFE PLACE while setting up the new installation.
+
+WARNING: Failure to do so could result in inadvertent DELETION of attached files. If you are unsure which directory this is, it's the "archive_dir" path specified in SLAM's configuration.ini file.
+
+2. Copy SLAM's configuration.ini and preferences.ini file to a safe location.
+
+3. Just for now, rename the old SLAM directory to "slam_old" or something similar, just in case you have to go back and fix something. After you've verified everything is working as it should, you can remove it.
+
+3. Move the new SLAM directory to the desired location on the web server.
+
+4. Copy the previous version of SLAM's configuration.ini and preferences.ini file to the new SLAM directory, and attempt to log in to SLAM. If SLAM needs to update these files it will do so automatically.
+
+Troubleshooting
+===============
+
+You can always head over to SLAM's google code page (code.google.com/p/slam) or SLAM's homepage (steelsnowflake.com/SLAM) and you can get in touch with a developer who can help you out.
+
+Many problems are the result of improper permissions for the SLAM attached files directory  and/or temp folder. Check and make sure that both of the file manager directory paths specified in the configuration.ini are readable and writable by the web server user.
+
+Other issues can arise from improper settings in the configuration.ini or (less frequently) preferences.ini file. If you saved your old config files (and you did, didn't you?) carefully comparing between them can save a lot of trouble.
+
+ 

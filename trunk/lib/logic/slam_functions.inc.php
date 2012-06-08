@@ -24,7 +24,7 @@ function makeRandomAlpha($length=8)
 	$chrs = 'abcdefghijklmnopqrstuvwxyz0123456789';
 	$out = '';
 	for ($i=0; $i < $length; $i++)
-		$out .= $characters[rand(0, strlen($chrs) - 1)];
+		$out.= $chrs[rand(0, strlen($chrs) - 1)];
 
 	return $out;
 }

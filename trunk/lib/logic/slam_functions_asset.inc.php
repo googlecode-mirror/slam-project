@@ -79,7 +79,7 @@ function SLAM_setAssetFields($config,$db,$user,$category,$structure,$clone=false
 	return $fields;
 }
 
-function SLAM_saveAssetEdits($config,$db,&$user,$request)
+function SLAM_saveAssetEdits(&$config,$db,&$user,$request)
 {	
 	/*
 		saves values present in edit_ fields to a new entry or to existing entries as necessary
@@ -96,7 +96,7 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 
 	/* go through all the tables we need to insert into */
 	foreach($request->categories as $category=>$identifiers)
-	{
+	{		
 		/* if permissions field is the multiple field value, don't overwrite asset's existing permissions */
 		if ($_REQUEST['permissions'] && ($_REQUEST['permissions'] == $config->values['multiple_value']))
 			$asset['permissions'] = false;
@@ -105,9 +105,16 @@ function SLAM_saveAssetEdits($config,$db,&$user,$request)
 		
 		/* identifiers is empty, we must be creating a new entry */
 		if (!is_array($identifiers))
+		{
 			if ( ($s = insertNewAsset( $config, $db, $user, $category, $asset)) !== True)
 				return $s;
+			else
+				SLAM_updateArchiveFileList($config,$db,$category,$asset['Identifier']);
+		}
 		
+		if( ! is_array($identifiers) )
+			$identifiers = array();
+
 		/* go through all the assets we have and update the changed fields */
 		foreach($identifiers as $identifier)
 		{
