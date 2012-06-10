@@ -158,6 +158,10 @@ function write_SLAM_config( )
 		if( mysql_query( $sql, $link ) === false )
 			return array(mysql_error());
 		
+		/* don't add the template category to the category list */
+		if( $name == 'Template' )
+			continue;
+		
 		/* add the categories to the category table */
 		if( SLAM_write_to_table( $link, 'SLAM_Categories', array('Name'=>$name,'Prefix'=>$prefix)) === false )
 			return array(mysql_error());
