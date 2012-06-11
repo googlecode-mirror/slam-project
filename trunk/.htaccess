@@ -1,1 +1,10 @@
 DirectoryIndex index.php
+
+<Files *ini>
+Order allow,deny
+Deny from all
+</Files>
+<Files error_log>
+Order allow,deny
+Deny from all
+</Files>

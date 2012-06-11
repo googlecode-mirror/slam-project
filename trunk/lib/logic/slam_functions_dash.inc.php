@@ -7,7 +7,7 @@ function SLAM_getDashboardResult(&$config,$db,$user,$request)
 	$dash_req->categories = $user->prefs['identifiers'];
 	
 	/* no tagged assets? bail */
-	if( !is_array($dash_req) )
+	if( !is_array($user->prefs['identifiers']) )
 		return new SLAMresult($config,$db,$user,array());
 	
 	/* preserve the current ordering scheme */
