@@ -14,7 +14,9 @@
 {
 	float: left;
 	height: 24px;
-
+	clear: left;
+	margin: 2px 0px 0px 0px;
+	
 	font-size:14pt;
 	font-family:"Georgia", Times, serif;
 	color: #045FB4;
@@ -52,10 +54,10 @@
 {
 	clear: left;
 	width: 630px;
-	text-align: center;
-	margin-top: 0px;
+	margin: 0px 0px 8px 0px;
+
 	padding-bottom: 2px;
-	margin-bottom: 8px;
+	text-align: center;
 	font-size:10pt;
 	font-family:"Georgia", Times, serif;
 	color: #666666;
@@ -66,25 +68,26 @@
 {
 	clear: left;
 	width: 630px;
+	margin: 0px 0px 8px 0px;
+	
 	border-collapse: collapse;
 	overflow: visible;
-	margin-bottom:8px;
 }
 
 div.assetListActions
 {
 	height: 24px;
 	width: 600px;
+	clear: left;
+	margin: 0px 10px 4px 10px;
+	padding: 4px 0px 0px 0px;
+	
 	text-align:left;
-	margin: 10px;
-	margin-top:2px;
-	margin-bottom:4px;
 }
 
 .assetListActionButton
 {
-	margin-left: 0px;
-	margin-right: 0px;
+	margin: 0px 0px 0px 0px;
 	border: 1px solid gray;
 	background-color: #EEEEEE;
 	cursor: pointer;
@@ -92,30 +95,29 @@ div.assetListActions
 
 .assetListNavigation
 {
+	display: inline;
+	margin: 0px 0px 0px 8px;
+
 	color: #666666;
 	font-weight: bold;
-	
-	display:inline;
 	text-align:left;
-	margin-top: 0px;
-	margin-left: 6px;
 	font-size: 10pt;
 }
 
 .assetListFunctions
 {
 	display:inline;
+	margin: 0px 0px 0px 8px;
+
 	text-align:right;
-	margin-left: 16px;
 	font-size: 10pt;
 }
 
 .assetListHeader td
 {
-	padding: 2px;
-	padding-left: 8px;
-	padding-right: 8px;
 	margin: 0px;
+	padding: 2px 8px 2px 8px;
+	
 	border-bottom: 0px;
 	background-color: #DDDDDD;
 	text-align: center;
@@ -154,8 +156,9 @@ td.assetListFieldLong
 {
 	height: 16px;
 	width: 36px;
-	margin-left: 2px;
-	border: 1px solid gray;
+	margin: 0px 2px 0px 0px;
 	padding: 0px;
+	
+	border: 1px solid gray;
 	background-color: #EEEEEE;
 }

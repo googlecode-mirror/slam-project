@@ -20,17 +20,25 @@ function SLAM_makeAssetEditHTML(&$config,$db,$user,$request,&$result)
 	$assets		= $result->assets[$category];
 	$structure	= $result->fields[$category];
 	$editable	= array();
-
+	
 	/* retrieve the field values, either for a new entry or for editing existing ones */
 	if ($request->action == 'new')
 	{
 		$editable[] = true;
 		$fields	= SLAM_setAssetFields($config,$db,$user,$category,$structure,null);
+
+		/* save the identifier to the form so we can come back to it if the user saves changes */
+		$s.=SLAM_makeHiddenInput($fields['Identifier'],'Identifier');
+		$s.=SLAM_makeHiddenInput('true','new');
 	}
 	elseif ($request->action == 'clone')
 	{
 		$editable[] = true;
 		$fields	= SLAM_setAssetFields($config,$db,$user,$category,$structure,$assets[0]);
+		
+		/* save the identifier to the form so we can come back to it if the user saves changes */
+		$s.=SLAM_makeHiddenInput($fields['Identifier'],'Identifier');
+		$s.=SLAM_makeHiddenInput('true','new');
 	}
 	elseif( count($assets) > 0)
 	{

@@ -10,7 +10,7 @@ class SLAMresult
 		$this->fields = array();
 		$this->assets = array();
 		$this->counts = array();
-	
+
 		if ($config)
 		{
 			$this->getStructures($config,$db,$user,$request);

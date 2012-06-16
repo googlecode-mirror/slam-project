@@ -103,27 +103,28 @@ function SLAM_saveAssetEdits(&$config,$db,&$user,$request)
 		elseif( $_REQUEST['permissions'] )
 			$asset['permissions'] = json_decode(base64_decode($_REQUEST['permissions']));
 		
-		/* identifiers is empty, we must be creating a new entry */
-		if (!is_array($identifiers))
+		/* are we creating a new entry? */
+		if ( $_REQUEST['new'] )
 		{
 			if ( ($s = insertNewAsset( $config, $db, $user, $category, $asset)) !== True)
 				return $s;
 			else
 				SLAM_updateArchiveFileList($config,$db,$category,$asset['Identifier']);
 		}
-		
-		if( ! is_array($identifiers) )
-			$identifiers = array();
-
-		/* go through all the assets we have and update the changed fields */
-		foreach($identifiers as $identifier)
+		elseif( is_array($identifiers) )
 		{
-			/* replace the insertion statement identifier with the correct one */
-			$asset['Identifier'] = $identifier;
-			
-			if (($s = replaceExistingAsset( $config, $db, $user, $category, $asset)) !== True)
-				return $s;
+			/* go through all the assets we have and update the changed fields */
+			foreach($identifiers as $identifier)
+			{
+				/* replace the insertion statement identifier with the correct one */
+				$asset['Identifier'] = $identifier;
+				
+				if (($s = replaceExistingAsset( $config, $db, $user, $category, $asset)) !== True)
+					return $s;
+			}
 		}
+		else
+			$config->errors[] = "No identifier was provided for saving edits";
 	}
 	
 	$user->savePrefs($config,$db);
