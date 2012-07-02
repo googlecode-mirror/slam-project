@@ -5,7 +5,7 @@
 ?>
 <div style='text-align:center'>
 	<div>
-		<p style='font-weight:bold;margin-bottom:5px'>SLAM v.<?php echo($config->values['version']) ?></p>
+		<p style='font-weight:bold;margin-bottom:5px'>SLAM v.<?php echo($config->values['version']) ?> build <?php echo($config->values['build']) ?></p>
 		<a href='http://code.google.com/p/slam-project/' target='_new'>code.google.com/p/slam-project/</a>
 	</div>
 	<div>

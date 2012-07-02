@@ -156,7 +156,7 @@ function SLAM_saveUserPassword(&$config,$db,$user)
 	$new_password = $_REQUEST['new_password'];
 
 	if ($user->checkPassword($config,$db,$old_password))
-		return SLAM_changeUserPassword($config,$db,$new_password);
+		return SLAM_changeUserPassword($config,$db,$user->username,$new_password);
 
 	return false;
 }
