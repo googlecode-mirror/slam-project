@@ -58,8 +58,8 @@ function toggleCategoryCheckboxes(category)
 	{
 		box = document.getElementById(category+'_checkbox_'+i);
 		if (box == null)
-			return false;
+			return checkAssetListBoxes(category);;
 		box.checked = !box.checked;
 		i++;
-	}
+	}	
 }

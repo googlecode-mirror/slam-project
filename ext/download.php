@@ -48,9 +48,9 @@ if( (count($config->errors) == 0) && ($access > 0) )
 
 	/* send the appropriate headers */		
 	if ((in_array($a['extension'],$config->values['file manager']['inline_formats']))&&($_REQUEST['inline']))
-		header("Content-Disposition: inline; filename=$file");
+		header("Content-Disposition: inline; filename=\"$file\"");
 	else
-		header("Content-Disposition: attachment; filename=$file");
+		header("Content-Disposition: attachment; filename=\"$file\"");
 	
 	/* extract the requested file from the zip archive */
 	$path = addslashes($path);
