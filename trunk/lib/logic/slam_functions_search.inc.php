@@ -90,8 +90,12 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 		if(!in_array($request->order['field'],array_keys($result->fields[$category])))				
 			$request->order['field'] = 'Identifier';
 		
-		$order = mysql_real_escape($request->order['field'],$db->link)." ".mysql_real_escape($request->order['direction'],$db->link);
-		
+		/* convert identifiers to numeric sort */
+		if($request->order['field'] == 'Identifier')
+			$order = 'CAST(SUBSTR(`Identifier`,6) AS SIGNED) '.mysql_real_escape($request->order['direction'],$db->link);
+		else
+			$order = "`".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link);
+
 		/* construct the select statement by putting together the field names and joining conjunctions */
 		$select = '';
 		foreach($terms as $i=>$term)

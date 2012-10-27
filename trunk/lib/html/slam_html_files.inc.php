@@ -34,7 +34,10 @@ EOL;
 			$open_url = "<a href='$save_url'>save</a>/<a href='$view_url' target='_new'>view</a>";
 		else
 			$open_url = "<a href='$save_url'>save</a>";
-			
+		
+		/* ok to strip slashes from filename now */
+		$name = stripslashes($name);
+		
 		/* smash together the row */
 		$s.= <<<EOL
 <td style='text-align:center'>$open_url</td>

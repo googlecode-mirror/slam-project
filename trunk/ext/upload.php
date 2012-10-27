@@ -45,8 +45,10 @@ if( (count($config->errors) == 0) && ($access > 1) )
 		{
 			if ($error == UPLOAD_ERR_OK)
 			{
+				# single quotes really mess with zip's ability to access file, may fix at a later date
+				$name = str_replace("\'",'',urldecode($_FILES['asset_file']['name'][$i]));
+
 				/* move the uploaded file into the temporary directory for incorporation into the archive */
-				$name = urldecode($_FILES['asset_file']['name'][$i]);
 				$temp = urldecode($_FILES['asset_file']['tmp_name'][$i]);
 				$file = "{$config->values['file manager']['temp_dir']}/$name";
 

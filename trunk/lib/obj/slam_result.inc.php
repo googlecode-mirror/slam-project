@@ -72,18 +72,21 @@ class SLAMresult
 			if(!in_array($request->order['field'],array_keys($this->fields[$category])))				
 				$request->order['field'] = 'Identifier';
 			
-			/* retrieve assets from the table */
+			/* convert identifiers to numeric sort */
+			if($request->order['field'] == 'Identifier')
+				$order = 'CAST(SUBSTR(`Identifier`,6) AS SIGNED) '.mysql_real_escape($request->order['direction'],$db->link);
+			else
+				$order = "`".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link);
 			
+			/* retrieve assets from the table */
 			if(empty($identifiers) || ($request->action == 'save'))
 			{
-				$select = "1=1";
-				$order = "`".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link);
+				$select = "1=1";				
 				$limit = ($request->limit > 0) ? "{$request->limit},".($request->limit+$config->values['list_max']) : "0,{$config->values['list_max']}";
 			}
 			else
 			{
 				$select = "`Identifier`='".implode("' OR `Identifier`='",$identifiers)."'";
-				$order = "`".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link);
 				$limit = count($identifiers);
 			}
 			

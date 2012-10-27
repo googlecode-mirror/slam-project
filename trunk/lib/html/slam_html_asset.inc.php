@@ -215,7 +215,7 @@ function SLAM_makeFieldHTML($config,$request,$v,$s,$e,$h)
 		$b = SLAM_makeProjectMenuHTML($config,$v,$s,$n,$e);
 	
 	/* should the file be a linked identifier field? */
-	if ( preg_match('/^(\#\S+\s+)/',$s['comment'],$m) > 0 )
+	if ( preg_match('/^(\#\w+)/',$s['comment'],$m) > 0 )
 	{
 		$f = SLAM_makeIdentifierMenuHTML($config,$request,$v,$s,"name='$n' id='$n'");
 		$s['comment'] = str_replace($m[1],'',$s['comment']); // remove the link field specifier from the title
