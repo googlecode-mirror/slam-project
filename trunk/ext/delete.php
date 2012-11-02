@@ -50,7 +50,10 @@ if( (count($config->errors) == 0) && ($access > 1) )
 			
 			if ($status > 0)
 			{
-				$config->errors[] = "There was a zip error: {$slam_file_errors['zip_errors'][$status]}";
+				if( key_exists($status, $slam_file_errors['zip_errors']) )
+					$config->errors[] = "File manager error: Zip error: {$slam_file_errors['zip_errors'][$status]}";
+				else
+					$config->errors[] = sprintf("File manager error: Attempting to call zip returned nonzero status %i : %s",$status,$output[0]);
 				break;
 			}
 		}

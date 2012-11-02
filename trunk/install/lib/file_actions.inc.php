@@ -39,6 +39,20 @@ function checkFileList( $file_list_path )
 	return $ret;
 }
 
+function checkExecCommand($cmd)
+{
+	if(function_exists('exec'))
+	{
+		$cmd = escapeshellcmd($cmd);
+	    exec("command -v $string >& /dev/null && echo 'Found' || echo 'Not Found'", $output);
+
+	    if( $output[0] == "Found" )
+	        return true;
+	    else
+	        return false;
+	}
+}
+
 function checkDirectoryIsRW($path)
 {
 	if ($path != '')

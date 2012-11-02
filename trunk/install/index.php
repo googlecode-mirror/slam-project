@@ -9,6 +9,10 @@
 	if (version_compare(PHP_VERSION, $req_php_version, '<'))
 		$fail[] = "The installed PHP version must be at least $req_php_version, the currently installed version is ".PHP_VERSION;
 	
+	# make sure that safe mode is not enabled
+	if(ini_get('safe_mode'))
+		$fail[] = "SLAM cannot run when PHP's Safe Mode is enabled. Please contact your system administrator.";
+	
 	# make sure we're not installing into an existing install
 	if((!$fail) && (file_exists('../configuration.ini')))
 		$fail[] = "SLAM has already been installed. Click [<a href='../index.php'>here</a>] to access it.";
@@ -19,7 +23,17 @@
 	
 	# make sure the install directory is writeable
 	if((!$fail) && (!is_writable( $pathinfo['dirname'])))
-		$fail[] = "Installation directory is not writeable. Please contact your system administrator";		
+		$fail[] = "Installation directory is not writeable. Please contact your system administrator";
+	
+	if((!$fail) && (!function_exists('exec')))
+		$fail[] = "SLAM requires PHP's exec command. Please contact your system administrator.";		
+	
+	if((!$fail) && (!checkExecCommand('zip')))
+		$fail[] = "The Zip utility is not accessible. Please contact your system administrator.";
+
+	if((!$fail) && (!checkExecCommand('unzip')))
+		$fail[] = "The Unzip utility is not accessible. Please contact your system administrator.";
+
 ?>
 <html>
 	<head>
