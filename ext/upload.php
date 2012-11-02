@@ -63,6 +63,9 @@ if( (count($config->errors) == 0) && ($access > 1) )
 				
 				/* remove the temporary file now that it's been added to the archive */
 				exec("rm $file", $output,$status);
+				
+				if($status > 0)
+					$config->errors[] = sprintf("Attempted removal of temporary upload file returned nonzero status %i : %s",$status,$output[0]);
 			}
 			elseif($error != UPLOAD_ERR_NO_FILE)
 			{
