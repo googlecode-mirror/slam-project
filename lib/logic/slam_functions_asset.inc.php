@@ -69,8 +69,8 @@ function SLAM_setAssetFields($config,$db,$user,$category,$structure,$clone=false
 			
 	/* generate the unique identifier */
 	if(($results = $db->Query("SHOW TABLE STATUS WHERE `name`='$category'")) === false)
-		die('Database error: Couldn\'t get table status: '.mysql_error());
-	$row = mysql_fetch_assoc($results);
+		die('Database error: Couldn\'t get table status: '.$db->ErrorState());
+	$row = $results[0];
 	
 	$fields['Serial'] = $row['Auto_increment'];
 	$fields['Identifier'] = "{$config->values['lab_prefix']}{$config->categories[$category]['prefix']}_{$row['Auto_increment']}";
@@ -139,20 +139,20 @@ function insertNewAsset( $config, $db, $user, $category, $asset )
 	$r = $db->GetRecords("SELECT * FROM `$category` WHERE identifier='{$asset['Identifier']}' LIMIT 1");
 	
 	if ($r === false)
-		 return SLAM_makeErrorHTML('Database error: could not check for duplicate identifiers: '.mysql_error(),true);
+		 return SLAM_makeErrorHTML('Database error: could not check for duplicate identifiers: '.$db->ErrorState(),true);
 
 	if(count($r) > 0)
 	{
 		// pre-existing entry with that identifier!, get next highest asset number and regenerate identifier
 		
 		if(($results = $db->Query("SHOW TABLE STATUS WHERE `name`='$category'")) === false)
-			return SLAM_makeErrorHTML('Database error: error retrieving table status:'.mysql_error(),true);
-			
-		$row = mysql_fetch_assoc($results);
-		if(empty($row))
+			return SLAM_makeErrorHTML('Database error: error retrieving table status:'.$db->ErrorState(),true);
+		
+		if(size($results) == 0)
 			return SLAM_makeErrorHTML('Database error: could not get table\'s next available identifier.',true);
 		else
 		{
+			$row = $results[0];
 			$asset['Serial'] = $row['Auto_increment'];
 			$asset['Identifier'] = "{$config->values['lab_prefix']}{$config->categories[ $category ]['prefix']}_{$row['Auto_increment']}";
 		}
@@ -165,7 +165,7 @@ function insertNewAsset( $config, $db, $user, $category, $asset )
 	/* insert the asset attributes into the database */
 	$q = SLAM_makeInsertionStatement( $db, 'INSERT', $category, $asset );
 	if ($db->Query($q) === false)
-		return SLAM_makeErrorHTML('Database error: could not save record: '.mysql_error(),true);
+		return SLAM_makeErrorHTML('Database error: could not save record: '.$db->ErrorState(),true);
 	
 	/* save the permissions as well */
 	$asset['permissions'] = $permissions;
@@ -195,10 +195,10 @@ function replaceExistingAsset( $config, $db, $user, $category, $asset )
 	/* don't try and save the permissions field into the asset table */
 	unset($asset['permissions']);
 	
-	$q = SLAM_makeUpdateStatement( $db, $category, $asset, "`Identifier`='".mysql_real_escape($asset['Identifier'],$db->link)."'", 1 );
+	$q = SLAM_makeUpdateStatement( $db, $category, $asset, "`Identifier`='".sql_real_escape($asset['Identifier'],$db->link)."'", 1 );
 
 	if ($db->Query($q) === false)
-		return SLAM_makeErrorHTML('Database error: could not save record: '.mysql_error(),true);
+		return SLAM_makeErrorHTML('Database error: could not save record: '.$db->ErrorState(),true);
 	
 	$asset['permissions'] = $permissions;
 	if( ($ret = SLAM_saveAssetPerms($config, $db, $asset)) !== true)
@@ -220,7 +220,7 @@ function SLAM_saveAssetPerms(&$config, $db, $asset)
 	$q = SLAM_makeInsertionStatement( $db, 'REPLACE', $config->values['perms_table'], $permissions );	
 
 	if ($db->Query($q) === false)
-		return SLAM_makeErrorHTML('Database error: could not save record permissions: '.mysql_error(),true);
+		return SLAM_makeErrorHTML('Database error: could not save record permissions: '.$db->ErrorState(),true);
 
 	return true;
 }
@@ -248,7 +248,7 @@ function SLAM_deleteAssets(&$config, $db, &$user, &$request)
 			
 			/* attempt to run the query */
 			if (($result = $db->Query($q)) === false)
-		 		return SLAM_makeErrorHTML('Database error: asset removal failure: '.mysql_error(),true);
+		 		return SLAM_makeErrorHTML('Database error: asset removal failure: '.$db->ErrorState(),true);
 			
 			/* remove from the request as well (mainly to remove from the breadcrumb trail) */
 			unset($request->categories[$category][$i]);

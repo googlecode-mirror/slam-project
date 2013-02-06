@@ -88,11 +88,11 @@ function SLAM_updateArchiveFileList(&$config,$db,$category,$identifier)
 		return;
 		
 	/* slam together all the files for the records, separated by newlines */
-	$s = mysql_real_escape(implode("\n",array_keys($files)),$db->link);
+	$s = sql_real_escape(implode("\n",array_keys($files)),$db->link);
 
 	$q = "UPDATE `$category` SET `Files`='$s' WHERE (`Identifier`='$identifier') LIMIT 1";
 	if (($result = $db->Query($q)) === false)
-		$config->errors[]='Database error: Could not update asset file list:'.mysql_error();
+		$config->errors[]='Database error: Could not update asset file list:'.$db->ErrorState();
 		
 	return;
 }

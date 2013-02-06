@@ -160,8 +160,7 @@ td.categoryListElementSelected>a:hover, td.categoryListElementSelected>a:active{
 	margin:50px;
 	margin-left:auto;
 	margin-right:auto;
-	border: 1px solid gray;
-    
+	border: 1px solid gray;    
 }
 
 #authContainer>input, #searchTerms>input, #searchConditions>input
