@@ -63,11 +63,11 @@ class SLAMuser
 		}
 		elseif($_COOKIE["slam_{$config->values['lab_prefix']}"]) /* does the user possess an auth cookie? */
 		{
-			$crypt = mysql_real_escape(urldecode($_COOKIE["slam_{$config->values['lab_prefix']}"]),$db->link);
+			$crypt = sql_real_escape(urldecode($_COOKIE["slam_{$config->values['lab_prefix']}"]),$db->link);
 			$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `crypt`='$crypt' LIMIT 1");
 			
 			if ($auth === false) //GetRecords returns false on error
-				die('Database error: could not check user crypt key: '.mysql_error());
+				die('Database error: could not check user crypt key: '.$db->ErrorState());
 			elseif (count($auth) == 1)
 			{
 				/* refresh the cookie */
@@ -106,11 +106,26 @@ class SLAMuser
 	
 	function checkPassword(&$config,$db,$password)
 	{
-		$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `username`='".mysql_real_escape($this->username,$db->link)."' LIMIT 1");
+		/* try to bind to LDAP first */
+		if( $config->values['ldap_server'] != '' )
+		{
+			if(($link = ldap_connect($config->values['ldap_server'])) != true)
+			{
+				$config->errors[] = "Auth error: could not connect to LDAP server";
+				return false;
+			}
+			if(!ldap_bind($link,$this->username,$password))
+			{	
+				$config->errors[] = "Auth error: could not bind to LDAP server";
+				return false;
+			}
+		}
 		
+		$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `username`='$this->username' LIMIT 1");
+
 		/* compare the salt+password hash with that stored in the db */
 		if ($auth === false) //GetRecords returns false on error
-			die('Database error: could not check user passphrase: '.mysql_error());
+			die('Database error: could not check user passphrase: '.$db->ErrorState());
 		
 		/* make sure we haven't exceeded our number of failed logins */
 		if( count($auth) == 1)
@@ -133,11 +148,11 @@ class SLAMuser
 	
 	function savePrefs(&$config,$db)
 	{
-		$prefs = mysql_real_escape(serialize($this->prefs),$db->link);
+		$prefs = sql_real_escape(serialize($this->prefs),$db->link);
 		$q = "UPDATE `{$config->values['user_table']}` SET `prefs`='$prefs' WHERE `username`='$this->username' LIMIT 1";		
 		if (!$db->Query($q))
 		{
-			$config->errors[] = 'Error updating user preferences: '.mysql_error();
+			$config->errors[] = 'Error updating user preferences: '.$db->ErrorState();
 			return false;
 		}
 		return true;

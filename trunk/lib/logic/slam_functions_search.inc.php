@@ -57,14 +57,14 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 
 		if( in_array($field, $fields) )
 		{
-			$terms[] = '`'.mysql_real_escape($field,$db->link).'` '.$allowed_modes[$request->search['mode'][$i]].' \''.mysql_real_escape($value,$db->link).'\'';
+			$terms[] = '`'.sql_real_escape($field,$db->link).'` '.$allowed_modes[$request->search['mode'][$i]].' \''.sql_real_escape($value,$db->link).'\'';
 		}
 		elseif( $field == '(Search all)' )
 		{
 			/* build a special term that contains all of the available fields with OR joins */
 			$sub_terms = array();
 			foreach( $fields as $field )
-				$sub_terms[] = '`'.mysql_real_escape($field,$db->link).'` '.$allowed_modes[$request->search['mode'][$i]].' \''.mysql_real_escape($value,$db->link).'\'';
+				$sub_terms[] = '`'.sql_real_escape($field,$db->link).'` '.$allowed_modes[$request->search['mode'][$i]].' \''.sql_real_escape($value,$db->link).'\'';
 			
 			if( $request->search['mode'][$i] == 'LIKE' )
 				$terms[] = '( '.implode( ' OR ', $sub_terms ).' )';
@@ -92,9 +92,9 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 		
 		/* convert identifiers to numeric sort */
 		if($request->order['field'] == 'Identifier')
-			$order = 'CAST(SUBSTR(`Identifier`,6) AS SIGNED) '.mysql_real_escape($request->order['direction'],$db->link);
+			$order = 'CAST(SUBSTR(`Identifier`,6) AS SIGNED) '.sql_real_escape($request->order['direction'],$db->link);
 		else
-			$order = "`".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link);
+			$order = "`".sql_real_escape($request->order['field'],$db->link)."` ".sql_real_escape($request->order['direction'],$db->link);
 
 		/* construct the select statement by putting together the field names and joining conjunctions */
 		$select = '';
@@ -107,7 +107,7 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 		/* execute the query */
 		if (($result->assets[$category] = $db->getRecords($query)) === false)
 		{
-			$config->errors[] ='Database error: Error retrieving search:'.mysql_error().$query;
+			$config->errors[] ='Database error: Error retrieving search:'.$db->ErrorState().$query;
 			return new SLAMresult();
 		}
 		
@@ -115,7 +115,7 @@ function SLAM_loadSearchResults($config,$db,$user,$request)
 		$query = SLAM_makePermsQuery($config, $db, $user, 'COUNT(*)', $category, $select);
 		
 		if (($count=$db->getRecords($query)) === false)
-			$config->errors[] = 'Database error: Error counting assets:'.mysql_error().$query;
+			$config->errors[] = 'Database error: Error counting assets:'.$db->ErrorState().$query;
 		
 		$result->counts[$category] = $count[0]['COUNT(*)'];
 	}

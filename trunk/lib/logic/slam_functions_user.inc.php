@@ -127,7 +127,7 @@ function SLAM_dropAssetTags($config,$db,&$user,$request)
 
 function SLAM_changeUserPassword(&$config,$db,$username,$newpass)
 {
-	$username = mysql_real_escape($username,$db->link);
+	$username = sql_real_escape($username,$db->link);
 	$salt = makeRandomAlpha(8);
 	$crypt = sha1($salt.$newpass);
 
@@ -135,7 +135,7 @@ function SLAM_changeUserPassword(&$config,$db,$username,$newpass)
 	$auth = $db->Query("UPDATE `{$config->values['user_table']}` SET `salt`='$salt',`crypt`='$crypt' WHERE `username`='$username' LIMIT 1");
 	if ($auth === false)
 	{
-		$config->errors[] = 'Database error: Could not update password, could not access user table:'.mysql_error();
+		$config->errors[] = 'Database error: Could not update password, could not access user table:'.$db->ErrorState();
 		return false;
 	}
 	elseif (count($auth) < 1)
@@ -163,14 +163,14 @@ function SLAM_saveUserPassword(&$config,$db,$user)
 
 function SLAM_sendUserResetMail(&$config,$db)
 {
-	$email = mysql_real_escape($_REQUEST['user_email'],$db->link);
+	$email = sql_real_escape($_REQUEST['user_email'],$db->link);
 
 	$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `email`='$email'");
 	
 	//GetRecords returns false on error
 	if ($auth === false)
 	{
-		$config->errors[] = 'Database error: Could not send reset email, could not access user table:'.mysql_error();
+		$config->errors[] = 'Database error: Could not send reset email, could not access user table:'.$db->ErrorState();
 		return;
 	}
 	elseif (count($auth) < 1)
@@ -188,12 +188,12 @@ function SLAM_sendUserResetMail(&$config,$db)
 		/* save the secret to the user */
 		$prefs = unserialize($user['prefs']);
 		$prefs['reset_secret'] = $secret;
-		$prefs = mysql_real_escape(serialize($prefs),$db->link);
+		$prefs = sql_real_escape(serialize($prefs),$db->link);
 	
 		/* attempt to save the secret back to the user */
 		$result = $db->Query("UPDATE `{$config->values['user_table']}` SET `prefs`='$prefs' WHERE `username`='{$user['username']}' LIMIT 1");
 		if ($result === false){
-			$config->errors[] = 'Database error:  Could not send reset email, could not update user table:'.mysql_error();
+			$config->errors[] = 'Database error:  Could not send reset email, could not update user table:'.$db->ErrorState();
 			return;
 		}
 	
@@ -222,13 +222,13 @@ function SLAM_saveUserResetPass(&$config,$db)
 	if (empty($_REQUEST['user_name']) || empty($_REQUEST['new_password']))
 		return false;
 
-	$username = mysql_real_escape($_REQUEST['user_name'],$db->link);		
-	$password = mysql_real_escape($_REQUEST['new_password'],$db->link);
+	$username = sql_real_escape($_REQUEST['user_name'],$db->link);		
+	$password = sql_real_escape($_REQUEST['new_password'],$db->link);
 	$secret = $_REQUEST['secret'];
 	
 	$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `username`='$username' LIMIT 1");
 	if ($auth === false){ //GetRecords returns false on error
-		$config->errors[] = 'Database error: Could not save new password, could not access user table:'.mysql_error();
+		$config->errors[] = 'Database error: Could not save new password, could not access user table:'.$db->ErrorState();
 		return;
 	}
 	elseif (count($auth) < 1){
@@ -250,11 +250,11 @@ function SLAM_saveUserResetPass(&$config,$db)
 		
 	/* remove the secret key from the user's prefs */
 	unset($prefs['reset_secret']);
-	$prefs = mysql_real_escape(serialize($prefs),$db->link);
+	$prefs = sql_real_escape(serialize($prefs),$db->link);
 	
 	$result = $db->Query("UPDATE `{$config->values['user_table']}` SET `prefs`='$prefs' WHERE `username`='$username' LIMIT 1");
 	if ($result === false)
-		$config->errors[] = 'Database error:  Could not remove secret key from user record:'.mysql_error();
+		$config->errors[] = 'Database error:  Could not remove secret key from user record:'.$db->ErrorState();
 	
 	return;
 }
@@ -264,14 +264,14 @@ function SLAM_createNewUser( &$config, $db, $user )
 	if( ! $user->superuser )
 		return "Only superusers can add a new user.";
 	
-	$username	= mysql_real_escape($_REQUEST['new_user_name'],$db->link);		
-	$email		= mysql_real_escape($_REQUEST['new_user_email'],$db->link);		
-	$password	= mysql_real_escape($_REQUEST['new_user_password'],$db->link);
-	$projects	= mysql_real_escape($_REQUEST['new_user_projects'],$db->link);		
+	$username	= sql_real_escape($_REQUEST['new_user_name'],$db->link);		
+	$email		= sql_real_escape($_REQUEST['new_user_email'],$db->link);		
+	$password	= sql_real_escape($_REQUEST['new_user_password'],$db->link);
+	$projects	= sql_real_escape($_REQUEST['new_user_projects'],$db->link);		
 	
 	$auth = $db->GetRecords("SELECT * FROM `{$config->values['user_table']}` WHERE `username`='$username' LIMIT 1");
 	if ($auth === false){ //GetRecords returns false on error
-		$config->errors[] = 'Database error: Could not save new password, could not access user table:'.mysql_error();
+		$config->errors[] = 'Database error: Could not save new password, could not access user table:'.$db->ErrorState();
 		return;
 	}
 	elseif (count($auth) > 0){
@@ -281,7 +281,7 @@ function SLAM_createNewUser( &$config, $db, $user )
 	$result = $db->Query("INSERT INTO `{$config->values['user_table']}` (`username`,`email`,`projects`) VALUES ('$username','$email','$projects')");
 	if( $result === false)
 	{
-		$config->errors[] = 'Database error:  Could not create the new user:'.mysql_error();
+		$config->errors[] = 'Database error:  Could not create the new user:'.$db->ErrorState();
 		return "Could not create the user.";
 	}
 	

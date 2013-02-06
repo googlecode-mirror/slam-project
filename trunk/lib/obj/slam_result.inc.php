@@ -27,7 +27,7 @@ class SLAMresult
 		foreach($request->categories as $category=>$identifiers)
 		{
 			if(($structure = $db->getStructure($category)) === false)
-				die('Error retrieving table info:'.mysql_error());
+				die('Error retrieving table info:'.$db->ErrorState());
 				
 			/* set hidden status for fields */
 			foreach($structure as &$field)
@@ -74,9 +74,9 @@ class SLAMresult
 			
 			/* convert identifiers to numeric sort */
 			if($request->order['field'] == 'Identifier')
-				$order = 'CAST(SUBSTR(`Identifier`,6) AS SIGNED) '.mysql_real_escape($request->order['direction'],$db->link);
+				$order = 'CAST(SUBSTR(`Identifier`,6) AS SIGNED) '.sql_real_escape($request->order['direction'],$db->link);
 			else
-				$order = "`".mysql_real_escape($request->order['field'],$db->link)."` ".mysql_real_escape($request->order['direction'],$db->link);
+				$order = "`".sql_real_escape($request->order['field'],$db->link)."` ".sql_real_escape($request->order['direction'],$db->link);
 			
 			/* retrieve assets from the table */
 			if(empty($identifiers) || ($request->action == 'save'))
@@ -93,13 +93,13 @@ class SLAMresult
 			$query = SLAM_makePermsQuery($config, $db, $user, '*', $category, $select, $order, $limit);
 
 			if (($this->assets[$category] = $db->getRecords($query)) === false)
-				$config->errors[]='Database error: Error retrieving assets:'.mysql_error().$query;
+				$config->errors[]='Database error: Error retrieving assets:'.$db->ErrorState().$query;
 			
 			/* count the number of visible assets in the category */
 			$query = SLAM_makePermsQuery($config, $db, $user, 'COUNT(*)', $category, $select);
 			
 			if (($count=$db->getRecords($query)) === false)
-				$config->errors[]='Database error: Error counting assets:'.mysql_error().$query;
+				$config->errors[]='Database error: Error counting assets:'.$db->ErrorState().$query;
 			
 			$this->counts[$category] = $count[0]['COUNT(*)'];
 		}
@@ -126,7 +126,7 @@ class SLAMresult
 		$query = "SELECT * FROM `{$config->values['perms_table']}` WHERE `Identifier` IN (".join(',',$list).')';
 		if( ($rows = $db->GetRecords( $query )) === false)
 		{
-			$config->errors[] = "Error: Could not retrieve permissions for requested assets.".mysql_error();
+			$config->errors[] = "Error: Could not retrieve permissions for requested assets.".$db->ErrorState();
 			return false;
 		}
 		

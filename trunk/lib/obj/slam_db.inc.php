@@ -9,11 +9,11 @@ class SLAMdb
 	
 	public function __construct(&$config)
 	{
-		if(($this->Connect($config->values['db_server'],$config->values['db_user'],$config->values['db_pass'],$config->values['db_name'])) === false)
-			die('Database error: Could not connect: '.mysql_error());
+		if( $error = ($this->Connect($config->values['db_server'],$config->values['db_user'],$config->values['db_pass'],$config->values['db_name'])) !== true)
+			die('Database error: Could not connect: '.$error);
 		
 		if(!($this->tables = $this->GetTables()))
-			die ('Database error: Could not get list of categories'.mysql_error());
+			die ('Database error: Could not get list of categories'.$this->errorState());
 
 		if (!in_array($config->values['user_table'],$this->tables))
 			die ("Database error: required user table \"{$config->values['user_table']}\" not found.");
@@ -41,14 +41,12 @@ class SLAMdb
 			returns true on success, false otherwise
 		*/
 		
-		if(!($link = @mysql_connect($server,$user,$pass)))
-			return false;
-			
-		$this->link = $link;
-			
-		if (!@mysql_select_db($db,$this->link))
-			return false;
-			
+		try{
+			$this->link = new PDO("mysql:host=$server;dbname=$db",$user,$pass);
+		}catch (PDOException $e){
+			return $e;
+		}
+		
 		return true;
 	}
 	
@@ -56,14 +54,14 @@ class SLAMdb
 	{
 		/* retrieve all the category info from the specified category table */
 
-		if(($result = mysql_query("SELECT * FROM {$config->values['category_table']}",$this->link)) === false)
-			die('Fatal error: could not retrieve category information. Please contact your system administrator: '.mysql_error());
+		if(($results = $this->Query("SELECT * FROM {$config->values['category_table']}")) === false)
+			die('Fatal error: could not retrieve category information. Please contact your system administrator: '.$this->ErrorState());
 		
-		if (mysql_num_rows($result) < 1)
+		if (count($results) < 1)
 			die('Fatal error: Your category database table contains no categories. Please add a category or contact your system administrator.');
 		
 		/* iterate through all of the categories */
-		while ($category = mysql_fetch_assoc($result))
+		foreach( $results as $category )
 		{
 			$fields = array_keys($this->GetStructure($category['Name']));
 			
@@ -105,10 +103,10 @@ class SLAMdb
 	
 	private function loadProjects(&$config)
 	{
-		if(($result = mysql_query("SELECT * FROM {$config->values['projects_table']}",$this->link)) === false)
-			die('Fatal error: could not retrieve project information. Please contact your system administrator: '.mysql_error());
+		if(($results = $this->Query("SELECT * FROM {$config->values['projects_table']}")) === false)
+			die('Fatal error: could not retrieve project information. Please contact your system administrator: '.$this->ErrrorState());
 		
-		while ($project = mysql_fetch_assoc($result))
+		foreach( $results as $project )
 			$config->projects[] = $project['Name'];
 
 		return;
@@ -120,12 +118,13 @@ class SLAMdb
 			returns all tables in the current database
 		*/
 		
-		if(!($result = mysql_query('SHOW TABLES',$this->link)))
+		if(!($results = $this->Query('SHOW TABLES')))
 			return false;
 			
 		$return = array();
-		while($row = mysql_fetch_row($result))
+		foreach( $results as $row )
 			$return[] = $row[0];
+		
 		return $return;
 	}
 	
@@ -135,11 +134,11 @@ class SLAMdb
 			returns information about the structure of the specified table, otherwise returns false on failure
 		*/
 		
-		if(!($result = mysql_query("SHOW FULL COLUMNS FROM `$t`",$this->link)))
+		if(!($results = $this->Query("SHOW FULL COLUMNS FROM `$t`")))
 			return false;
 
 		$fields = array();
-		while($row = mysql_fetch_assoc($result))
+		foreach( $results as $row )
 		{
 			$fields[$row['Field']]['name'] = $row['Field'];
 			$fields[$row['Field']]['comment'] = $row['Comment'];
@@ -170,11 +169,11 @@ class SLAMdb
 			horizontal: associative array of fields => numerical array of records
 		*/
 
-		if(($result = mysql_query($q,$this->link)) === false)
+		if(($results = $this->Query($q)) === false)
 			return false;
 			
 		$return = array();
-		while ($row = mysql_fetch_assoc($result))
+		foreach( $results as $row )
 		{
 			if ($vert)
 				$return[] = $row;
@@ -186,11 +185,17 @@ class SLAMdb
 	}
 	
 	public	function Query($q){
-		return mysql_query($q,$this->link);
+		return $this->link->query($q);;
 	}
 	
 	public	function Disconnect(){
-		mysql_close($this->link);
+		$this->link = null;
+	}
+	
+	public function ErrorState($i=2)
+	{
+		$a = $this->link->errorInfo();
+		return $a[$i];
 	}
 }
 
