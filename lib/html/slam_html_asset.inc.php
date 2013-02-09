@@ -284,12 +284,12 @@ function SLAM_makeIdentifierMenuHTML($config,$request,$v,$s,$n)
 	
 	$a=array();
 	foreach($m[0] as $k=>$match)
-		$a["{$m[1][$k]}{$m[2][$k]}_{$m[3][$k]}"] = $request->makeRequest($config,array('identifier'=>array("{$m[1][$k]}{$m[2][$k]}_{$m[3][$k]}")),true);
+		$a["{$m[1][$k]}{$m[2][$k]}_{$m[3][$k]}"] = $request->makeRequestURL($config,array('identifier'=>array("{$m[1][$k]}{$m[2][$k]}_{$m[3][$k]}")),true);
 	$id = "{$m[1][$k]}{$m[2][$k]}_{$m[3][$k]}";
 	
 	/* make a smart menu with each linkable identifier we found */
 	if (count($a) == 1)
-		return SLAM_makeButtonHTML("{$m[0][0]} &rarr;","name='{$s['name']}_linklist' class='assetIdentifierLinkButton' onClick=\"jumpToIdentifier('".$request->makeRequest($config,array('identifier'=>array($id)),true)."')\" class='linkButton'",false);
+		return SLAM_makeButtonHTML("{$m[0][0]} &rarr;","name='{$s['name']}_linklist' class='assetIdentifierLinkButton' onClick=\"jumpToIdentifier('".$request->makeRequestURL($config,array('identifier'=>array($id)),true)."')\" class='linkButton'",false);
 	elseif(count($a) > 1)
 		return SLAM_makeMenuHTML('',$a,"name='{$s['name']}_linklist' onChange=\"jumpToIdentifier(this.options[this.selectedIndex].value)\"",true,false);
 	else

@@ -120,6 +120,7 @@ elseif($_REQUEST['user_action']) /* has the user specified an action (e.g. loggi
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
 	<head>
+		<meta http-equiv="pragma" content="no-cache" />
 		<title><?php echo $config->values['name']; ?></title>
 <?php
 	/* include any specified header files */

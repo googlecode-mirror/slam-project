@@ -39,7 +39,7 @@ function SLAM_makeDashboardSearchHTML($config,$db,$user,$request)
 	/* restrict tables to only those that are specified in the config */
 	$tables = array_intersect($db->tables,array_keys($config->categories));
 
-	$s ="<form name='selectSearchCategories' action='".$request->makeRequest($config,array('category'=>array()),true)."&d_status=select' method='POST'>\n";
+	$s ="<form name='selectSearchCategories' action='".$request->makeRequestURL($config,array('category'=>array()),true)."&d_status=select' method='POST'>\n";
 	$s.="<div id='dashboardSearchContainer'>\n";
 	if (! $_REQUEST['d_status']=='select')
 		$s.=SLAM_makeButtonHTML('Multi-category search',"onClick=\"toggleHideBodyId('dashboardSearchReveal')\"",false);
@@ -72,7 +72,7 @@ function SLAM_makeDashboardListHTML(&$config,$db,$user,$request,$result)
 	if (empty($result->assets))
 		return "<div id='dashboardNoEntries'><span>No assets to show</span></div>\n";	
 		
-	$s.="<form name='dashboardListForm' action='".$request->makeRequest($config,array('location'=>'dash','order'=>$request->order),false)."' method='POST'>\n";
+	$s.="<form name='dashboardListForm' action='".$request->makeRequestURL($config,array('location'=>'dash','order'=>$request->order),false)."' method='POST'>\n";
 	$s.= "<div id='assetListContainer'>\n";
 	
 	/* are we to automatically tag entries from these categories? */
