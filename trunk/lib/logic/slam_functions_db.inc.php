@@ -50,14 +50,14 @@ $project_match
 EOL;
 
 	if ($user->superuser)
-		$query = "SELECT * FROM `$table` WHERE $match ";
+		$query = "SELECT $return FROM `$table` WHERE $match ";
 
 	if ($order)
 		$query .= "ORDER BY $order ";
 	
 	if ($limit)
 		$query .= "LIMIT $limit ";
-				
+
 	return $query;
 }
 

@@ -97,7 +97,7 @@ class SLAMresult
 			
 			/* count the number of visible assets in the category */
 			$query = SLAM_makePermsQuery($config, $db, $user, 'COUNT(*)', $category, $select);
-			
+
 			if (($count=$db->getRecords($query)) === false)
 				$config->errors[]='Database error: Error counting assets:'.$db->ErrorState().$query;
 			

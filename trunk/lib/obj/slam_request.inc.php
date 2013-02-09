@@ -92,7 +92,7 @@ class SLAMrequest
 			$this->order['direction'] = $config->values['list_direction'];
 	}
 	
-	public function makeRequest($config,$terms,$use_existing=false) /* FIX: change to makeRequestURL */
+	public function makeRequestURL($config,$terms,$use_existing=false) /* FIX: change to makeRequestURL */
 	{
 		/*
 			generates an interpretable url, possibly based on the current request

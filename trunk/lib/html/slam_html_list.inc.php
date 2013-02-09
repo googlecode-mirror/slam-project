@@ -19,7 +19,7 @@ function SLAM_makeAssetListHTML(&$config,$db,$user,$request,$result)
 			$s.="<div class='assetListName' onClick=\"toggleHideBodyId('assetListTable_{$category}')\">$category</div>\n";
 			
 		/* generate the category list html */
-		$s.="<form name='assetListForm_$category' action='".$request->makeRequest($config,array('location'=>'list','category'=>array($category)),false)."' method='POST'>\n";
+		$s.="<form name='assetListForm_$category' action='".$request->makeRequestURL($config,array('location'=>'list','category'=>array($category)),false)."' method='POST'>\n";
 		if (count($assets)>0)
 		{
 			$s.=SLAM_makeAssetTableActions($category);
@@ -76,8 +76,8 @@ function SLAM_makeAssetTableNavigation($config,$request,$result,$category)
 	$b_limit = max(0,$request->limit - $config->values['list_max']);
 	$f_limit = min($result->counts[$category],$request->limit + $config->values['list_max']);
 	
-	$b_url = $request->makeRequest($config,array('limit'=>$b_limit),true);
-	$f_url = $request->makeRequest($config,array('limit'=>$f_limit),true);
+	$b_url = $request->makeRequestURL($config,array('limit'=>$b_limit),true);
+	$f_url = $request->makeRequestURL($config,array('limit'=>$f_limit),true);
 
 	$s="<div class='assetListNavigation'>\n";
 	$s.= ($request->limit > 0) ? "<a href='$b_url'>&lt;</a>" : "&lt;";
@@ -113,7 +113,7 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 	{
 		$field = (strlen($field) > $config->values['title_truncate']) ? (substr($field,0,$config->value['title_truncate']).'...') : ($field);
 		$direction = ($request->order['direction'] == 'DESC') ? "ASC" : "DESC";
-		$s.="<td><a href='".$request->makeRequest($config,array('order'=>array('field'=>$field,'direction'=>$direction)),true)."'>$field</a></td>\n";
+		$s.="<td><a href='".$request->makeRequestURL($config,array('order'=>array('field'=>$field,'direction'=>$direction)),true)."'>$field</a></td>\n";
 	}
 	$s.="</tr>\n";
 	
@@ -132,7 +132,7 @@ function SLAM_makeAssetTableHTML($config,$db,$user,$request,$category,$assets)
 		$s.="<input type='checkbox' name='i[]' value='{$asset['Identifier']}' id='{$category}_checkbox_{$i}' onClick='checkAssetListBoxes(\"{$category}\")' /> ";
 
 		/* the url for the entry */
-		$url = $request->makeRequest($config,array('identifier'=>array($asset['Identifier']),'action'=>'open'),true);
+		$url = $request->makeRequestURL($config,array('identifier'=>array($asset['Identifier']),'action'=>'open'),true);
 
 		/* is the current user qualified to edit this record ? */
 		$editable = (SLAM_getAssetAccess($user,$asset) > 1);
