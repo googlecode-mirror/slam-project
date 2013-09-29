@@ -68,8 +68,9 @@ function SLAM_setAssetFields($config,$db,$user,$category,$structure,$clone=false
 	}
 			
 	/* generate the unique identifier */
-	if(($results = $db->Query("SHOW TABLE STATUS WHERE `name`='$category'")) === false)
+	if(($handle = $db->Query("SHOW TABLE STATUS WHERE `name`='$category'")) === false)
 		die('Database error: Couldn\'t get table status: '.$db->ErrorState());
+	$results = $handle->fetchAll();
 	$row = $results[0];
 	
 	$fields['Serial'] = $row['Auto_increment'];

@@ -10,7 +10,7 @@ function sql_real_escape($a,$link)
 		return substr($link->quote($a), 1, -1);
 	
 	foreach($a as $k => $v)
-		$a[$k] = (is_array($v)) ? sql_real_escape($v,$link) : $link->quote($v,$link);
+		$a[$k] = (is_array($v)) ? sql_real_escape($v,$link) : substr($link->quote($v), 1, -1);
 	
 	return $a;
 }
