@@ -173,7 +173,7 @@ class SLAMdb
 			return false;
 			
 		$return = array();
-		foreach( $results as $row )
+		while( $row = $results->fetch(PDO::FETCH_ASSOC) )
 		{
 			if ($vert)
 				$return[] = $row;
